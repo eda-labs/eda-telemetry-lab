@@ -1,0 +1,86 @@
+logging {
+  level  = "debug"
+  format = "logfmt"
+}
+
+loki.write "alerts" {
+  endpoint {
+    url = "http://10.58.2.45:3100/loki/api/v1/push"
+  }
+}
+
+loki.source.kafka "alarms" {
+  brokers    = ["10.58.2.46:9092"]
+  topics     = ["alarms"]
+  version    = "2.8.0"
+  group_id   = "alarms-processor"
+  labels     = { component = "kafka-alarms" }
+  forward_to = [loki.process.alarm_mapper.receiver]
+}
+
+loki.process "alarm_mapper" {
+  // Directly extract keys and fields in one pass
+  stage.json {
+    expressions = {
+      alarm_name     = "entries[0].keys.alarm_name",
+      namespace_name = "entries[0].keys.namespace_name",
+      fields_content = "entries[0].fields",
+    }
+  }
+
+  // Add alarm_name and namespace to fields
+  stage.labels {
+    values = {
+      alarm_name = "alarm_name",
+      namespace_name = "namespace_name",
+    }
+  }
+
+  // Set final log message to fields content
+  stage.output {
+    source = "fields_content"
+  }
+
+  forward_to = [loki.write.alerts.receiver]
+}
+
+loki.source.kafka "deviations" {
+  brokers    = ["10.58.2.46:9092"]
+  topics     = ["deviations"]
+  version    = "2.8.0"
+  group_id   = "deviations-processor"
+  labels     = { component = "kafka-deviations" }
+  forward_to = [loki.process.deviations_mapper.receiver]
+}
+
+
+loki.process "deviations_mapper" {
+  // Directly extract keys and fields in one pass
+  stage.json {
+    expressions = {
+      deviation_name = "entries[0].keys.deviation_name",
+      namespace_name = "entries[0].keys.namespace_name",
+      fields_content = "entries[0].fields",
+    }
+  }
+
+  // Add alarm_name and namespace to fields
+  stage.labels {
+    values = {
+      deviation_name = "deviation_name",
+      namespace_name = "namespace_name",
+    }
+  }
+
+  // Set final log message to fields content
+  stage.output {
+    source = "fields_content"
+  }
+
+  forward_to = [loki.write.alerts.receiver]
+}
+
+
+livedebugging {
+  enabled = true
+}

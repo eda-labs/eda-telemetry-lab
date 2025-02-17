@@ -125,15 +125,19 @@ topology:
         - ip addr add 10.20.2.4/24 dev bond0.202
 
     ### TELEMETRY STACK ###
-    telegraf:
+    alloy:
       kind: linux
-      image: telegraf:1.32.3
+      image: grafana/alloy:latest
       mgmt-ipv4: 10.58.2.41
       binds:
-        - configs/telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro
-      cmd: telegraf
+        - configs/alloy/config.alloy:/etc/alloy/config.alloy:ro
+      cmd: >
+        run
+        --server.http.listen-addr=0.0.0.0:12345
+        --storage.path=/var/lib/alloy/data
+        /etc/alloy/config.alloy
       ports:
-        - 9273:9273
+        - 12345:12345
 
     prometheus:
       kind: linux

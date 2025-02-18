@@ -112,6 +112,7 @@ There are two variants for deploying the lab.
 4. **Install the EDA Apps (Prometheus and Kafka):**
 
     Run:
+
     ```
     kubectl apply -f manifests/with_cx/0000_apps.yaml
     ```

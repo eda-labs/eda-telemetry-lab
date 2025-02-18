@@ -61,13 +61,10 @@ There are two variants for deploying the lab.
 4. **Install the EDA Apps (Prometheus and Kafka):**
 
     Run:
-
     ```
     kubectl apply -f manifests/with_clab/0000_apps.yaml
     ```
-
-        > [!TIP]
-        > Depending on your setup this can take couple of seconds/minutes. Please check in the EDA UI if the apps are installed.
+    **TIP:** Depending on your setup this can take couple of seconds/minutes. Please check in the EDA UI if the apps are installed.
 
 5. **Integrate Containerlab with EDA:**
 
@@ -78,8 +75,7 @@ There are two variants for deploying the lab.
     --eda-url https://<eda-ip>
     ```
 
-        > [!TIP]
-        > Check [Clab Connetor](https://github.com/eda-labs/clab-connector) for more details on the clab-connector options.
+    **TIP:** Check [Clab Connetor](https://github.com/eda-labs/clab-connector) for more details on the clab-connector options.
 
 6. **Deploy the Manifests:**
 
@@ -105,20 +101,18 @@ There are two variants for deploying the lab.
 3. **Bootstrap the Namespace in EDA:**
 
     Execute:
-
     ```
     kubectl exec -n eda-system $(kubectl get pods -n eda-system | grep eda-toolbox | awk '{print $1}') -- edactl namespace bootstrap clab-eda-st
     ```
+
 4. **Install the EDA Apps (Prometheus and Kafka):**
 
     Run:
-
     ```
     kubectl apply -f manifests/with_cx/0000_apps.yaml
     ```
 
-> [!TIP]
-> Depending on your setup this can take couple of seconds/minutes. Please check in the EDA UI if the apps are installed.
+    **TIP:** Depending on your setup this can take a couple of seconds/minutes. Please check in the EDA UI if the apps are installed.
 
 5. **Deploy the Lab:**
 

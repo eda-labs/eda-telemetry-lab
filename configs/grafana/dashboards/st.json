@@ -73,6 +73,7 @@
       "options": {
         "alwaysVisibleFilter": false,
         "autoScroll": false,
+        "browserTabNamePattern": "",
         "collapsedByDefault": false,
         "customValue": false,
         "displayMode": "button",
@@ -100,7 +101,7 @@
         "tabsInOrder": true,
         "variable": "NE_top"
       },
-      "pluginVersion": "3.6.0",
+      "pluginVersion": "3.7.0",
       "title": "Node Selection",
       "type": "volkovlabs-variable-panel"
     },
@@ -663,7 +664,7 @@
             "uid": "P8E80F9AEF21F6940"
           },
           "editorMode": "code",
-          "expr": "{__name=\".namespace.alarms.alarm\", host=\"EDA\"} | logfmt ",
+          "expr": "{component=\"kafka-alarms\", namespace_name=\"clab-eda-st\"} | json",
           "queryType": "range",
           "refId": "A"
         }
@@ -760,7 +761,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -799,7 +801,7 @@
             "uid": "P8E80F9AEF21F6940"
           },
           "editorMode": "code",
-          "expr": "count_over_time({__name=\".namespace.resources.cr.core_eda_nokia_com.v1.deviation\",host=\"EDA\"} | logfmt | keep nodeEndpoint [1m]  )",
+          "expr": "count_over_time({component=\"kafka-deviations\", namespace_name=\"clab-eda-st\"} | json | keep spec_nodeEndpoint [1m]  )",
           "legendFormat": "",
           "queryType": "range",
           "refId": "A",
@@ -862,7 +864,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -902,7 +905,7 @@
             "uid": "P8E80F9AEF21F6940"
           },
           "editorMode": "code",
-          "expr": "count_over_time({__name=\".namespace.alarms.alarm\", host=\"EDA\"} | logfmt | keep type [1m])",
+          "expr": "count_over_time({component=\"kafka-alarms\", namespace_name=\"clab-eda-st\"} | json| keep type [1m])",
           "queryType": "range",
           "refId": "A"
         }
@@ -940,7 +943,7 @@
             "uid": "P8E80F9AEF21F6940"
           },
           "editorMode": "code",
-          "expr": "{__name=\".namespace.alarms.alarm\",host=\"EDA\"} | logfmt | line_format \"{{if eq .cleared \\\"true\\\"}}-- CLEARED -- {{end}}Severity: {{.severity}} Name: {{.alarm_name}} Description: {{.description}}\"",
+          "expr": "{component=\"kafka-alarms\", namespace_name=\"clab-eda-st\"} | json | line_format \"{{if eq .cleared \\\"true\\\"}}-- CLEARED -- {{end}}Severity: {{.severity}} Name: {{.alarm_name}} Description: {{.description}}\"",
           "queryType": "range",
           "refId": "A"
         }
@@ -978,7 +981,7 @@
             "uid": "P8E80F9AEF21F6940"
           },
           "editorMode": "code",
-          "expr": "{host=\"EDA\",__name=\".namespace.resources.cr.core_eda_nokia_com.v1.deviation\"} | logfmt | line_format \"Deviation detected on {{.nodeEndpoint}} {{.path}}\"",
+          "expr": "{component=\"kafka-deviations\", namespace_name=\"clab-eda-st\"} | json | line_format \"Deviation detected on {{.spec_nodeEndpoint}} {{.spec_path}}\"",
           "queryType": "range",
           "refId": "A"
         }
@@ -1017,7 +1020,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -1038,6 +1042,7 @@
       "options": {
         "alwaysVisibleFilter": false,
         "autoScroll": false,
+        "browserTabNamePattern": "",
         "collapsedByDefault": false,
         "customValue": false,
         "displayMode": "minimize",
@@ -1065,7 +1070,7 @@
         "tabsInOrder": true,
         "variable": "NE"
       },
-      "pluginVersion": "3.6.0",
+      "pluginVersion": "3.7.0",
       "title": "Node",
       "type": "volkovlabs-variable-panel"
     },
@@ -1119,7 +1124,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -1253,7 +1259,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -1332,7 +1339,8 @@
             "mode": "percentage",
             "steps": [
               {
-                "color": "dark-blue"
+                "color": "dark-blue",
+                "value": null
               },
               {
                 "color": "red",
@@ -1354,7 +1362,8 @@
                   "mode": "absolute",
                   "steps": [
                     {
-                      "color": "dark-blue"
+                      "color": "dark-blue",
+                      "value": null
                     }
                   ]
                 }
@@ -1373,7 +1382,8 @@
                   "mode": "absolute",
                   "steps": [
                     {
-                      "color": "dark-blue"
+                      "color": "dark-blue",
+                      "value": null
                     }
                   ]
                 }
@@ -1473,7 +1483,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "dark-blue"
+                "color": "dark-blue",
+                "value": null
               },
               {
                 "color": "red",
@@ -1560,7 +1571,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -1651,7 +1663,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -1771,7 +1784,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               }
             ]
           }
@@ -1867,7 +1881,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -1945,7 +1960,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -1966,6 +1982,7 @@
       "options": {
         "alwaysVisibleFilter": false,
         "autoScroll": false,
+        "browserTabNamePattern": "",
         "collapsedByDefault": false,
         "customValue": false,
         "displayMode": "minimize",
@@ -1993,7 +2010,7 @@
         "tabsInOrder": true,
         "variable": "NE"
       },
-      "pluginVersion": "3.6.0",
+      "pluginVersion": "3.7.0",
       "title": "Node",
       "type": "volkovlabs-variable-panel"
     },
@@ -2151,7 +2168,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               }
             ]
           }
@@ -2229,9 +2247,10 @@
       },
       {
         "current": {
+          "isNone": true,
           "selected": false,
-          "text": "mgmt",
-          "value": "mgmt"
+          "text": "None",
+          "value": ""
         },
         "datasource": {
           "type": "prometheus",
@@ -2256,9 +2275,10 @@
       },
       {
         "current": {
+          "isNone": true,
           "selected": false,
-          "text": "logmgr_set_env.sh",
-          "value": "logmgr_set_env.sh"
+          "text": "None",
+          "value": ""
         },
         "datasource": {
           "type": "loki",
@@ -2366,6 +2386,6 @@
   "timezone": "",
   "title": "Telemetry Playground",
   "uid": "Telemetry_Playground",
-  "version": 7,
+  "version": 10,
   "weekStart": ""
 }

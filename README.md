@@ -5,7 +5,7 @@
 [discord-url]: https://discord.gg/7nJc5hh8
 
 
-The **EDA Telemetry Lab** demonstrates how to leverage full 100% YANG telemetry support integrated with [EDA (Event Driven Automation)](https://docs.eda.dev/). In this lab, [Nokia SR Linux](https://learn.srlinux.dev/) nodes are dynamically configured via EDA and integrated into a modern telemetry and logging stack that includes Prometheus, Grafana, Promtail, Loki, and Kafka exporters for alarms and deviations.
+The **EDA Telemetry Lab** demonstrates how to leverage full 100% YANG telemetry support integrated with [EDA (Event Driven Automation)](https://docs.eda.dev/). In this lab, [Nokia SR Linux](https://learn.srlinux.dev/) nodes are dynamically configured via EDA and integrated into a modern telemetry and logging stack that includes Prometheus, Grafana, Promtail, Loki, Alloy and Kafka exporters for alarms and deviations.
 
 <p align="center">
   <img src="./docs/dashboard.png" alt="Drawio Example">
@@ -14,8 +14,8 @@ The **EDA Telemetry Lab** demonstrates how to leverage full 100% YANG telemetry 
 
 - **EDA-Driven Configuration:** Automate SR Linux configuration and telemetry subscriptions with EDA.
 - **Modern Telemetry Stack:** Export telemetry data using EDA’s Prometheus exporter and monitor alarms/deviations via the Kafka exporter.
-- **Enhanced Logging:** Capture and aggregate system logs using Promtail and Loki.
-- **Versatile Deployment Options:** Deploy with either Containerlab (clab) for live traffic or CX (Simulation Platform) for license-flexible testing.
+- **Enhanced Logging:** Capture and aggregate system logs using Promtail, Alloy and Loki.
+- **Deployment Options:** Deploy with either Containerlab (clab) for live traffic or CX (Simulation Platform) for license-flexible testing.
 - **Traffic:** Generate and control iperf3 traffic to see dynamic network metrics in action.
 
 
@@ -25,7 +25,7 @@ The **EDA Telemetry Lab** demonstrates how to leverage full 100% YANG telemetry 
 - **Fabric:** A Clos topology of Nokia SR Linux nodes.
 - **Telemetry:** SR Linux nodes stream full YANG telemetry data. EDA exports these metrics via its Prometheus exporter and sends alarms/deviations using its Kafka exporter.
 - **Visualization:** Grafana dashboards (with the [Flow Plugin](https://grafana.com/grafana/plugins/andrewbmchugh-flow-panel/)) provide real-time insights into network metrics.
-- **Alarms:** Data is collected by Promtail and aggregated in Loki, with logs viewable in Grafana.
+- **Alarms:** Data is collected by Kafka, processed by Alloy and aggregated in Loki, with logs viewable in Grafana.
 - **Traffic Generation:** Use iperf3 tests and provided scripts to simulate live traffic across the network.
 
 
@@ -41,42 +41,53 @@ There are two variants for deploying the lab.
 > **Hardware License:** A valid **`hardware license` for EDA version 24.12.1** is mandatory for using this lab.
 
 1. **Initialize the Lab Configuration:**
-   - Run the provided `init.sh` script. When prompted, enter your EDA IP address. This will update files like `configs/prometheus/prometheus.yml`.
+
+    Run the provided `init.sh` script. When prompted, enter your EDA IP address. This will update files like `configs/prometheus/prometheus.yml`.
 
 2. **Deploy the containerlab:**
-   - Run `containerlab deploy -t eda-st.clab.yaml` to deploy the lab.
+
+    Run `containerlab deploy -t eda-st.clab.yaml` to deploy the lab.
 
 3. **Install Required Tools:**
-   - Execute the following commands:
-        ```
-        curl -LsSf https://astral.sh/uv/install.sh | sh
-        ```
-        ```
-        uv tool install git+https://github.com/eda-labs/clab-connector.git
-        ```
+
+    Execute the following commands:
+
+    ```
+    curl -LsSf https://astral.sh/uv/install.sh | sh
+    ```
+    ```
+    uv tool install git+https://github.com/eda-labs/clab-connector.git
+    ```
 4. **Install the EDA Apps (Prometheus and Kafka):**
-   - Run:
-        ```
-        kubectl apply -f manifests/with_clab/0000_apps.yaml
-        ```
-      > [!TIP]
-      > Depending on your setup this can take couple of seconds/minutes. Please check in the EDA UI if the apps are installed.
+
+    Run:
+
+    ```
+    kubectl apply -f manifests/with_clab/0000_apps.yaml
+    ```
+
+    > [!TIP]
+    > Depending on your setup this can take couple of seconds/minutes. Please check in the EDA UI if the apps are installed.
 
 5. **Integrate Containerlab with EDA:**
-   - Run:
-        ```
-        clab-connector integrate \
-        --topology-data clab-eda-st/topology-data.json \
-        --eda-url https://<eda-ip>
-        ```
-      > [!TIP]
-      > Check [Clab Connetor](https://github.com/eda-labs/clab-connector) for more details on the clab-connector options.
+
+    Run:
+    ```
+    clab-connector integrate \
+    --topology-data clab-eda-st/topology-data.json \
+    --eda-url https://<eda-ip>
+    ```
+
+    > [!TIP]
+    > Check [Clab Connetor](https://github.com/eda-labs/clab-connector) for more details on the clab-connector options.
 
 6. **Deploy the Manifests:**
-   - Apply the manifests:
-        ```
-        kubectl apply -f manifests/with_clab
-        ```
+
+    Apply the manifests:
+    ```
+    kubectl apply -f manifests/with_clab
+    ```
+
 7. **Enjoy Your Lab!**
 
 ### Variant 2: CX (Simulation Platform)
@@ -84,29 +95,37 @@ There are two variants for deploying the lab.
 >  Works without any license but its limited in traffic generation.
 
 1. **Initialize the Lab Configuration:**
-   - Run the provided `init.sh` script to update your configuration files with the EDA IP address.
+
+    Run the provided `init.sh` script to update your configuration files with the EDA IP address.
 
 2. **Deploy the containerlab:**
-   - Run `containerlab deploy -t eda-st-cx.clab.yaml` to deploy the lab.
+
+    Run `containerlab deploy -t eda-st-cx.clab.yaml` to deploy the lab.
 
 3. **Bootstrap the Namespace in EDA:**
-   - Execute:
-        ```
-        kubectl exec -n eda-system $(kubectl get pods -n eda-system | grep eda-toolbox | awk '{print $1}') -- edactl namespace bootstrap clab-eda-st
-        ```
+
+    Execute:
+
+    ```
+    kubectl exec -n eda-system $(kubectl get pods -n eda-system | grep eda-toolbox | awk '{print $1}') -- edactl namespace bootstrap clab-eda-st
+    ```
 4. **Install the EDA Apps (Prometheus and Kafka):**
-   - Run:
-        ```
-        kubectl apply -f manifests/with_cx/0000_apps.yaml
-        ```
-      > [!TIP]
-      > Depending on your setup this can take couple of seconds/minutes. Please check in the EDA UI if the apps are installed.
+
+    Run:
+    ```
+    kubectl apply -f manifests/with_cx/0000_apps.yaml
+    ```
+
+    > [!TIP]
+    > Depending on your setup this can take couple of seconds/minutes. Please check in the EDA UI if the apps are installed.
 
 5. **Deploy the Lab:**
-   - Apply the manifests:
-        ```
-        kubectl apply -f manifests/with_cx
-        ```
+
+    Apply the manifests:
+    ```
+    kubectl apply -f manifests/with_cx
+    ```
+
 6. **Enjoy Your Lab!**
 
 ---
@@ -137,6 +156,10 @@ There are two variants for deploying the lab.
 
 ### Telemetry
 
+<p align="center">
+  <img src="./docs/eda_telemetry_lab-tooling.drawio.svg" alt="Drawio Example">
+</p>
+
 - **SR Linux Telemetry:**
   Nodes stream full YANG telemetry data.
 - **EDA Exporters:**
@@ -149,6 +172,9 @@ There are two variants for deploying the lab.
 
 ### Logging
 
+- **Alloy & Loki:**
+  Alloy processes Kafka data and sends it to Loki for storage.
+  Alloy has a web interface at http://alloy:12345.
 - **Promtail & Loki:**
   Collect and aggregate SR Linux syslogs (e.g., BGP events, interface state changes). Logs are accessible and filterable via Grafana.
 - **Prometheus UI:**
@@ -199,7 +225,7 @@ The lab includes a traffic script (named **traffic.sh**) that launches bidirecti
 The provided containerlab file defines the lab topology. For the Containerlab (clab) variant, it includes:
 - Nokia SR Linux nodes (leaf and spine switches)
 - Linux clients configured with bonding, VLANs, and iperf3 servers/clients
-- Telemetry and logging containers (telegraf, Prometheus, Grafana, Promtail, Loki, Kafka, syslog)
+- Telemetry and logging containers (Alloy, Prometheus, Grafana, Promtail, Loki, Kafka, syslog)
 
 For the CX variant, the topology includes only the telemetry and logging containers.
 

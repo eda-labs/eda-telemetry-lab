@@ -117,8 +117,8 @@ There are two variants for deploying the lab.
     kubectl apply -f manifests/with_cx/0000_apps.yaml
     ```
 
-        > [!TIP]
-        > Depending on your setup this can take couple of seconds/minutes. Please check in the EDA UI if the apps are installed.
+> [!TIP]
+> Depending on your setup this can take couple of seconds/minutes. Please check in the EDA UI if the apps are installed.
 
 5. **Deploy the Lab:**
 

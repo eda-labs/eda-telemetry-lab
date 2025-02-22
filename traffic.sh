@@ -1,27 +1,27 @@
 #!/bin/bash
-# A robust script for launching bidirectional iperf3 tests.
+# A script for launching bidirectional traffic tests.
 # This script assumes that:
 #   • iperf3 servers on client1 and client2 are already running persistently.
 #   • Docker container names are:
-#         clab-eda-st-client1 (server on client1)
-#         clab-eda-st-client2 (server on client2)
-#         clab-eda-st-client3 (client that will test toward client2)
-#         clab-eda-st-client4 (client that will test toward client1)
+#         clab-eda-st-client1 (iperf server on client1)
+#         clab-eda-st-client2 (iperf server on client2)
+#         clab-eda-st-client3 (iperf client that will connect to client2)
+#         clab-eda-st-client4 (iperf client that will connect to client1)
 #
 # The following test pairs are configured:
 #   • client4 (10.10.10.4)  -> client1 (10.10.10.1)  on port 5201
-#   • client4 (10.20.2.4)  -> client1 (10.20.1.1)   on port 5202
-#   • client3 (10.10.10.3) -> client2 (10.10.10.2)  on port 5201
-#   • client3 (10.20.1.3)  -> client2 (10.20.2.2)   on port 5202
+#   • client4 (10.20.2.4)   -> client1 (10.20.1.1)   on port 5202
+#   • client3 (10.10.10.3)  -> client2 (10.10.10.2)  on port 5201
+#   • client3 (10.20.1.3)   -> client2 (10.20.2.2)   on port 5202
 #
 # Each test is run in bidirectional mode with the following defaults:
 #   • Duration: 10000 seconds (modifiable via the DURATION environment variable)
 #   • Report interval: 1 second
-#   • Parallel streams: 5
-#   • Bandwidth: 100K (only applicable for UDP tests; for TCP it’s ignored)
+#   • Parallel streams: 10
+#   • Bandwidth: 150K
 #   • MSS: 1400
 #
-# Usage: ./iperf3-run.sh {start|stop} {client3|client4|all}
+# Usage: ./traffic.sh {start|stop} {client3|client4|all}
 #
 
 set -euo pipefail
@@ -29,11 +29,12 @@ set -euo pipefail
 # Configuration defaults (override by exporting variables if needed)
 DURATION=${DURATION:-10000}    # Test duration in seconds
 INTERVAL=1                     # Reporting interval (seconds)
-PORT1=5201                   # Port for first set of tests (TCP/UDP)
-PORT2=5202                   # Port for second set of tests (TCP/UDP)
-PARALLEL=10                   # Number of parallel streams
-BANDWIDTH="150K"             # Bandwidth parameter (for UDP tests)
-MSS=1400                     # Maximum segment size
+PORT1=5201                     # Port for first set of tests (TCP/UDP)
+PORT2=5202                     # Port for second set of tests (TCP/UDP)
+PARALLEL=10                    # Number of parallel streams
+BANDWIDTH="150K"               # Bandwidth parameter
+MSS=1400                       # Maximum segment size
+WINDOW=4K                      # Window size
 
 # Define endpoints based on your design:
 # Client4 will target client1's two interfaces:
@@ -54,11 +55,12 @@ start_client4() {
         echo "  - Starting test: ${CLIENT4_CONTAINER} -> ${CLIENT1_IP_TCP}:${PORT1}"
         sudo docker exec "${CLIENT4_CONTAINER}" \
             iperf3 -c "${CLIENT1_IP_TCP}" --bidir -t "${DURATION}" -i "${INTERVAL}" -p "${PORT1}" \
-                -P "${PARALLEL}" -b "${BANDWIDTH}" -M "${MSS}" >/dev/null 2>&1 &
+                -P "${PARALLEL}" -w ${WINDOW} -b "${BANDWIDTH}" -M "${MSS}" >/dev/null 2>&1 &
+
         echo "  - Starting test: ${CLIENT4_CONTAINER} -> ${CLIENT1_IP_VLAN}:${PORT2}"
         sudo docker exec "${CLIENT4_CONTAINER}" \
             iperf3 -c "${CLIENT1_IP_VLAN}" --bidir -t "${DURATION}" -i "${INTERVAL}" -p "${PORT2}" \
-                -P "${PARALLEL}" -b "${BANDWIDTH}" -M "${MSS}" >/dev/null 2>&1 &
+                -P "${PARALLEL}" -w ${WINDOW} -b "${BANDWIDTH}" -M "${MSS}" >/dev/null 2>&1 &
     done
 }
 
@@ -69,11 +71,12 @@ start_client3() {
         echo "  - Starting test: ${CLIENT3_CONTAINER} -> ${CLIENT2_IP_TCP}:${PORT1}"
         sudo docker exec "${CLIENT3_CONTAINER}" \
             iperf3 -c "${CLIENT2_IP_TCP}" --bidir -t "${DURATION}" -i "${INTERVAL}" -p "${PORT1}" \
-                -P "${PARALLEL}" -b "${BANDWIDTH}" -M "${MSS}" >/dev/null 2>&1 &
+                -P "${PARALLEL}" -w ${WINDOW} -b "${BANDWIDTH}" -M "${MSS}" >/dev/null 2>&1 &
+
         echo "  - Starting test: ${CLIENT3_CONTAINER} -> ${CLIENT2_IP_VLAN}:${PORT2}"
         sudo docker exec "${CLIENT3_CONTAINER}" \
             iperf3 -c "${CLIENT2_IP_VLAN}" --bidir -t "${DURATION}" -i "${INTERVAL}" -p "${PORT2}" \
-                -P "${PARALLEL}" -b "${BANDWIDTH}" -M "${MSS}" >/dev/null 2>&1 &
+                -P "${PARALLEL}" -w ${WINDOW} -b "${BANDWIDTH}" -M "${MSS}" >/dev/null 2>&1 &
     done
 }
 

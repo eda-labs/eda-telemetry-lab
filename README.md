@@ -56,7 +56,7 @@ There are two variants for deploying the lab.
     - retrieves the EDA IP and sets it in the `configs/prometheus/prometheus.yml` files.
     - save EDA API address in a `.eda_api_address` file.
 
-3. **Deploy the containerlab:**
+3. **Deploy containerlab topology:**
 
     Run `containerlab deploy -t eda-st.clab.yaml` to deploy the lab.
 
@@ -101,7 +101,7 @@ There are two variants for deploying the lab.
 
     Run the provided `init.sh` script to update your configuration files with the EDA IP address.
 
-2. **Deploy the containerlab:**
+2. **Deploy containerlab topology:**
 
     Run `containerlab deploy -t eda-st-cx.clab.yaml` to deploy the lab.
 
@@ -210,18 +210,22 @@ The lab includes a traffic script (named **traffic.sh**) that launches bidirecti
 **Usage Examples:**
 
 - **Start Traffic:**
-  To launch tests from a specific client or from both clients, run:
+    To launch tests from a specific client or from both clients, run:
 
-        ./traffic.sh start client3
-        ./traffic.sh start client4
-        ./traffic.sh start all
+    ```bash
+    ./traffic.sh start client3
+    ./traffic.sh start client4
+    ./traffic.sh start all
+    ```
 
 - **Stop Traffic:**
   To stop tests on a specific client or on all clients, run:
-
-        ./traffic.sh stop client3
-        ./traffic.sh stop client4
-        ./traffic.sh stop all
+  
+    ```bash
+    ./traffic.sh stop client3
+    ./traffic.sh stop client4
+    ./traffic.sh stop all
+    ```
 
 ## Additional Components
 

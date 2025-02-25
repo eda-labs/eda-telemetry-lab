@@ -13,13 +13,13 @@ spec:
   links:
     - local:
         interface: ethernet-1-1
-        interfaceResource: leaf1-ethernet-1-1
+        interfaceResource: lag-l1-l2-eth-1-1-lag-1-local
         node: leaf1
       speed: 10G
       type: edge
     - local:
         interface: ethernet-1-1
-        interfaceResource: leaf2-ethernet-1-1
+        interfaceResource: lag-l1-l2-eth-1-1-lag-1-local
         node: leaf2
       speed: 10G
       type: edge
@@ -39,13 +39,13 @@ spec:
   links:
     - local:
         interface: ethernet-1-2
-        interfaceResource: leaf1-ethernet-1-2
+        interfaceResource: lag-l1-l2-eth-1-2-lag-2-local
         node: leaf1
       speed: 10G
       type: edge
     - local:
         interface: ethernet-1-2
-        interfaceResource: leaf2-ethernet-1-2
+        interfaceResource: lag-l1-l2-eth-1-2-lag-2-local
         node: leaf2
       speed: 10G
       type: edge
@@ -65,13 +65,13 @@ spec:
   links:
     - local:
         interface: ethernet-1-1
-        interfaceResource: leaf3-ethernet-1-1
+        interfaceResource: lag-l3-l4-eth-1-1-lag-3-local
         node: leaf3
       speed: 10G
       type: edge
     - local:
         interface: ethernet-1-1
-        interfaceResource: leaf4-ethernet-1-1
+        interfaceResource: lag-l3-l4-eth-1-1-lag-3-local
         node: leaf4
       speed: 10G
       type: edge
@@ -91,13 +91,13 @@ spec:
   links:
     - local:
         interface: ethernet-1-2
-        interfaceResource: leaf3-ethernet-1-2
+        interfaceResource: lag-l3-l4-eth-1-2-lag-4-local
         node: leaf3
       speed: 10G
       type: edge
     - local:
         interface: ethernet-1-2
-        interfaceResource: leaf4-ethernet-1-2
+        interfaceResource: lag-l3-l4-eth-1-2-lag-4-local
         node: leaf4
       speed: 10G
       type: edge

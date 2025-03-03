@@ -7,19 +7,19 @@ metadata:
     eda.nokia.com/macvrf201: "true"
     eda.nokia.com/macvrf1001: "true"
     eda.nokia.com/role: edge
-  name: l1-l2-eth-1-1-lag-1
+  name: lag1-l1-l2-eth-1-1
   namespace: clab-eda-st
 spec:
   links:
     - local:
         interface: ethernet-1-1
-        interfaceResource: lag-l1-l2-eth-1-1-lag-1-local
+        interfaceResource: lag1-l1-l2-eth-1-1
         node: leaf1
       speed: 10G
       type: edge
     - local:
         interface: ethernet-1-1
-        interfaceResource: lag-l1-l2-eth-1-1-lag-1-local
+        interfaceResource: lag1-l1-l2-eth-1-1
         node: leaf2
       speed: 10G
       type: edge
@@ -33,19 +33,19 @@ metadata:
     eda.nokia.com/macvrf202: "true"
     eda.nokia.com/macvrf1001: "true"
     eda.nokia.com/role: edge
-  name: l1-l2-eth-1-2-lag-2
+  name: lag2-l1-l2-eth-1-2
   namespace: clab-eda-st
 spec:
   links:
     - local:
         interface: ethernet-1-2
-        interfaceResource: lag-l1-l2-eth-1-2-lag-2-local
+        interfaceResource: lag2-l1-l2-eth-1-2
         node: leaf1
       speed: 10G
       type: edge
     - local:
         interface: ethernet-1-2
-        interfaceResource: lag-l1-l2-eth-1-2-lag-2-local
+        interfaceResource: lag2-l1-l2-eth-1-2
         node: leaf2
       speed: 10G
       type: edge
@@ -59,19 +59,19 @@ metadata:
     eda.nokia.com/macvrf201: "true"
     eda.nokia.com/macvrf1001: "true"
     eda.nokia.com/role: edge
-  name: l3-l4-eth-1-1-lag-3
+  name: lag3-l3-l4-eth-1-1
   namespace: clab-eda-st
 spec:
   links:
     - local:
         interface: ethernet-1-1
-        interfaceResource: lag-l3-l4-eth-1-1-lag-3-local
+        interfaceResource: lag3-l3-l4-eth-1-1
         node: leaf3
       speed: 10G
       type: edge
     - local:
         interface: ethernet-1-1
-        interfaceResource: lag-l3-l4-eth-1-1-lag-3-local
+        interfaceResource: lag3-l3-l4-eth-1-1
         node: leaf4
       speed: 10G
       type: edge
@@ -85,19 +85,19 @@ metadata:
     eda.nokia.com/macvrf202: "true"
     eda.nokia.com/macvrf1001: "true"
     eda.nokia.com/role: edge
-  name: l3-l4-eth-1-2-lag-4
+  name: lag4-l3-l4-eth-1-2
   namespace: clab-eda-st
 spec:
   links:
     - local:
         interface: ethernet-1-2
-        interfaceResource: lag-l3-l4-eth-1-2-lag-4-local
+        interfaceResource: lag4-l3-l4-eth-1-2
         node: leaf3
       speed: 10G
       type: edge
     - local:
         interface: ethernet-1-2
-        interfaceResource: lag-l3-l4-eth-1-2-lag-4-local
+        interfaceResource: lag4-l3-l4-eth-1-2
         node: leaf4
       speed: 10G
       type: edge

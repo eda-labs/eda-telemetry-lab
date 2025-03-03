@@ -1,5 +1,5 @@
 name: eda-st
-#prefix: ""
+
 mgmt:
   network: eda-st
   ipv4-subnet: 10.58.2.0/24

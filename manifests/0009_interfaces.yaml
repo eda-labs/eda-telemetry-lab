@@ -1,0 +1,108 @@
+---
+apiVersion: interfaces.eda.nokia.com/v1alpha1
+kind: Interface
+metadata:
+  labels:
+    eda.nokia.com/macvrf201: "true"
+    eda.nokia.com/macvrf1001: "true"
+    eda.nokia.com/role: edge
+  name: lag1-l1-l2-eth-1-1
+  namespace: clab-eda-st
+spec:
+  enabled: true
+  encapType: dot1q
+  ethernet:
+    speed: 10G
+  lag:
+    multihoming:
+      mode: all-active
+    lacp:
+      systemPriority: 32768
+  members:
+    - interface: ethernet-1-1
+      node: leaf1
+    - interface: ethernet-1-1
+      node: leaf2
+  type: lag
+
+---
+apiVersion: interfaces.eda.nokia.com/v1alpha1
+kind: Interface
+metadata:
+  labels:
+    eda.nokia.com/macvrf202: "true"
+    eda.nokia.com/macvrf1001: "true"
+    eda.nokia.com/role: edge
+  name: lag2-l1-l2-eth-1-2
+  namespace: clab-eda-st
+spec:
+  enabled: true
+  encapType: dot1q
+  ethernet:
+    speed: 10G
+  lag:
+    multihoming:
+      mode: all-active
+    lacp:
+      systemPriority: 32768
+  members:
+    - interface: ethernet-1-2
+      node: leaf1
+    - interface: ethernet-1-2
+      node: leaf2
+  type: lag
+
+---
+apiVersion: interfaces.eda.nokia.com/v1alpha1
+kind: Interface
+metadata:
+  labels:
+    eda.nokia.com/macvrf201: "true"
+    eda.nokia.com/macvrf1001: "true"
+    eda.nokia.com/role: edge
+  name: lag3-l3-l4-eth-1-1
+  namespace: clab-eda-st
+spec:
+  enabled: true
+  encapType: dot1q
+  ethernet:
+    speed: 10G
+  lag:
+    multihoming:
+      mode: all-active
+    lacp:
+      systemPriority: 32768
+  members:
+    - interface: ethernet-1-1
+      node: leaf3
+    - interface: ethernet-1-1
+      node: leaf4
+  type: lag
+
+---
+apiVersion: interfaces.eda.nokia.com/v1alpha1
+kind: Interface
+metadata:
+  generation: 1
+  labels:
+    eda.nokia.com/macvrf202: "true"
+    eda.nokia.com/macvrf1001: "true"
+    eda.nokia.com/role: edge
+  name: lag4-l3-l4-eth-1-2
+  namespace: clab-eda-st
+spec:
+  enabled: true
+  encapType: dot1q
+  ethernet:
+    speed: 10G
+  lag:
+    multihoming:
+      mode: all-active
+    lacp:
+      systemPriority: 32768
+  members:
+    - interface: ethernet-1-2
+      node: leaf3
+    - interface: ethernet-1-2
+      node: leaf4
+  type: lag

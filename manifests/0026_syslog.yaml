@@ -1,11 +1,13 @@
 apiVersion: config.eda.nokia.com/v1alpha1
 kind: Configlet
 metadata:
-  name: syslog-config
+  name: syslog
   namespace: clab-eda-st
 spec:
   configs:
-    - config: |-
+    - path: .system
+      operation: Update
+      config: |-
         {
           "logging": {
               "network-instance": "mgmt",
@@ -26,10 +28,7 @@ spec:
               ]
           }
         }
-      operation: Update
-      path: .system
   endpointSelector:
     - eda.nokia.com/role=leaf
     - eda.nokia.com/role=spine
   operatingSystem: srl
-  priority: 0

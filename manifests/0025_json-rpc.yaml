@@ -9,15 +9,15 @@ spec:
       operation: Create
       config: |-
         {
-            "admin-state": "enable"
-        }
-    - path: .system.json-rpc-server.network-instance{.name=="mgmt"}
-      operation: Create
-      config: |-
-        {
-            "http": {
-                "admin-state": "enable"
-            }
+            "admin-state": "enable",
+            "network-instance": [
+              {
+                "name": "mgmt",
+                "http": {
+                  "admin-state": "enable"
+                }
+              }
+            ]
         }
   endpointSelector:
     - eda.nokia.com/role=leaf

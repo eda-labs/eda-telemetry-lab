@@ -27,21 +27,27 @@ The **EDA Telemetry Lab** demonstrates how to leverage full 100% YANG telemetry 
 
 ## Deployment Variants
 
-There are two variants for deploying the lab.
+There are two variants for deploying the lab:
 
-### Variant 1: Containerlab
->
+- **Using Containerlab**:
+    The simulated SR Linux nodes, client containers and the telemetry stack are deployed using Containerlab. This deployment variant requires a license for EDA, as the simulated SR Linux nodes are deployed outside of EDA.  
+    On the positive side, using Containerlab allows for live traffic generation using iperf.
+- **Using CX** (EDA Simulation Platform):
+    The simulated SR Linux nodes are spawned in EDA CX and thus do not require a license. The telemetry stack for convenience is deployed using Containerlab. This deployment variant does not require a license but does not support traffic generation with iperf.
+
+This README focuses on the Containerlab deployment variant as it leverages iperf-generated traffic for demonstration purposes. See [cx/README.md](cx/README.md) for the CX deployment variant.
+
 > [!IMPORTANT]
 > **EDA Installation Mode:** This lab requires EDA to be installed in the [`Simulate=False`][sim-false-doc] mode. Ensure that your EDA deployment is configured accordingly.
 >
-> **Hardware License:** A valid `hardware license` for EDA version 24.12 is mandatory for using this lab.
+> **Hardware License:** A valid `hardware license` for EDA version 24.12 is mandatory for using this lab with Containerlab.
 
 [sim-false-doc]: https://docs.eda.dev/user-guide/containerlab-integration/#installing-eda
 
 1. **Ensure `kubectl` is installed and configured:**
     To test if `kubectl` is installed and configured, run:
 
-    ```
+    ```bash
     kubectl -n eda-system get engineconfig engine-config \
     -o jsonpath='{.status.run-status}{"\n"}'
     ```
@@ -58,13 +64,13 @@ There are two variants for deploying the lab.
 
 3. **Deploy containerlab topology:**
 
-    Run `containerlab deploy -t eda-st.clab.yaml` to deploy the lab.
+    Run `containerlab deploy` to deploy the lab.
 
 4. **Install the EDA Apps (Prometheus and Kafka):**
 
     Run:
 
-    ```
+    ```bash
     kubectl apply -f manifests/0000_apps.yaml
     ```
 
@@ -86,79 +92,22 @@ There are two variants for deploying the lab.
 
     Apply the manifests:
 
-    ```
-    kubectl apply -f manifests/clab
+    ```bash
+    kubectl apply -f manifests
     ```
 
 7. **Enjoy Your Lab!**
 
 > [!TIP]
-> **Shutdown interfaces via WebUI:** Client 1, exposes the port 8080 for the WebUI. You can use the WebUI to shutdown interfaces on the SR Linux nodes. 
+> **Shutdown interfaces via WebUI:** Client 1, exposes the port 8080 for the WebUI. You can use the WebUI to shutdown interfaces on the SR Linux nodes.
 
-### Variant 2: CX (Simulation Platform)
->
-> [!NOTE]
-> Works without any license but its limited in traffic generation.
-
-1. **Initialize the Lab Configuration:**
-
-    Run the provided `init.sh` script to update your configuration files with the EDA IP address.
-
-2. **Deploy containerlab topology:**
-
-    Run `containerlab deploy -t eda-st-cx.clab.yaml` to deploy the lab.
-
-3. **Bootstrap the Namespace in EDA:**
-
-    Execute:
-
-    ```
-    kubectl exec -n eda-system $(kubectl get pods -n eda-system | grep eda-toolbox | awk '{print $1}') -- edactl namespace bootstrap clab-eda-st
-    ```
-
-4. **Install the EDA Apps (Prometheus and Kafka):**
-
-    Run:
-
-    ```
-    kubectl apply -f manifests/with_cx/0000_apps.yaml
-    ```
-
-    **TIP:** Depending on your setup this can take a couple of seconds/minutes. Please check in the EDA UI if the apps are installed.
-
-5. **Deploy the Lab:**
-
-    Apply the manifests:
-
-    ```
-    kubectl apply -f manifests/with_cx
-    ```
-
-6. **Enjoy Your Lab!**
-
----
-
-## Accessing Network Elements in clab
+## Accessing Network Elements
 
 - **SR Linux Nodes:**
   Access these devices via SSH using the management IP addresses or hostnames (e.g., `ssh clab-eda-st-leaf2`).
 
 - **Linux Clients:**
   Access client-emulating container via SSH: e.g. `ssh user@clab-eda-st-server3` (password: `multit00l`).
-
-## Accessing Network Elements in cx (Simulation Platform)
-
-- **SR Linux Nodes:**
-  Access these devices via the SR Linux CLI using the following command:
-
-    ```
-    kubectl get pods -n eda-system | grep leaf1 | awk '{print "kubectl exec -it -n eda-system " $1 " -- sudo sr_cli"}'
-    ```
-
-> [!NOTE]
-> Replace grep leaf1 with the desired node name.
-
----
 
 ## Telemetry & Logging Stack
 
@@ -253,8 +202,6 @@ The lab includes several manifest files that define the configuration of EDA app
 - **Syslog (0021_syslog.yaml / 0026_syslog.yaml):** Set up syslog forwarding to a centralized server.
 - **Fabric Topology (0030_fabric.yaml):** Establish the Clos fabric connectivity.
 - **Virtual Networks (0040_ipvrf2001.yaml and 0041_macvrf1001.yaml):** Configure VRFs and VLANs for traffic segmentation.
-
-For the CX variant, similar manifest files are provided in the manifests/with_cx directory. These components enable automated deployment and comprehensive monitoring of the lab environment.
 
 ## Conclusion
 

@@ -159,3 +159,24 @@ spec:
           destination: "0"
         - source: degraded
           destination: "2"
+
+---
+apiVersion: prom.eda.nokia.com/v1alpha1
+kind: Export
+metadata:
+  name: vnet-status
+  namespace: eda-system
+spec:
+  exports:
+    - path: >-
+        .namespace.resources.cr-status.services_eda_nokia_com.v1alpha1.virtualnetwork.status
+      metricName:
+        regex: namespace_(.+)
+        replacement: $1
+      mappings:
+        - source: up
+          destination: "1"
+        - source: down
+          destination: "0"
+        - source: degraded
+          destination: "2"

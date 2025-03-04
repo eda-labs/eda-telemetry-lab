@@ -1,0 +1,15 @@
+---
+apiVersion: kafka.eda.nokia.com/v1alpha1
+kind: Producer
+metadata:
+  name: kafka
+  namespace: eda-system
+spec:
+  brokers: 10.58.2.46:9092
+  exports:
+    - mode: on-change
+      path: .namespace.alarms.alarm
+      topic: alarms
+    - mode: on-change
+      path: .namespace.resources.cr.core_eda_nokia_com.v1.deviation
+      topic: deviations

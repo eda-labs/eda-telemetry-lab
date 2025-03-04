@@ -14,7 +14,7 @@ spec:
 apiVersion: prom.eda.nokia.com/v1alpha1
 kind: Export
 metadata:
-  name: bgproutes
+  name: bgp-stats
   namespace: eda-system
 spec:
   exports:
@@ -40,7 +40,7 @@ spec:
 apiVersion: prom.eda.nokia.com/v1alpha1
 kind: Export
 metadata:
-  name: defaultbgppeers
+  name: default-bgp-group-status
   namespace: eda-system
 spec:
   exports:
@@ -54,7 +54,7 @@ spec:
 apiVersion: prom.eda.nokia.com/v1alpha1
 kind: Export
 metadata:
-  name: healthscore
+  name: default-router-status
   namespace: eda-system
 spec:
   exports:
@@ -86,7 +86,7 @@ spec:
 apiVersion: prom.eda.nokia.com/v1alpha1
 kind: Export
 metadata:
-  name: interface-rate
+  name: interface-traffic-rate
   namespace: eda-system
 spec:
   exports:
@@ -130,7 +130,7 @@ spec:
 apiVersion: prom.eda.nokia.com/v1alpha1
 kind: Export
 metadata:
-  name: srl-routes
+  name: ipv4-statistics
   namespace: eda-system
 spec:
   exports:

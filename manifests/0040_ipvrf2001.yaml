@@ -8,94 +8,39 @@ spec:
     - name: macvrf201
       spec:
         eviPool: evi-pool
-        l2proxyARPND:
-          proxyARP: false
-          proxyND: false
-          tableSize: 250
-        macAging: 300
         macDuplicationDetection:
-          action: StopLearning
           enabled: true
-          holdDownTime: 9
-          monitoringWindow: 3
-          numMoves: 5
         tunnelIndexPool: tunnel-index-pool
         vniPool: vni-pool
         macLimit: 250
     - name: macvrf202
       spec:
         eviPool: evi-pool
-        l2proxyARPND:
-          proxyARP: false
-          proxyND: false
-          tableSize: 250
-        macAging: 300
         macDuplicationDetection:
-          action: StopLearning
           enabled: true
-          holdDownTime: 9
-          monitoringWindow: 3
-          numMoves: 5
         tunnelIndexPool: tunnel-index-pool
         vniPool: vni-pool
         macLimit: 250
   irbInterfaces:
     - name: macvrf201-irb
       spec:
-        arpTimeout: 14400
         bridgeDomain: macvrf201
-        evpnRouteAdvertisementType:
-          arpDynamic: true
-          arpStatic: false
-          ndDynamic: false
-          ndStatic: false
-        hostRoutePopulate:
-          dynamic: true
-          evpn: false
-          static: false
-        ipMTU: 1500
         ipAddresses:
           - ipv4Address:
               ipPrefix: 10.20.1.254/24
               primary: false
-        l3ProxyARPND:
-          proxyARP: false
-          proxyND: false
-        learnUnsolicited: NONE
         router: ipvrf2001
     - name: macvrf202-irb
       spec:
-        arpTimeout: 14400
         bridgeDomain: macvrf202
-        evpnRouteAdvertisementType:
-          arpDynamic: true
-          arpStatic: false
-          ndDynamic: false
-          ndStatic: false
-        hostRoutePopulate:
-          dynamic: true
-          evpn: false
-          static: false
-        ipMTU: 1500
         ipAddresses:
           - ipv4Address:
               ipPrefix: 10.20.2.254/24
               primary: false
-        l3ProxyARPND:
-          proxyARP: false
-          proxyND: false
-        learnUnsolicited: NONE
         router: ipvrf2001
   routers:
     - name: ipvrf2001
       spec:
-        bgp:
-          ebgpPreference: 170
-          enabled: false
-          ibgpPreference: 170
-          minWaitToAdvertise: 0
-          rapidWithdrawl: true
-          waitForFIBInstall: false
         eviPool: evi-pool
         routerID: "2001"
         tunnelIndexPool: tunnel-index-pool

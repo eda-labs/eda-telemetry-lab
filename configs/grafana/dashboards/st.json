@@ -1599,6 +1599,7 @@
             "cellOptions": {
               "type": "auto"
             },
+            "filterable": true,
             "inspect": false
           },
           "mappings": [],
@@ -1667,12 +1668,16 @@
               "__name__": true,
               "instance": true,
               "job": true,
+              "namespace_name": true,
+              "node_name": true,
               "source": true,
               "subscription_name": true
             },
+            "includeByName": {},
             "indexByName": {},
             "renameByName": {
-              "Value": "PID"
+              "Value": "PID",
+              "application_name": "App name"
             }
           }
         }
@@ -2276,8 +2281,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               }
             ]
           }
@@ -2355,9 +2359,10 @@
       },
       {
         "current": {
+          "isNone": true,
           "selected": false,
-          "text": "default",
-          "value": "default"
+          "text": "None",
+          "value": ""
         },
         "datasource": {
           "type": "prometheus",
@@ -2525,6 +2530,6 @@
   "timezone": "",
   "title": "Telemetry Playground",
   "uid": "Telemetry_Playground",
-  "version": 2,
+  "version": 11,
   "weekStart": ""
 }

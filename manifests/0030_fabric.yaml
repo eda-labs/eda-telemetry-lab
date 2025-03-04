@@ -4,20 +4,31 @@ metadata:
   name: fabric
   namespace: clab-eda-st
 spec:
+  leafs:
+    leafNodeSelector:
+      - eda.nokia.com/role=leaf
+  spines:
+    spineNodeSelector:
+      - eda.nokia.com/role=spine
   interSwitchLinks:
     linkSelector:
       - eda.nokia.com/role=interSwitch
     poolIPV4: ipv4-pool
-  leafs:
-    leafNodeSelector:
-      - eda.nokia.com/role=leaf
+  underlayProtocol:
+    bfd:
+      enabled: true
+    bgp:
+      asnPool: asn-pool
+      timers:
+        connectRetry: 10
+        holdTime: 3
+        keepAlive: 1
+        minimumAdvertisementInterval: 1
+    protocol:
+      - EBGP
   overlayProtocol:
     bfd:
-      desiredMinTransmitInt: 1000000
-      detectionMultiplier: 3
       enabled: true
-      minEchoReceiveInterval: 1000000
-      requiredMinReceive: 1000000
     bgp:
       autonomousSystem: 65100
       clusterID: "100"
@@ -31,23 +42,4 @@ spec:
         keepAlive: 1
         minimumAdvertisementInterval: 1
     protocol: IBGP
-  spines:
-    spineNodeSelector:
-      - eda.nokia.com/role=spine
   systemPoolIPV4: systemipv4-pool
-  underlayProtocol:
-    bfd:
-      desiredMinTransmitInt: 100000
-      detectionMultiplier: 3
-      enabled: true
-      minEchoReceiveInterval: 1000000
-      requiredMinReceive: 100000
-    bgp:
-      asnPool: asn-pool
-      timers:
-        connectRetry: 10
-        holdTime: 3
-        keepAlive: 1
-        minimumAdvertisementInterval: 1
-    protocol:
-      - EBGP

@@ -8,16 +8,8 @@ spec:
     - name: macvrf1001
       spec:
         eviPool: evi-pool
-        l2proxyARPND:
-          proxyARP: false
-          proxyND: false
-        macAging: 300
         macDuplicationDetection:
-          action: StopLearning
           enabled: true
-          holdDownTime: 9
-          monitoringWindow: 3
-          numMoves: 5
         tunnelIndexPool: tunnel-index-pool
         vniPool: vni-pool
         macLimit: 250

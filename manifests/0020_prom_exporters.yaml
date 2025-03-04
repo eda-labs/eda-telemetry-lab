@@ -5,10 +5,10 @@ metadata:
   namespace: eda-system
 spec:
   exports:
-    - metricName:
+    - path: .namespace.node.srl.system.app-management.application
+      metricName:
         regex: namespace_(.+)
         replacement: $1
-      path: .namespace.node.srl.system.app-management.application
 
 ---
 apiVersion: prom.eda.nokia.com/v1alpha1
@@ -18,10 +18,10 @@ metadata:
   namespace: eda-system
 spec:
   exports:
-    - metricName:
+    - path: .namespace.node.srl.network-instance.protocols.bgp.statistics
+      metricName:
         regex: namespace_(.+)
         replacement: $1
-      path: .namespace.node.srl.network-instance.protocols.bgp.statistics
 
 ---
 apiVersion: prom.eda.nokia.com/v1alpha1
@@ -31,10 +31,10 @@ metadata:
   namespace: eda-system
 spec:
   exports:
-    - metricName:
+    - path: .namespace.node.srl.platform.control.cpu.total
+      metricName:
         regex: namespace_(.+)
         replacement: $1
-      path: .namespace.node.srl.platform.control.cpu.total
 
 ---
 apiVersion: prom.eda.nokia.com/v1alpha1
@@ -44,11 +44,11 @@ metadata:
   namespace: eda-system
 spec:
   exports:
-    - metricName:
+    - path: >-
+        .namespace.resources.cr-status.protocols_eda_nokia_com.v1alpha1.defaultbgpgroup.status
+      metricName:
         regex: namespace_(.+)
         replacement: $1
-      path: >-
-        .namespace.resources.cr-status.protocols_eda_nokia_com.v1alpha1.defaultbgpgroup.status
 
 ---
 apiVersion: prom.eda.nokia.com/v1alpha1
@@ -58,11 +58,11 @@ metadata:
   namespace: eda-system
 spec:
   exports:
-    - metricName:
+    - path: >-
+        .namespace.resources.cr-status.routing_eda_nokia_com.v1alpha1.defaultrouter.status
+      metricName:
         regex: namespace_(.+)
         replacement: $1
-      path: >-
-        .namespace.resources.cr-status.routing_eda_nokia_com.v1alpha1.defaultrouter.status
 
 ---
 apiVersion: prom.eda.nokia.com/v1alpha1
@@ -72,7 +72,8 @@ metadata:
   namespace: eda-system
 spec:
   exports:
-    - mappings:
+    - path: .namespace.node.srl.interface
+      mappings:
         - destination: "1"
           source: up
         - destination: "0"
@@ -80,7 +81,6 @@ spec:
       metricName:
         regex: namespace_(.+)
         replacement: $1
-      path: .namespace.node.srl.interface
 
 ---
 apiVersion: prom.eda.nokia.com/v1alpha1
@@ -90,10 +90,10 @@ metadata:
   namespace: eda-system
 spec:
   exports:
-    - metricName:
+    - path: .namespace.node.srl.interface.traffic-rate
+      metricName:
         regex: namespace_(.+)
         replacement: $1
-      path: .namespace.node.srl.interface.traffic-rate
 
 ---
 apiVersion: prom.eda.nokia.com/v1alpha1
@@ -103,10 +103,10 @@ metadata:
   namespace: eda-system
 spec:
   exports:
-    - metricName:
+    - path: .namespace.node.srl.platform.control.memory
+      metricName:
         regex: namespace_(.+)
         replacement: $1
-      path: .namespace.node.srl.platform.control.memory
 
 ---
 apiVersion: prom.eda.nokia.com/v1alpha1
@@ -116,7 +116,8 @@ metadata:
   namespace: eda-system
 spec:
   exports:
-    - mappings:
+    - path: .namespace.node.srl.network-instance
+      mappings:
         - destination: "1"
           source: up
         - destination: "0"
@@ -124,7 +125,6 @@ spec:
       metricName:
         regex: namespace_(.+)
         replacement: $1
-      path: .namespace.node.srl.network-instance
 
 ---
 apiVersion: prom.eda.nokia.com/v1alpha1
@@ -134,7 +134,28 @@ metadata:
   namespace: eda-system
 spec:
   exports:
-    - metricName:
+    - path: .namespace.node.srl.network-instance.route-table.ipv4-unicast.statistics
+      metricName:
         regex: namespace_(.+)
         replacement: $1
-      path: .namespace.node.srl.network-instance.route-table.ipv4-unicast.statistics
+
+---
+apiVersion: prom.eda.nokia.com/v1alpha1
+kind: Export
+metadata:
+  name: fabric-status
+  namespace: eda-system
+spec:
+  exports:
+    - path: >-
+        .namespace.resources.cr-status.fabrics_eda_nokia_com.v1alpha1.fabric.status
+      metricName:
+        regex: namespace_(.+)
+        replacement: $1
+      mappings:
+        - source: up
+          destination: "1"
+        - source: down
+          destination: "0"
+        - source: degraded
+          destination: "2"

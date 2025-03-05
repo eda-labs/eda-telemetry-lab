@@ -91,6 +91,7 @@
       border: 2px solid #ccc;
       cursor: pointer;
       border-radius: 5px;
+      margin: 5px;
     }
 
     button:hover {
@@ -110,6 +111,12 @@
       font-size: 0.8rem !important;
       color: #ffffff;
     }
+
+    .button-group {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+    }
   </style>
   <link rel="stylesheet"
     href="https://cdn.jsdelivr.net/npm/pretty-print-json@3.0/dist/css/pretty-print-json.dark-mode.css" />
@@ -118,7 +125,7 @@
 
 <body>
   <div class="container">
-    <h1>🧨 Shutdown an interface 🧨</h1>
+    <h1>🧨 Interface Control Panel 🧨</h1>
     <!-- Device selection -->
     <div class="container-line">
       <div class="div-group">
@@ -205,10 +212,11 @@
       </div>
     </div>
 
-    <!-- Shutdown button -->
+    <!-- Interface control buttons -->
     <div class="container-line">
-      <div class="div-group">
-        <button type="button" id="submitButton" onclick="sendData()">💥 shutdown interface!</button>
+      <div class="div-group button-group">
+        <button type="button" id="shutdownButton" onclick="sendData(false)">💥 Shutdown interface!</button>
+        <button type="button" id="enableButton" onclick="sendData(true)">✅ Enable interface</button>
       </div>
     </div>
   </div>
@@ -252,8 +260,9 @@
     const jsonReq = document.getElementById('request');
     const jsonResp = document.getElementById('response');
 
-    // When the user clicks the "shutdown interface" button:
-    function sendData() {
+    // When the user clicks either button:
+    // isEnable = true for enabling, false for shutdown
+    function sendData(isEnable) {
       // Gather the selected device IP
       let selectedDeviceIp = null;
       deviceSelector.forEach(radio => {
@@ -279,8 +288,8 @@
           commands: [
             {
               action: 'update',
-              // e.g. /interface[name=ethernet-1/49]/admin-state:disable
-              path: `/interface[name=${selectedIface}]/admin-state:disable`
+              // Set admin-state based on isEnable value
+              path: `/interface[name=${selectedIface}]/admin-state:${isEnable ? 'enable' : 'disable'}`
             }
           ]
         }

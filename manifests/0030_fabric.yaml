@@ -11,9 +11,9 @@ spec:
     spineNodeSelector:
       - eda.nokia.com/role=spine
   interSwitchLinks:
+    unnumbered: IPV6
     linkSelector:
       - eda.nokia.com/role=interSwitch
-    poolIPV4: ipv4-pool
   underlayProtocol:
     bfd:
       enabled: true

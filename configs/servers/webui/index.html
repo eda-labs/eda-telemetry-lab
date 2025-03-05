@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -12,6 +13,7 @@
       height: 100vh;
       background-color: #f0f0f0;
     }
+
     .container {
       margin: 20px auto;
       background-color: white;
@@ -21,6 +23,7 @@
       width: 550px;
       text-align: center;
     }
+
     .json {
       margin: 20px auto;
       background-color: black;
@@ -30,34 +33,41 @@
       width: 50%;
       display: none;
     }
+
     .container h1 {
       text-align: center;
     }
+
     .container-line {
       display: inline-block;
       width: 100%;
     }
+
     .json-line {
       display: flex;
       gap: 20px;
       width: 100%;
       margin: 0 10px;
     }
+
     .div-group {
       display: inline-block;
       margin-top: 10px;
       margin-left: auto;
       margin-right: auto;
     }
+
     input[type="radio"] {
       display: none;
     }
-    input[type="radio"]:checked + label {
+
+    input[type="radio"]:checked+label {
       background-color: #4c5eaf;
       padding: 10px;
       color: white;
       border-radius: 5px;
     }
+
     label {
       display: inline-block;
       text-align: center;
@@ -69,9 +79,11 @@
       transition: 0.3s;
       border-radius: 5px;
     }
+
     label:hover {
       background-color: #f0f0f0;
     }
+
     button {
       background-color: white;
       font-size: 20px;
@@ -80,27 +92,30 @@
       cursor: pointer;
       border-radius: 5px;
     }
+
     button:hover {
       background-color: #f0f0f0;
     }
+
     button:active {
       background-color: #4c5eaf;
     }
+
     .json-line h4 {
       color: white;
       font-family: menlo, consolas, monospace;
     }
+
     .json-container {
       font-size: 0.8rem !important;
       color: #ffffff;
     }
   </style>
-  <link
-    rel="stylesheet"
-    href="https://cdn.jsdelivr.net/npm/pretty-print-json@3.0/dist/css/pretty-print-json.dark-mode.css"
-  />
+  <link rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/pretty-print-json@3.0/dist/css/pretty-print-json.dark-mode.css" />
   <script src="https://cdn.jsdelivr.net/npm/pretty-print-json@3.0/dist/pretty-print-json.min.js"></script>
 </head>
+
 <body>
   <div class="container">
     <h1>🧨 Shutdown an interface 🧨</h1>
@@ -128,24 +143,40 @@
       <div class="div-group">
         <!-- We'll show/hide these interface groups depending on the selected device -->
         <div id="leaf1-options" style="display: block;">
+          <input type="radio" id="leaf1-e1-1" name="interface" value="ethernet-1/1" />
+          <label for="leaf1-e1-1">e-1/1</label>
+          <input type="radio" id="leaf1-e1-2" name="interface" value="ethernet-1/2" />
+          <label for="leaf1-e1-2">e-1/2</label>
           <input type="radio" id="leaf1-e1-49" name="interface" value="ethernet-1/49" checked />
           <label for="leaf1-e1-49">e-1/49</label>
           <input type="radio" id="leaf1-e1-50" name="interface" value="ethernet-1/50" />
           <label for="leaf1-e1-50">e-1/50</label>
         </div>
         <div id="leaf2-options" style="display: none;">
+          <input type="radio" id="leaf2-e1-1" name="interface" value="ethernet-1/1" />
+          <label for="leaf2-e1-1">e-1/1</label>
+          <input type="radio" id="leaf2-e1-2" name="interface" value="ethernet-1/2" />
+          <label for="leaf2-e1-2">e-1/2</label>
           <input type="radio" id="leaf2-e1-49" name="interface" value="ethernet-1/49" />
           <label for="leaf2-e1-49">e-1/49</label>
           <input type="radio" id="leaf2-e1-50" name="interface" value="ethernet-1/50" />
           <label for="leaf2-e1-50">e-1/50</label>
         </div>
         <div id="leaf3-options" style="display: none;">
+          <input type="radio" id="leaf3-e1-1" name="interface" value="ethernet-1/1" />
+          <label for="leaf3-e1-1">e-1/1</label>
+          <input type="radio" id="leaf3-e1-2" name="interface" value="ethernet-1/2" />
+          <label for="leaf3-e1-2">e-1/2</label>
           <input type="radio" id="leaf3-e1-49" name="interface" value="ethernet-1/49" />
           <label for="leaf3-e1-49">e-1/49</label>
           <input type="radio" id="leaf3-e1-50" name="interface" value="ethernet-1/50" />
           <label for="leaf3-e1-50">e-1/50</label>
         </div>
         <div id="leaf4-options" style="display: none;">
+          <input type="radio" id="leaf4-e1-1" name="interface" value="ethernet-1/1" />
+          <label for="leaf4-e1-1">e-1/1</label>
+          <input type="radio" id="leaf4-e1-2" name="interface" value="ethernet-1/2" />
+          <label for="leaf4-e1-2">e-1/2</label>
           <input type="radio" id="leaf4-e1-49" name="interface" value="ethernet-1/49" />
           <label for="leaf4-e1-49">e-1/49</label>
           <input type="radio" id="leaf4-e1-50" name="interface" value="ethernet-1/50" />
@@ -270,31 +301,31 @@
         },
         body: JSON.stringify(data)
       })
-      .then((response) => response.text())
-      .then((body) => {
-        // Show the raw text body from the device (or from the proxy)
-        jsonResp.innerHTML = body
-          ? prettyPrintJson.toHtml(JSON.parse(body), { quoteKeys: true })
-          : '(no response body)';
+        .then((response) => response.text())
+        .then((body) => {
+          // Show the raw text body from the device (or from the proxy)
+          jsonResp.innerHTML = body
+            ? prettyPrintJson.toHtml(JSON.parse(body), { quoteKeys: true })
+            : '(no response body)';
 
-        // Clear out after 8 seconds
-        setTimeout(() => {
-          jsonUrl.textContent = '';
-          jsonReq.innerHTML = '';
-          jsonResp.innerHTML = '';
+          // Clear out after 8 seconds
+          setTimeout(() => {
+            jsonUrl.textContent = '';
+            jsonReq.innerHTML = '';
+            jsonResp.innerHTML = '';
+            jsonContainer.style.display = 'none';
+          }, 8000);
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+          alert('Error occurred! Check console/logs.');
           jsonContainer.style.display = 'none';
-        }, 8000);
-      })
-      .catch((error) => {
-        console.error('Error:', error);
-        alert('Error occurred! Check console/logs.');
-        jsonContainer.style.display = 'none';
-      });
+        });
     }
 
     // Listen for device radio changes, so we show/hide the relevant interface radios
     deviceSelector.forEach(radio => {
-      radio.addEventListener('change', function() {
+      radio.addEventListener('change', function () {
         l1Options.style.display = 'none';
         l2Options.style.display = 'none';
         l3Options.style.display = 'none';
@@ -325,4 +356,5 @@
     });
   </script>
 </body>
+
 </html>

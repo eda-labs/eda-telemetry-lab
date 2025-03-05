@@ -279,7 +279,7 @@
       },
       "id": 57,
       "options": {
-        "alignValue": "left",
+        "alignValue": "center",
         "legend": {
           "displayMode": "list",
           "placement": "bottom",
@@ -287,7 +287,7 @@
         },
         "mergeValues": true,
         "rowHeight": 0.9,
-        "showValue": "auto",
+        "showValue": "always",
         "tooltip": {
           "mode": "single",
           "sort": "none"
@@ -2815,6 +2815,6 @@
   "timezone": "",
   "title": "Telemetry Playground",
   "uid": "Telemetry_Playground",
-  "version": 12,
+  "version": 13,
   "weekStart": ""
 }

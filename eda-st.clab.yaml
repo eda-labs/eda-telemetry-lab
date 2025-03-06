@@ -112,6 +112,10 @@ topology:
       ports:
         - 3000:3000
       env:
+        http_proxy: ${http_proxy:=""}
+        https_proxy: ${https_proxy:=""}
+        HTTP_PROXY: ${HTTP_PROXY:=""}
+        HTTPS_PROXY: ${HTTPS_PROXY:=""}
         GF_INSTALL_PLUGINS: "andrewbmchugh-flow-panel, volkovlabs-variable-panel"
         GF_ORG_ROLE: "Admin"
         GF_ORG_NAME: "Main Org"

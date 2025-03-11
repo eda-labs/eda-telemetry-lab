@@ -1,3 +1,19 @@
+# the eda labs catalog and the protocols app from it
+# is used until 25.4.1 release, where the protocols app will have
+# a fix for v6 unnumbered underlay reporting health when we put the port down
+---
+apiVersion: appstore.eda.nokia.com/v1
+kind: Catalog
+metadata:
+  name: eda-labs-catalog
+  namespace: eda-system
+spec:
+  description: EDA Labs catalog
+  remoteType: git
+  remoteURL: https://github.com/eda-labs/catalog
+  skipTLSVerify: false
+  title: EDA Labs Catalog
+---
 apiVersion: core.eda.nokia.com/v1
 kind: Workflow
 metadata:
@@ -28,4 +44,20 @@ spec:
     version:
       type: semver
       value: v2.0.1
+  type: app-installer
+---
+apiVersion: core.eda.nokia.com/v1
+kind: Workflow
+metadata:
+  name: protocols-v2.0.2-rc1
+  namespace: eda-system
+spec:
+  input:
+    app: protocols
+    catalog: eda-labs-catalog
+    operation: install
+    vendor: nokia
+    version:
+      type: semver
+      value: v2.0.2-rc1
   type: app-installer

@@ -53,12 +53,12 @@ start_server4() {
     # Launch two instances per endpoint for increased parallelism
     for i in {1..2}; do
         echo "  - Starting test: ${SERVER4_CONTAINER} -> ${SERVER1_IP_TCP}:${PORT1}"
-        sudo docker exec "${SERVER4_CONTAINER}" \
+        docker exec "${SERVER4_CONTAINER}" \
             iperf3 -c "${SERVER1_IP_TCP}" -t "${DURATION}" -i "${INTERVAL}" -p "${PORT1}" \
                 -P "${PARALLEL}" -w ${WINDOW} -b "${BANDWIDTH}" -M "${MSS}" >/dev/null 2>&1 &
 
         echo "  - Starting test: ${SERVER4_CONTAINER} -> ${SERVER1_IP_VLAN}:${PORT2}"
-        sudo docker exec "${SERVER4_CONTAINER}" \
+        docker exec "${SERVER4_CONTAINER}" \
             iperf3 -c "${SERVER1_IP_VLAN}" -t "${DURATION}" -i "${INTERVAL}" -p "${PORT2}" \
                 -P "${PARALLEL}" -w ${WINDOW} -b "${BANDWIDTH}" -M "${MSS}" >/dev/null 2>&1 &
     done
@@ -69,12 +69,12 @@ start_server3() {
     echo "Starting iperf3 traffic from server3 (${SERVER3_CONTAINER}) to server2..."
     for i in {1..2}; do
         echo "  - Starting test: ${SERVER3_CONTAINER} -> ${SERVER2_IP_TCP}:${PORT1}"
-        sudo docker exec "${SERVER3_CONTAINER}" \
+        docker exec "${SERVER3_CONTAINER}" \
             iperf3 -c "${SERVER2_IP_TCP}" -t "${DURATION}" -i "${INTERVAL}" -p "${PORT1}" \
                 -P "${PARALLEL}" -w ${WINDOW} -b "${BANDWIDTH}" -M "${MSS}" >/dev/null 2>&1 &
 
         echo "  - Starting test: ${SERVER3_CONTAINER} -> ${SERVER2_IP_VLAN}:${PORT2}"
-        sudo docker exec "${SERVER3_CONTAINER}" \
+        docker exec "${SERVER3_CONTAINER}" \
             iperf3 -c "${SERVER2_IP_VLAN}" -t "${DURATION}" -i "${INTERVAL}" -p "${PORT2}" \
                 -P "${PARALLEL}" -w ${WINDOW} -b "${BANDWIDTH}" -M "${MSS}" >/dev/null 2>&1 &
     done
@@ -84,7 +84,7 @@ start_server3() {
 stop_client() {
     local container="$1"
     echo "Stopping iperf3 traffic on ${container}..."
-    sudo docker exec "${container}" pkill iperf3 >/dev/null 2>&1 || true
+    docker exec "${container}" pkill iperf3 >/dev/null 2>&1 || true
 }
 
 usage() {

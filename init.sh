@@ -42,3 +42,7 @@ echo "Updated target to '$EDA_API' in $PROM_CONFIG_FILE"
 
 # save EDA API address to a file
 echo "$EDA_API" > .eda_api_address
+
+# patch engine config to dump more resources to etcd
+kubectl -n eda-system patch engineconfig engine-config --type merge --patch "$(cat ./configs/ce.k8s.yml)"
+kubectl -n eda-system rollout restart deployment eda-ce

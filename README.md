@@ -7,10 +7,7 @@
 
 The **EDA Telemetry Lab** demonstrates how to leverage full 100% YANG telemetry support integrated with [EDA (Event Driven Automation)](https://docs.eda.dev/). In this lab, [Nokia SR Linux](https://learn.srlinux.dev/) nodes are dynamically configured via EDA and integrated into a modern telemetry and logging stack that includes Prometheus, Grafana, Promtail, Loki, Alloy and Kafka exporters for alarms and deviations.
 
-
-https://github.com/user-attachments/assets/38efb03a-c4aa-4a52-820a-b96d8a7005ea
-
-
+<https://github.com/user-attachments/assets/38efb03a-c4aa-4a52-820a-b96d8a7005ea>
 
 - **EDA-Driven Configuration:** Automate SR Linux configuration and telemetry subscriptions with EDA.
 - **Modern Telemetry Stack:** Export telemetry data using EDA’s Prometheus exporter and monitor alarms/deviations via the Kafka exporter.
@@ -62,6 +59,10 @@ This README focuses on the Containerlab deployment variant as it leverages iperf
     - ensures `uv` and `clab-connector` tools are installed
     - retrieves the EDA IP and sets it in the `configs/prometheus/prometheus.yml` files.
     - save EDA API address in a `.eda_api_address` file.
+
+    ```bash
+    ./init.sh
+    ```
 
 3. **Deploy containerlab topology:**
 

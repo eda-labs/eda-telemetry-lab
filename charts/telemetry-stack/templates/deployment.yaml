@@ -26,6 +26,7 @@ spec:
             - --config.file=/etc/prometheus/prometheus.yml
             - --storage.tsdb.path=/prometheus
             - --storage.tsdb.retention.time=7d
+            - --storage.tsdb.retention.size=2GB
           volumeMounts:
             - name: config
               mountPath: /etc/prometheus
@@ -81,6 +82,14 @@ spec:
           image: grafana/grafana:12.0.2
           imagePullPolicy: {{ .Values.imagePullPolicy }}
           env:
+            {{- if .Values.proxy.https }}
+            - name: HTTPS_PROXY
+              value: "{{ .Values.proxy.https }}"
+            {{- end }}
+            {{- if .Values.proxy.noProxy }}
+            - name: NO_PROXY
+              value: "{{ .Values.proxy.noProxy }}"
+            {{- end }}
             - name: GF_INSTALL_PLUGINS
               value: "andrewbmchugh-flow-panel, volkovlabs-variable-panel"
             - name: GF_AUTH_ANONYMOUS_ENABLED

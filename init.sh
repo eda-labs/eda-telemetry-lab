@@ -17,8 +17,22 @@ uv tool upgrade clab-connector
 
 # Install helm chart
 echo "Installing telemetry-stack helm chart..."
-helm install telemetry-stack ./charts/telemetry-stack \
-  --create-namespace -n eda-telemetry
+
+proxy_var="${https_proxy:-$HTTPS_PROXY}"
+if [[ -n "$proxy_var" ]]; then
+    echo "Using proxy for grafana deployment: $proxy_var"
+    noproxy="localhost\,127.0.0.1\,.local\,.internal\,.svc"
+
+    helm install telemetry-stack ./charts/telemetry-stack \
+    --set proxy.https="$proxy_var" \
+    --set proxy.noProxy="$noproxy" \
+    --create-namespace -n eda-telemetry
+else
+    helm install telemetry-stack ./charts/telemetry-stack \
+    --create-namespace -n eda-telemetry
+fi
+
+
 
 # Wait for alloy service to be ready and get external IP
 echo "Waiting for alloy service to get external IP..."

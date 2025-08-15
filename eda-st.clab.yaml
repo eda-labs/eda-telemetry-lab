@@ -8,7 +8,7 @@ topology:
   kinds:
     nokia_srlinux:
       image: ghcr.io/nokia/srlinux:25.3.2
-      type: ixrd2l
+      type: ixr-d2l
 
   nodes:
     leaf1:
@@ -29,10 +29,12 @@ topology:
 
     spine1:
       kind: nokia_srlinux
+      type: ixr-d3l
       mgmt-ipv4: 10.58.2.21
 
     spine2:
       kind: nokia_srlinux
+      type: ixr-d3l
       mgmt-ipv4: 10.58.2.22
 
     server1:

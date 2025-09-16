@@ -33,7 +33,7 @@ This lab supports two deployment methods, each with distinct advantages:
 
 - **EDA Mode:** `Simulate=False` - integrates with external Containerlab nodes
 - **Architecture:** SR Linux nodes and client containers run via Containerlab, telemetry stack runs in Kubernetes
-- **License:** Requires valid EDA hardware license (version 25.4+)
+- **License:** Requires valid EDA hardware license (version 25.8+)
 - **Traffic Generation:** ✅ Full iperf3 support for realistic network testing
 - **Node Prefix:** `clab-eda-st-*` (e.g., `clab-eda-st-leaf1`)
 - **Use Case:** Production-like testing, traffic analysis
@@ -52,7 +52,7 @@ This lab supports two deployment methods, each with distinct advantages:
 ## Requirements
 
 > [!IMPORTANT]
-> **EDA Version:** 25.4 or later required
+> **EDA Version:** 25.8 or later required
 >
 > **For Containerlab:** EDA must be installed with `Simulate=False` mode ([see docs][sim-false-doc])
 >

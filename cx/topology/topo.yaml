@@ -25,6 +25,8 @@ interswitch_labels: &interswitch_labels
 
 edge_labels: &edge_labels
   eda.nokia.com/role: edge
+  eda.nokia.com/macvrf202: "true"
+  eda.nokia.com/macvrf1001: "true"
 
 ####### TOPOLOGY #######
 items:

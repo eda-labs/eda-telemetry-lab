@@ -2846,13 +2846,13 @@
       },
       {
         "current": {
-          "text": "eda-st",
-          "value": "eda-st"
+          "text": "eda-telemetry",
+          "value": "eda-telemetry"
         },
         "hide": 2,
         "label": "namespace",
         "name": "namespace",
-        "query": "eda-st",
+        "query": "eda-telemetry",
         "skipUrlSync": true,
         "type": "constant"
       },

@@ -3,7 +3,7 @@ apiVersion: kafka.eda.nokia.com/v1alpha1
 kind: Producer
 metadata:
   name: alarms-and-deviations
-  namespace: eda-st
+  namespace: eda-telemetry
 spec:
   brokers: kafka.eda-telemetry.svc.cluster.local:9092
   exports:

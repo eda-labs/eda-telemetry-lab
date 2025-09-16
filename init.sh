@@ -25,7 +25,7 @@ CX_DEP=$(kubectl get -A deployment -l eda.nokia.com/app=cx 2>/dev/null | grep ed
 if [[ -n "$CX_DEP" ]]; then
     echo "EDA CX variant detected."
     IS_CX=true
-    NODE_PREFIX="eda-st"
+    NODE_PREFIX=${ST_STACK_NS}
 else
     echo "Containerlab variant detected (no CX pods found)."
     IS_CX=false

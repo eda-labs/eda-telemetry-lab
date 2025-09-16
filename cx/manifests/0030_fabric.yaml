@@ -1,58 +1,25 @@
-apiVersion: v1
-items:
-- apiVersion: fabrics.eda.nokia.com/v1alpha1
-  kind: Fabric
-  metadata:
-    name: fabric
-    namespace: eda-st
-  spec:
-    interSwitchLinks:
-      linkSelector:
-      - eda.nokia.com/role=interSwitch
-      poolIPV4: ipv4-pool
-    leafs:
-      leafNodeSelector:
-      - eda.nokia.com/role=leaf
-    overlayProtocol:
-      bfd:
-        desiredMinTransmitInt: 1000000
-        detectionMultiplier: 3
-        enabled: true
-        minEchoReceiveInterval: 1000000
-        requiredMinReceive: 1000000
-      bgp:
-        autonomousSystem: 65100
-        clusterID: "100"
-        rrClientNodeSelector:
-        - eda.nokia.com/role=leaf
-        rrNodeSelector:
-        - eda.nokia.com/role=spine
-        timers:
-          connectRetry: 10
-          holdTime: 3
-          keepAlive: 1
-          minimumAdvertisementInterval: 1
-      protocol: IBGP
-    spines:
-      spineNodeSelector:
-      - eda.nokia.com/role=spine
-    systemPoolIPV4: systemipv4-pool
-    underlayProtocol:
-      bfd:
-        desiredMinTransmitInt: 100000
-        detectionMultiplier: 3
-        enabled: true
-        minEchoReceiveInterval: 1000000
-        requiredMinReceive: 100000
-      bgp:
-        asnPool: asn-pool
-        timers:
-          connectRetry: 10
-          holdTime: 3
-          keepAlive: 1
-          minimumAdvertisementInterval: 1
-      protocol:
-      - EBGP
-kind: List
+# note, unnumbered does not work with ceos yet
+apiVersion: fabrics.eda.nokia.com/v1alpha1
+kind: Fabric
 metadata:
-  resourceVersion: ""
+  name: myfabric
+  namespace: eda-telemetry
+spec:
+  leafs:
+    leafNodeSelector:
+      - eda.nokia.com/role=leaf
+  spines:
+    spineNodeSelector:
+      - eda.nokia.com/role=spine
+  interSwitchLinks:
+    linkSelector:
+      - eda.nokia.com/role=interSwitch
+    unnumbered: IPV6
+  systemPoolIPV4: systemipv4-pool
+  underlayProtocol:
+    protocol:
+      - EBGP
+    bgp:
+      asnPool: asn-pool
+  overlayProtocol:
+    protocol: EBGP

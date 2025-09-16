@@ -1,8 +1,8 @@
-apiVersion: services.eda.nokia.com/v1alpha1
+apiVersion: services.eda.nokia.com/v1
 kind: VirtualNetwork
 metadata:
   name: ipvrf2001
-  namespace: eda-st
+  namespace: eda-telemetry
 spec:
   bridgeDomains:
   - name: macvrf201

@@ -42,10 +42,10 @@ This lab supports two deployment methods, each with distinct advantages:
 
 **Best for:** License-free learning and development
 
-- **EDA Mode:** `Simulate=True` - uses EDA's built-in simulation platform
+- **EDA Mode:** `Simulate=True` - uses EDA's built-in [Digital Twin](https://docs.eda.dev/25.8/digital-twin/) platform, aka CX.
 - **Architecture:** SR Linux nodes spawn directly in EDA CX, telemetry stack runs in Kubernetes
-- **License:** ❌ No license required
-- **Traffic Generation:** ⚠️ Limited (no iperf3 support)
+- **License:** ✅ No license required
+- **Traffic Generation:** ✅ Full iperf3 support for realistic network testing
 - **Node Prefix:** `eda-st-*` (e.g., `eda-st-leaf1`)
 - **Use Case:** Learning EDA, testing configurations, development environments
 
@@ -155,7 +155,7 @@ The `init.sh` script automatically:
 ./init.sh
 ```
 
-The script will automatically run `edactl namespace bootstrap eda-st` for CX deployments.
+The script will automatically run `edactl namespace bootstrap eda-telemetry` for CX deployments.
 
 #### Step 2: Start Grafana Port-Forward
 
@@ -169,7 +169,7 @@ kubectl port-forward -n eda-telemetry service/grafana 3000:3000 --address=0.0.0.
 kubectl apply -f manifests/0000_apps.yaml
 ```
 
-#### Step 4: Deploy CX-Specific Manifests
+#### Step 4: Deploy CX-specific Lab Resources
 
 ```bash
 kubectl apply -f cx/manifests
@@ -202,7 +202,7 @@ Access via SSH using the appropriate prefix for your deployment:
 
 ### Linux Clients (Containerlab only)
 
-- **SSH Access:** `ssh user@clab-eda-st-server1` (password: `multit00l`)
+- **SSH Access:** `ssh admin@clab-eda-st-server1` (password: `multit00l`)
 - **WebUI:** <http://localhost:8080> (exposed from server1)
   - Use the WebUI to simulate network failures by shutting down interfaces
 

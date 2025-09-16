@@ -2,7 +2,7 @@ apiVersion: config.eda.nokia.com/v1alpha1
 kind: Configlet
 metadata:
   name: syslog-config
-  namespace: eda-st
+  namespace: eda-telemetry
 spec:
   configs:
   - config: |-

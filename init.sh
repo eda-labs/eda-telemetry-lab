@@ -10,16 +10,11 @@ function install-uv {
 
 }
 
-# install uv and clab-connector
-install-uv
-uv tool install git+https://github.com/eda-labs/clab-connector.git
-uv tool upgrade clab-connector
-
-# Check if EDA CX variant is installed (before helm install)
+# Check if EDA CX deployment is present
 echo "Checking for EDA CX variant..."
-CX_PODS=$(kubectl get pods -A 2>/dev/null | grep eda-cx || true)
+CX_DEP=$(kubectl get -A deployment -l eda.nokia.com/app=cx 2>/dev/null | grep eda-cx || true)
 
-if [[ -n "$CX_PODS" ]]; then
+if [[ -n "$CX_DEP" ]]; then
     echo "EDA CX variant detected."
     IS_CX=true
     NODE_PREFIX="eda-st"
@@ -27,6 +22,11 @@ else
     echo "Containerlab variant detected (no CX pods found)."
     IS_CX=false
     NODE_PREFIX="clab-eda-st"
+
+    # install uv and clab-connector
+    install-uv
+    uv tool install git+https://github.com/eda-labs/clab-connector.git
+    uv tool upgrade clab-connector
 fi
 
 # Update Grafana dashboard with correct node prefix

@@ -28,6 +28,7 @@ The **EDA Telemetry Lab** demonstrates how to leverage full 100% YANG telemetry 
 This lab supports two deployment methods, each with distinct advantages:
 
 ### 1. Containerlab Deployment (Simulate=False)
+
 **Best for:** Full-featured testing with live traffic generation
 
 - **EDA Mode:** `Simulate=False` - integrates with external Containerlab nodes
@@ -38,6 +39,7 @@ This lab supports two deployment methods, each with distinct advantages:
 - **Use Case:** Production-like testing, traffic analysis
 
 ### 2. CX Deployment (Simulate=True)
+
 **Best for:** License-free learning and development
 
 - **EDA Mode:** `Simulate=True` - uses EDA's built-in simulation platform
@@ -47,14 +49,13 @@ This lab supports two deployment methods, each with distinct advantages:
 - **Node Prefix:** `eda-st-*` (e.g., `eda-st-leaf1`)
 - **Use Case:** Learning EDA, testing configurations, development environments
 
-
 ## Requirements
 
 > [!IMPORTANT]
 > **EDA Version:** 25.4 or later required
-> 
+>
 > **For Containerlab:** EDA must be installed with `Simulate=False` mode ([see docs][sim-false-doc])
-> 
+>
 > **License:** Hardware license required for Containerlab deployment only (CX is license-free)
 
 [sim-false-doc]: https://docs.eda.dev/user-guide/containerlab-integration/#installing-eda
@@ -66,10 +67,12 @@ This lab supports two deployment methods, each with distinct advantages:
 1. **Kubernetes with EDA installed:** Check your EDA installation mode matches your deployment choice
 2. **Helm:** Install from <https://helm.sh/docs/intro/install/>
 3. **kubectl:** Verify installation with:
+
     ```bash
     kubectl -n eda-system get engineconfig engine-config \
     -o jsonpath='{.status.run-status}{"\n"}'
     ```
+
     Expected output: `Started`
 
 ### Deployment Instructions
@@ -80,12 +83,15 @@ Choose your deployment method below:
 <summary><b>📦 Option A: Containerlab Deployment</b> (Requires EDA with Simulate=False)</summary>
 
 #### Step 1: Deploy Containerlab Topology
+
 ```bash
 containerlab deploy -t eda-st.clab.yaml
 ```
 
 #### Step 2: Initialize the Lab
+
 The `init.sh` script automatically:
+
 - Installs required tools (`uv`, `clab-connector`)
 - Deploys the telemetry stack via Helm
 - Configures syslog integration
@@ -96,6 +102,7 @@ The `init.sh` script automatically:
 ```
 
 #### Step 3: Start Grafana Port-Forward
+
 ```bash
 # Foreground (recommended for first-time setup)
 kubectl port-forward -n eda-telemetry service/grafana 3000:3000 --address=0.0.0.0
@@ -105,12 +112,15 @@ nohup kubectl port-forward -n eda-telemetry service/grafana 3000:3000 --address=
 ```
 
 #### Step 4: Install EDA Apps
+
 ```bash
 kubectl apply -f manifests/0000_apps.yaml
 ```
+
 Wait for apps to be ready in the EDA UI (this may take a few minutes).
 
 #### Step 5: Integrate Containerlab with EDA
+
 ```bash
 clab-connector integrate \
   --topology-data clab-eda-st/topology-data.json \
@@ -122,6 +132,7 @@ clab-connector integrate \
 > The `--skip-edge-intfs` flag is mandatory as LAG interfaces are created via manifests.
 
 #### Step 6: Deploy Configuration Manifests
+
 ```bash
 kubectl apply -f manifests
 ```
@@ -129,10 +140,12 @@ kubectl apply -f manifests
 </details>
 
 <details>
-<summary><b>🚀 Option B: CX Deployment</b> (Requires EDA with Simulate=True)</summary>
+<summary><b>🚀 Option B: CX Deployment</b></summary>
 
 #### Step 1: Initialize the Lab
+
 The `init.sh` script automatically:
+
 - Detects CX installation
 - Deploys the telemetry stack
 - Runs namespace bootstrap for CX
@@ -145,16 +158,19 @@ The `init.sh` script automatically:
 The script will automatically run `edactl namespace bootstrap eda-st` for CX deployments.
 
 #### Step 2: Start Grafana Port-Forward
+
 ```bash
 kubectl port-forward -n eda-telemetry service/grafana 3000:3000 --address=0.0.0.0
 ```
 
 #### Step 3: Install EDA Apps
+
 ```bash
 kubectl apply -f manifests/0000_apps.yaml
 ```
 
 #### Step 4: Deploy CX-Specific Manifests
+
 ```bash
 kubectl apply -f cx/manifests
 ```
@@ -176,6 +192,7 @@ After completing either deployment:
 ## Accessing Network Elements
 
 ### SR Linux Nodes
+
 Access via SSH using the appropriate prefix for your deployment:
 
 | Deployment | Node Access Example | Management Network |
@@ -184,6 +201,7 @@ Access via SSH using the appropriate prefix for your deployment:
 | CX | `ssh admin@eda-st-leaf1` | Auto-assigned |
 
 ### Linux Clients (Containerlab only)
+
 - **SSH Access:** `ssh user@clab-eda-st-server1` (password: `multit00l`)
 - **WebUI:** <http://localhost:8080> (exposed from server1)
   - Use the WebUI to simulate network failures by shutting down interfaces
@@ -225,7 +243,6 @@ Access via SSH using the appropriate prefix for your deployment:
 ### Traffic Script Overview
 
 The `traffic.sh` script orchestrates bidirectional iperf3 tests between server containers to generate realistic network traffic for telemetry observation.
-
 
 ### Traffic Parameters
 
@@ -304,41 +321,49 @@ Additional CX-specific manifests include:
 <summary><b>Pods stuck in pending state</b></summary>
 
 Check if images are still downloading:
+
 ```bash
 kubectl get pods -n eda-telemetry -o wide
 kubectl describe pod <pod-name> -n eda-telemetry
 ```
+
 </details>
 
 <details>
 <summary><b>Alloy service no external IP</b></summary>
 
 Verify MetalLB or load balancer configuration:
+
 ```bash
 kubectl get svc -n eda-telemetry
 kubectl logs -n metallb-system -l app=metallb
 ```
+
 </details>
 
 <details>
 <summary><b>CX namespace bootstrap fails</b></summary>
 
 Manually run the bootstrap:
+
 ```bash
 kubectl -n eda-system exec -it $(kubectl -n eda-system get pods \
   -l eda.nokia.com/app=eda-toolbox -o jsonpath="{.items[0].metadata.name}") \
   -- edactl namespace bootstrap eda-st
 ```
+
 </details>
 
 <details>
 <summary><b>Traffic script fails</b></summary>
 
 Ensure containers are running (Containerlab only):
+
 ```bash
 sudo docker ps | grep eda-st
 containerlab inspect -t eda-st.clab.yaml
 ```
+
 </details>
 
 ### Quick Cleanup

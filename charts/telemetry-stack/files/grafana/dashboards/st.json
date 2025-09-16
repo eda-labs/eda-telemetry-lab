@@ -2846,13 +2846,13 @@
       },
       {
         "current": {
-          "text": "clab-eda-st",
-          "value": "clab-eda-st"
+          "text": "eda-st",
+          "value": "eda-st"
         },
         "hide": 2,
         "label": "namespace",
         "name": "namespace",
-        "query": "clab-eda-st",
+        "query": "eda-st",
         "skipUrlSync": true,
         "type": "constant"
       },

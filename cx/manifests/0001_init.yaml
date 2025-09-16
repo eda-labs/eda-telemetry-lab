@@ -1,9 +1,0 @@
-apiVersion: bootstrap.eda.nokia.com/v1alpha1
-kind: Init
-metadata:
-  name: init-base
-  namespace: eda-st
-spec:
-  mgmt:
-    ipv4DHCP: true
-    ipv6DHCP: true

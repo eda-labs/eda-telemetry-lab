@@ -10,6 +10,14 @@ function install-uv {
 
 }
 
+# k8s and cx namespace
+# this is where the telemetry stack will be installed
+# and in case of CX variant, where the nodes will be created
+ST_STACK_NS=eda-telemetry
+
+# namespace where default EDA resources are
+DEFAULT_USER_NS=eda
+
 # Check if EDA CX deployment is present
 echo "Checking for EDA CX variant..."
 CX_DEP=$(kubectl get -A deployment -l eda.nokia.com/app=cx 2>/dev/null | grep eda-cx || true)
@@ -50,10 +58,10 @@ if [[ -n "$proxy_var" ]]; then
     helm install telemetry-stack ./charts/telemetry-stack \
     --set https_proxy="$proxy_var" \
     --set no_proxy="$noproxy" \
-    --create-namespace -n eda-telemetry
+    --create-namespace -n ${ST_STACK_NS}
 else
     helm install telemetry-stack ./charts/telemetry-stack \
-    --create-namespace -n eda-telemetry
+    --create-namespace -n ${ST_STACK_NS}
 fi
 
 
@@ -67,13 +75,13 @@ MAX_RETRIES=60  # Increased from 30 to 60 for initial deployments
 
 # First, wait for the alloy pod to be ready
 echo "Checking alloy pod status..."
-kubectl wait --for=condition=ready pod -l app=alloy -n eda-telemetry --timeout=600s
+kubectl wait --for=condition=ready pod -l app=alloy -n ${ST_STACK_NS} --timeout=600s
 
 # Get external allow IP when in Containerlab mode
 if [[ -z "$IS_CX" ]]; then
     # Now wait for the service to get an external IP
     while [ -z "$ALLOY_IP" ] && [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
-        ALLOY_IP=$(kubectl get svc alloy -n eda-telemetry -o jsonpath='{.status.loadBalancer.ingress[0].ip}' 2>/dev/null)
+        ALLOY_IP=$(kubectl get svc alloy -n ${ST_STACK_NS} -o jsonpath='{.status.loadBalancer.ingress[0].ip}' 2>/dev/null)
         if [ -z "$ALLOY_IP" ]; then
             echo "Waiting for external IP... (attempt $((RETRY_COUNT+1))/$MAX_RETRIES)"
             sleep 10
@@ -84,7 +92,7 @@ fi
 
 # Get internal cluster IP for Alloy when in CX mode
 if [[ "$IS_CX" == "true" ]]; then
-    ALLOY_IP=$(kubectl get svc alloy -n eda-telemetry -o jsonpath='{.spec.clusterIP}' 2>/dev/null)
+    ALLOY_IP=$(kubectl get svc alloy -n ${ST_STACK_NS} -o jsonpath='{.spec.clusterIP}' 2>/dev/null)
 fi
 
 if [ -z "$ALLOY_IP" ]; then
@@ -134,13 +142,19 @@ RESET="\033[0m"
 echo ""
 echo ""
 echo -e "${GREEN}Run the following command to access Grafana:${RESET}"
-echo -e "kubectl port-forward -n eda-telemetry service/grafana 3000:3000 --address=0.0.0.0"
+echo -e "kubectl port-forward -n ${ST_STACK_NS} service/grafana 3000:3000 --address=0.0.0.0"
 echo ""
 echo -e "${GREEN}Or run this in the background:${RESET}"
-echo -e "nohup kubectl port-forward -n eda-telemetry service/grafana 3000:3000 --address=0.0.0.0 >/dev/null 2>&1 &"
+echo -e "nohup kubectl port-forward -n ${ST_STACK_NS} service/grafana 3000:3000 --address=0.0.0.0 >/dev/null 2>&1 &"
 
 # Run namespace bootstrap for CX variant if detected
 if [[ "$IS_CX" == "true" ]]; then
+    echo ""
+    echo "Adding eda.nokia.com/bootstrap=true label to resources before bootstrapping the namespace"
+
+
+    kubectl -n ${DEFAULT_USER_NS} label nodeprofile srlinux-ghcr-25.7.1 eda.nokia.com/bootstrap=true
+
     echo ""
     echo "Running namespace bootstrap for CX variant..."
     
@@ -152,11 +166,12 @@ if [[ "$IS_CX" == "true" ]]; then
     }
 
     # Run namespace bootstrap
-    edactl namespace bootstrap eda-st
+    edactl namespace bootstrap ${ST_STACK_NS}
 
     if [ $? -eq 0 ]; then
-        echo "Namespace bootstrap completed successfully."
+        echo "Namespace ${ST_STACK_NS} bootstrap completed successfully."
     else
-        echo "Warning: Namespace bootstrap failed. It may have been already bootstrapped, or you may need to run it manually."
+        echo "Warning: Namespace ${ST_STACK_NS} bootstrap failed. It may have been already bootstrapped, or you may need to run it manually."
     fi
 fi
+

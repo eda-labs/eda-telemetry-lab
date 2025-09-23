@@ -1,0 +1,8 @@
+apiVersion: core.eda.nokia.com/v1
+kind: HttpProxy
+metadata:
+  name: grafana
+  namespace: eda-system
+spec:
+  authType: atDestination
+  rootUrl: http://grafana.eda-telemetry.svc.cluster.local

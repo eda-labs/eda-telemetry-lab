@@ -1,5 +1,6 @@
 replicaCount: 1
 imagePullPolicy: IfNotPresent
+eda_url: "docs.eda.dev" # no schema and port here, just the domain name or IP address
 
 # Grafana persistence configuration
 grafana:

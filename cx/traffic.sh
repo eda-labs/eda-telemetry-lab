@@ -26,15 +26,15 @@
 set -euo pipefail
 
 # Configuration defaults (override by exporting variables if needed)
-DURATION=${DURATION:-10000}    # Test duration in seconds
-INTERVAL=1                     # Reporting interval (seconds)
-PORT1=5201                     # Port for first set of tests (TCP/UDP)
-PORT2=5202                     # Port for second set of tests (TCP/UDP)
-PARALLEL=20                    # Number of parallel streams
-BANDWIDTH="120K"               # Bandwidth parameter
-MSS=1400                       # Maximum segment size
-WINDOW=4K                      # Window size
-CORE_NS=${CORE_NS:-"eda-system"}         # Kubernetes namespace
+DURATION=${DURATION:-10000}       # Test duration in seconds
+INTERVAL=1                        # Reporting interval (seconds)
+PORT1=5201                        # Port for first set of tests (TCP/UDP)
+PORT2=5202                        # Port for second set of tests (TCP/UDP)
+PARALLEL=20                       # Number of parallel streams
+BANDWIDTH="120K"                  # Bandwidth parameter
+MSS=1400                          # Maximum segment size
+WINDOW=4K                         # Window size
+CORE_NS=${CORE_NS:-"eda-system"}  # Kubernetes namespace
 
 # Define deployments
 DEPLOYMENT_SERVER1="cx-eda-telemetry--server1-sim"
@@ -65,13 +65,13 @@ SERVER2_IP_VLAN="10.20.2.2"   # Test over port 5202
 # Function to restart iperf3 servers to ensure clean connections
 restart_iperf_servers() {
     echo "Restarting iperf3 servers to ensure clean connections..."
-    
+
     # Kill existing iperf3 servers on server1 and server2
     kubectl exec $SERVER1_POD -n ${CORE_NS} -- pkill iperf3 >/dev/null 2>&1 || true
     kubectl exec $SERVER2_POD -n ${CORE_NS} -- pkill iperf3 >/dev/null 2>&1 || true
-    
+
     sleep 2
-    
+
     # Start new iperf3 servers on server1
     echo "  - Starting iperf3 servers on ${SERVER1_POD}"
     kubectl exec $SERVER1_POD -n ${CORE_NS} -- sh -c "iperf3 -s -p ${PORT1} > /dev/null 2>&1 &"
@@ -86,7 +86,7 @@ restart_iperf_servers() {
     echo "iperf3 servers restarted successfully"
 }
 
-# Function to start tests from server4 toward server1
+# Function to start tests from server4 towards server1
 start_server4() {
     echo "Starting iperf3 traffic from server4 (${SERVER4_POD}) to server1..."
     # Only one instance per endpoint (servers can only handle one connection at a time)
@@ -97,7 +97,7 @@ start_server4() {
     kubectl exec $SERVER4_POD -n ${CORE_NS} -- sh -c "timeout $((DURATION + 10)) iperf3 -c '${SERVER1_IP_VLAN}' -t '${DURATION}' -i '${INTERVAL}' -p '${PORT2}' -P '${PARALLEL}' -w ${WINDOW} -b '${BANDWIDTH}' -M '${MSS}' --connect-timeout 5000 > /dev/null 2>&1 &"
 }
 
-# Function to start tests from server3 toward server2
+# Function to start tests from server3 towards server2
 start_server3() {
     echo "Starting iperf3 traffic from server3 (${SERVER3_POD}) to server2..."
     # Only one instance per endpoint (servers can only handle one connection at a time)

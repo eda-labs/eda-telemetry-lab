@@ -10,6 +10,10 @@ function install-uv {
 
 }
 
+# Term colors
+GREEN="\033[0;32m"
+RESET="\033[0m"
+
 # k8s and cx namespace
 # this is where the telemetry stack will be installed
 # and in case of CX variant, where the nodes will be created
@@ -139,17 +143,16 @@ if [[ -z "$IS_CX" ]]; then
 fi
 
 
-
-# Start port-forward for Grafana
-GREEN="\033[0;32m"
-RESET="\033[0m"
-echo ""
-echo ""
-echo -e "${GREEN}Run the following command to access Grafana:${RESET}"
-echo -e "kubectl port-forward -n ${ST_STACK_NS} service/grafana 3000:3000 --address=0.0.0.0"
-echo ""
-echo -e "${GREEN}Or run this in the background:${RESET}"
-echo -e "nohup kubectl port-forward -n ${ST_STACK_NS} service/grafana 3000:3000 --address=0.0.0.0 >/dev/null 2>&1 &"
+if [[ "$IS_CX" != "true" ]]; then
+    # Start port-forward for Grafana when in clab mode
+    echo ""
+    echo ""
+    echo -e "${GREEN}Run the following command to access Grafana:${RESET}"
+    echo -e "kubectl port-forward -n ${ST_STACK_NS} service/grafana 3000:3000 --address=0.0.0.0"
+    echo ""
+    echo -e "${GREEN}Or run this in the background:${RESET}"
+    echo -e "nohup kubectl port-forward -n ${ST_STACK_NS} service/grafana 3000:3000 --address=0.0.0.0 >/dev/null 2>&1 &"
+fi
 
 # Run namespace bootstrap for CX variant if detected
 if [[ "$IS_CX" == "true" ]]; then
@@ -177,5 +180,7 @@ if [[ "$IS_CX" == "true" ]]; then
     else
         echo "Warning: Namespace ${ST_STACK_NS} bootstrap failed. It may have been already bootstrapped, or you may need to run it manually."
     fi
+
+    echo -e "${GREEN}Navigate to the ${EDA_URL}/core/httpproxy/v1/grafana/ to access Grafana${RESET}"
 fi
 

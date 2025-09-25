@@ -50,7 +50,7 @@ SERVER2_POD=$(kubectl get -n ${CORE_NS} pods \
 SERVER3_POD=$(kubectl get -n ${CORE_NS} pods \
     -l eda.nokia.com/app=sim-server3 -o jsonpath="{.items[0].metadata.name}")
 SERVER4_POD=$(kubectl get -n ${CORE_NS} pods \
-    -l eda.nokia.com/app=sim-server3 -o jsonpath="{.items[0].metadata.name}")
+    -l eda.nokia.com/app=sim-server4 -o jsonpath="{.items[0].metadata.name}")
 
 # Define endpoints based on your design:
 # Server pods

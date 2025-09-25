@@ -101,7 +101,7 @@ spec:
             - name: GF_AUTH_OAUTH_AUTO_LOGIN
               value: "true"
             - name: GF_SERVER_ROOT_URL
-              value: "https://{{ .Values.eda_url }}/core/httpproxy/v1/grafana/"
+              value: "{{ .Values.eda_url }}/core/httpproxy/v1/grafana/"
             # - name: GF_SERVER_SERVE_FROM_SUB_PATH
             #   value: "true"
           volumeMounts:

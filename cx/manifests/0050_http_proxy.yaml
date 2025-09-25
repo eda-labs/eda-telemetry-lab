@@ -1,0 +1,55 @@
+# grafana will be exposed via EDA HttpProxy
+# ${EDA_URL}/core/httpproxy/v1/grafana/
+apiVersion: core.eda.nokia.com/v1
+kind: HttpProxy
+metadata:
+  name: grafana
+  namespace: eda-system
+spec:
+  authType: atDestination
+  rootUrl: http://grafana.eda-telemetry.svc.cluster.local:3000/
+---
+# prometheus
+# watch out, "query" is part of the path here and MUST be there
+# ${EDA_URL}/core/httpproxy/v1/prometheus/query
+apiVersion: core.eda.nokia.com/v1
+kind: HttpProxy
+metadata:
+  name: prometheus
+  namespace: eda-system
+spec:
+  authType: atDestination
+  rootUrl: http://prometheus.eda-telemetry.svc.cluster.local:9090/
+---
+# # Alloy
+# # ${EDA_URL}/core/httpproxy/v1/alloy
+# apiVersion: core.eda.nokia.com/v1
+# kind: HttpProxy
+# metadata:
+#   name: alloy
+#   namespace: eda-system
+# spec:
+#   authType: atDestination
+#   rootUrl: http://alloy.eda-telemetry.svc.cluster.local:12345/
+# ---
+# # Loki
+# # ${EDA_URL}/core/httpproxy/v1/loki
+# apiVersion: core.eda.nokia.com/v1
+# kind: HttpProxy
+# metadata:
+#   name: loki
+#   namespace: eda-system
+# spec:
+#   authType: atDestination
+#   rootUrl: http://loki.eda-telemetry.svc.cluster.local:3100/
+# ---
+# # Kafka
+# # ${EDA_URL}/core/httpproxy/v1/kafka
+# apiVersion: core.eda.nokia.com/v1
+# kind: HttpProxy
+# metadata:
+#   name: kafka
+#   namespace: eda-system
+# spec:
+#   authType: atDestination
+#   rootUrl: http://kafka.eda-telemetry.svc.cluster.local:9092/

@@ -90,7 +90,7 @@ containerlab deploy -t eda-st.clab.yaml
 
 #### Step 2: Initialize the Lab
 
-The `init.sh` script automatically:
+The `init.sh` script requires a user to provide the EDA URL and the rest happens automatically:
 
 - Installs required tools (`uv`, `clab-connector`)
 - Deploys the telemetry stack via Helm
@@ -98,7 +98,7 @@ The `init.sh` script automatically:
 - Saves EDA API address
 
 ```bash
-./init.sh
+EDA_URL=https://test.eda.com:9443 ./init.sh
 ```
 
 #### Step 3: Start Grafana Port-Forward
@@ -144,7 +144,7 @@ kubectl apply -f manifests
 
 #### Step 1: Initialize the Lab
 
-The `init.sh` script automatically:
+The `init.sh` script requires a user to provide the EDA URL and the rest happens automatically:
 
 - Detects CX installation
 - Deploys the telemetry stack
@@ -152,7 +152,7 @@ The `init.sh` script automatically:
 - Configures node prefixes
 
 ```bash
-./init.sh
+EDA_URL=https://test.eda.com:9443 ./init.sh
 ```
 
 The script will automatically run `edactl namespace bootstrap eda-telemetry` for CX deployments.

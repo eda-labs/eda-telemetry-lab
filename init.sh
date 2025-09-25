@@ -15,6 +15,8 @@ function install-uv {
 # and in case of CX variant, where the nodes will be created
 ST_STACK_NS=eda-telemetry
 
+EDA_URL=${EDA_URL:-""} # e.g. https://my.eda.com or https://10.1.0.1:9443
+
 # namespace where default EDA resources are
 DEFAULT_USER_NS=eda
 
@@ -58,9 +60,11 @@ if [[ -n "$proxy_var" ]]; then
     helm install telemetry-stack ./charts/telemetry-stack \
     --set https_proxy="$proxy_var" \
     --set no_proxy="$noproxy" \
+    --set eda_url="${EDA_URL}" \
     --create-namespace -n ${ST_STACK_NS}
 else
     helm install telemetry-stack ./charts/telemetry-stack \
+    --set eda_url="${EDA_URL}" \
     --create-namespace -n ${ST_STACK_NS}
 fi
 

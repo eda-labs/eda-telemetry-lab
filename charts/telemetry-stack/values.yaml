@@ -1,6 +1,6 @@
 replicaCount: 1
 imagePullPolicy: IfNotPresent
-eda_url: "docs.eda.dev" # no schema and port here, just the domain name or IP address
+eda_url: "https://changeme.eda.dev:443" # the domain name or IP address with port number if needed
 
 # Grafana persistence configuration
 grafana:

@@ -19,8 +19,9 @@ echo "enabling eth1/eth2 interfaces on servers"
 # do a loop with server1 server2 server3 server4
 
 for server in server1 server2 server3 server4; do
+  echo "Configuring $server IP and interfaces..."
   kubectl -n ${CORE_NS} exec -it \
-    $(kubectl get -n ${CORE_NS} pods \
-    -l eda.nokia.com/app=sim-${server} -o jsonpath="{.items[0].metadata.name}") \
-    -- bash -c "ip link set eth1 up && ip link set eth2 up"
+      $(kubectl get -n ${CORE_NS} pods \
+      -l eda.nokia.com/app=sim-${server} -o jsonpath="{.items[0].metadata.name}") \
+      -- bash -c "$(cat configs/servers/$server.sh)"
 done

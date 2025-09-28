@@ -24,6 +24,9 @@ EDA_URL=${EDA_URL:-""} # e.g. https://my.eda.com or https://10.1.0.1:9443
 # namespace where default EDA resources are
 DEFAULT_USER_NS=eda
 
+echo "--> Installing Prometheus and Kafka exporters EDA apps..."
+kubectl apply -f 0000_apps.yaml
+
 # Check if EDA CX deployment is present
 echo "Checking for EDA CX variant..."
 CX_DEP=$(kubectl get -A deployment -l eda.nokia.com/app=cx 2>/dev/null | grep eda-cx || true)
@@ -32,6 +35,39 @@ if [[ -n "$CX_DEP" ]]; then
     echo "EDA CX variant detected."
     IS_CX=true
     NODE_PREFIX=${ST_STACK_NS}
+
+    echo "--> Adding eda.nokia.com/bootstrap=true label to resources before bootstrapping the namespace"
+
+
+    kubectl -n ${DEFAULT_USER_NS} label nodeprofile srlinux-ghcr-25.7.2 eda.nokia.com/bootstrap=true
+
+    echo ""
+    echo "--> Running namespace bootstrap for CX variant..."
+    
+    # Define edactl alias function
+    edactl() {
+        kubectl -n eda-system exec -it $(kubectl -n eda-system get pods \
+            -l eda.nokia.com/app=eda-toolbox -o jsonpath="{.items[0].metadata.name}") \
+            -- edactl "$@"
+    }
+
+    # Run namespace bootstrap
+    edactl namespace bootstrap ${ST_STACK_NS}
+
+    if [ $? -eq 0 ]; then
+        echo "--> Namespace ${ST_STACK_NS} bootstrap completed successfully."
+    else
+        echo "--> Warning: Namespace ${ST_STACK_NS} bootstrap failed. It may have been already bootstrapped, or you may need to run it manually."
+    fi
+
+    echo "--> Deploying topology in EDA Digital Twin (CX)"
+    bash ./cx/topology/topo.sh load cx/topology/topo.yaml cx/topology/simtopo.yaml 2>&1> /dev/null
+
+    echo "--> Waiting for nodes to sync..."
+    kubectl -n ${ST_STACK_NS} wait --for=jsonpath='{.status.node-state}'=Synced toponode --all --timeout=300s
+
+    echo "--> Configuring servers in CX topology..."
+    bash ./cx/topology/configure-servers.sh
 else
     echo "Containerlab variant detected (no CX pods found)."
     IS_CX=false
@@ -54,7 +90,7 @@ if [[ -f "$DASHBOARD_FILE" ]]; then
 fi
 
 # Install helm chart
-echo "Installing telemetry-stack helm chart..."
+echo "--> Installing telemetry-stack helm chart..."
 
 proxy_var="${https_proxy:-$HTTPS_PROXY}"
 if [[ -n "$proxy_var" ]]; then
@@ -75,14 +111,14 @@ fi
 
 
 # Wait for alloy service to be ready and get external IP
-echo "Waiting for alloy service to get external IP..."
+echo "--> Waiting for alloy service to get external IP..."
 echo "Note: First-time deployment may take several minutes while downloading container images."
 ALLOY_IP=""
 RETRY_COUNT=0
 MAX_RETRIES=60  # Increased from 30 to 60 for initial deployments
 
 # First, wait for the alloy pod to be ready
-echo "Checking alloy pod status..."
+echo "--> Checking alloy pod status..."
 kubectl wait --for=condition=ready pod -l app=alloy -n ${ST_STACK_NS} --timeout=600s
 
 # Get external allow IP when in Containerlab mode
@@ -124,7 +160,7 @@ fi
 # Update syslog.yaml with alloy IP
 # Replace the IP in the host field for main syslog config
 sed -i.bak -E "s/(\"host\": \")[^\"]+(\",)/\1${ALLOY_IP}\2/" "$SYSLOG_CONFIG_FILE"
-echo "Updated syslog host to '$ALLOY_IP' in $SYSLOG_CONFIG_FILE"
+echo "--> Updated syslog host to '$ALLOY_IP' in $SYSLOG_CONFIG_FILE"
 
 
 # Fetch and save EDA API address if not in CX mode
@@ -156,30 +192,10 @@ fi
 
 # Run namespace bootstrap for CX variant if detected
 if [[ "$IS_CX" == "true" ]]; then
-    echo ""
-    echo "Adding eda.nokia.com/bootstrap=true label to resources before bootstrapping the namespace"
 
-
-    kubectl -n ${DEFAULT_USER_NS} label nodeprofile srlinux-ghcr-25.7.1 eda.nokia.com/bootstrap=true
-
-    echo ""
-    echo "Running namespace bootstrap for CX variant..."
-    
-    # Define edactl alias function
-    edactl() {
-        kubectl -n eda-system exec -it $(kubectl -n eda-system get pods \
-            -l eda.nokia.com/app=eda-toolbox -o jsonpath="{.items[0].metadata.name}") \
-            -- edactl "$@"
-    }
-
-    # Run namespace bootstrap
-    edactl namespace bootstrap ${ST_STACK_NS}
-
-    if [ $? -eq 0 ]; then
-        echo "Namespace ${ST_STACK_NS} bootstrap completed successfully."
-    else
-        echo "Warning: Namespace ${ST_STACK_NS} bootstrap failed. It may have been already bootstrapped, or you may need to run it manually."
-    fi
+    # Create EDA resources
+    echo "--> Configuring EDA resources..."
+    kubectl apply -f cx/manifests
 
     echo -e "${GREEN}Navigate to the ${EDA_URL}/core/httpproxy/v1/grafana/ to access Grafana${RESET}"
 fi

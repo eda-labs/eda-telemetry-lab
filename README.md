@@ -27,18 +27,7 @@ The **EDA Telemetry Lab** demonstrates how to leverage full 100% YANG telemetry 
 
 This lab supports two deployment methods, each with distinct advantages:
 
-### 1. Containerlab Deployment (Simulate=False)
-
-**Best for:** Full-featured testing with live traffic generation
-
-- **EDA Mode:** `Simulate=False` - integrates with external Containerlab nodes
-- **Architecture:** SR Linux nodes and client containers run via Containerlab, telemetry stack runs in Kubernetes
-- **License:** Requires valid EDA hardware license (version 25.8+)
-- **Traffic Generation:** ✅ Full iperf3 support for realistic network testing
-- **Node Prefix:** `clab-eda-st-*` (e.g., `clab-eda-st-leaf1`)
-- **Use Case:** Production-like testing, traffic analysis
-
-### 2. CX Deployment (Simulate=True)
+### 1. CX Deployment
 
 **Best for:** License-free learning and development
 
@@ -49,14 +38,25 @@ This lab supports two deployment methods, each with distinct advantages:
 - **Node Prefix:** `eda-st-*` (e.g., `eda-st-leaf1`)
 - **Use Case:** Learning EDA, testing configurations, development environments
 
+### 2. Containerlab Deployment
+
+**Best for:** Full-featured testing with live traffic generation
+
+- **EDA Mode:** `Simulate=False` - integrates with external Containerlab nodes
+- **Architecture:** SR Linux nodes and client containers run via Containerlab, telemetry stack runs in Kubernetes
+- **License:** Requires valid EDA hardware license (version 25.8+)
+- **Traffic Generation:** ✅ Full iperf3 support for realistic network testing
+- **Node Prefix:** `clab-eda-st-*` (e.g., `clab-eda-st-leaf1`)
+- **Use Case:** Production-like testing, traffic analysis
+
 ## Requirements
 
 > [!IMPORTANT]
-> **EDA Version:** 25.8 or later required
+> **EDA Version:** 25.8.2 or later required
 >
-> **For Containerlab:** EDA must be installed with `Simulate=False` mode ([see docs][sim-false-doc])
+> **For Containerlab:** EDA must be installed with `Simulate=False` mode ([see docs][sim-false-doc]) and a valid EDA license is required.
 >
-> **License:** Hardware license required for Containerlab deployment only (CX is license-free)
+> <small>License is not required for CX-based deployment.</small>
 
 [sim-false-doc]: https://docs.eda.dev/user-guide/containerlab-integration/#installing-eda
 
@@ -75,74 +75,9 @@ This lab supports two deployment methods, each with distinct advantages:
 
     Expected output: `Started`
 
-### Deployment Instructions
+## 🚀 CX Deployment Instructions
 
-Choose your deployment method below:
-
-<details>
-<summary><b>📦 Option A: Containerlab Deployment</b> (Requires EDA with Simulate=False)</summary>
-
-#### Step 1: Deploy Containerlab Topology
-
-```bash
-containerlab deploy -t eda-st.clab.yaml
-```
-
-#### Step 2: Initialize the Lab
-
-The `init.sh` script requires a user to provide the EDA URL and the rest happens automatically:
-
-- Installs required tools (`uv`, `clab-connector`)
-- Deploys the telemetry stack via Helm
-- Configures syslog integration
-- Saves EDA API address
-
-```bash
-EDA_URL=https://test.eda.com:9443 ./init.sh
-```
-
-#### Step 3: Start Grafana Port-Forward
-
-```bash
-# Foreground (recommended for first-time setup)
-kubectl port-forward -n eda-telemetry service/grafana 3000:3000 --address=0.0.0.0
-
-# Or background
-nohup kubectl port-forward -n eda-telemetry service/grafana 3000:3000 --address=0.0.0.0 >/dev/null 2>&1 &
-```
-
-#### Step 4: Install EDA Apps
-
-```bash
-kubectl apply -f manifests/0000_apps.yaml
-```
-
-Wait for apps to be ready in the EDA UI (this may take a few minutes).
-
-#### Step 5: Integrate Containerlab with EDA
-
-```bash
-clab-connector integrate \
-  --topology-data clab-eda-st/topology-data.json \
-  --eda-url "https://$(cat .eda_api_address)" \
-  --skip-edge-intfs
-```
-
-> [!IMPORTANT]
-> The `--skip-edge-intfs` flag is mandatory as LAG interfaces are created via manifests.
-
-#### Step 6: Deploy Configuration Manifests
-
-```bash
-kubectl apply -f manifests
-```
-
-</details>
-
-<details>
-<summary><b>🚀 Option B: CX Deployment</b></summary>
-
-#### Step 1: Initialize the Lab
+### Step 1: Initialize the Lab
 
 The `init.sh` script requires a user to provide the EDA URL and the rest happens automatically:
 
@@ -157,19 +92,7 @@ EDA_URL=https://test.eda.com:9443 ./init.sh
 
 The script will automatically run `edactl namespace bootstrap eda-telemetry` for CX deployments.
 
-#### Step 2: Start Grafana Port-Forward
-
-```bash
-kubectl port-forward -n eda-telemetry service/grafana 3000:3000 --address=0.0.0.0
-```
-
-#### Step 3: Install EDA Apps
-
-```bash
-kubectl apply -f manifests/0000_apps.yaml
-```
-
-#### Step 4: Deploy CX-specific Lab Resources
+### Step 2: Configure EDA Resources
 
 ```bash
 kubectl apply -f cx/manifests

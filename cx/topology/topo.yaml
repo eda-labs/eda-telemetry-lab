@@ -6,8 +6,8 @@ srl_leaf_template: &srl_leaf_template
   spec:
     operatingSystem: srl
     platform: 7220 IXR-D2L
-    version: 25.7.1
-    nodeProfile: srlinux-ghcr-25.7.1
+    version: 25.7.2
+    nodeProfile: srlinux-ghcr-25.7.2
 
 srl_spine_template: &srl_spine_template
   labels:
@@ -16,8 +16,8 @@ srl_spine_template: &srl_spine_template
   spec:
     operatingSystem: srl
     platform: 7220 IXR-D3L
-    version: 25.7.1
-    nodeProfile: srlinux-ghcr-25.7.1
+    version: 25.7.2
+    nodeProfile: srlinux-ghcr-25.7.2
 
 # Link labels
 interswitch_labels: &interswitch_labels
@@ -46,7 +46,7 @@ items:
           <<: *srl_spine_template
 
       links:
-######## ISL links #########
+        ######## ISL links #########
         - name: leaf1-spine1
           labels:
             <<: *interswitch_labels
@@ -151,7 +151,7 @@ items:
                   node: spine2
                   interface: ethernet-1-4
 
-######## Edge links #########
+        ######## Edge links #########
 
         - name: l1-l2-eth-1-1-lag-1
           labels:
@@ -212,91 +212,3 @@ items:
                 local:
                   node: leaf4
                   interface: ethernet-1-2
-
-        # - name: leaf1-ethernet-1-1
-        #   labels:
-        #     <<: *edge_labels
-        #   encapType: dot1q
-        #   spec:
-        #     links:
-        #       - type: edge
-        #         local:
-        #           node: leaf1
-        #           interface: ethernet-1-1
-
-        # - name: leaf1-ethernet-1-2
-        #   labels:
-        #     <<: *edge_labels
-        #   encapType: dot1q
-        #   spec:
-        #     links:
-        #       - type: edge
-        #         local:
-        #           node: leaf1
-        #           interface: ethernet-1-2
-
-        # - name: leaf2-ethernet-1-1
-        #   labels:
-        #     <<: *edge_labels
-        #   encapType: dot1q
-        #   spec:
-        #     links:
-        #       - type: edge
-        #         local:
-        #           node: leaf2
-        #           interface: ethernet-1-1
-
-        # - name: leaf2-ethernet-1-2
-        #   labels:
-        #     <<: *edge_labels
-        #   encapType: dot1q
-        #   spec:
-        #     links:
-        #       - type: edge
-        #         local:
-        #           node: leaf1
-        #           interface: ethernet-1-2
-
-        # - name: leaf3-ethernet-1-1
-        #   labels:
-        #     <<: *edge_labels
-        #   encapType: dot1q
-        #   spec:
-        #     links:
-        #       - type: edge
-        #         local:
-        #           node: leaf3
-        #           interface: ethernet-1-1
-
-        # - name: leaf3-ethernet-1-2
-        #   labels:
-        #     <<: *edge_labels
-        #   encapType: dot1q
-        #   spec:
-        #     links:
-        #       - type: edge
-        #         local:
-        #           node: leaf3
-        #           interface: ethernet-1-2
-
-        # - name: leaf4-ethernet-1-1
-        #   labels:
-        #     <<: *edge_labels
-        #   encapType: dot1q
-        #   spec:
-        #     links:
-        #       - type: edge
-        #         local:
-        #           node: leaf4
-        #           interface: ethernet-1-1
-
-        # - name: leaf4-ethernet-1-2
-        #   labels:
-        #     <<: *edge_labels
-        #   encapType: dot1q
-        #   spec:
-        #     links:
-        #       - type: edge
-        #         local:
-        #           node: leaf4
-        #           interface: ethernet-1-2

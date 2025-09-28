@@ -1,5 +1,14 @@
 # 📦 Option A: Containerlab Deployment
 
+> [!IMPORTANT]
+> **EDA Version:** 25.8.2 or later required
+>
+> **For Containerlab:** EDA must be installed with `Simulate=False` mode ([see docs][sim-false-doc]) and a valid EDA license is required.
+>
+> <small>License is not required for CX-based deployment.</small>
+
+[sim-false-doc]: https://docs.eda.dev/user-guide/containerlab-integration/#installing-eda
+
 Requires EDA with `Simulate=False`.
 
 ## Step 1: Deploy Containerlab Topology

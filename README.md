@@ -53,16 +53,6 @@ This lab supports two deployment methods, each with distinct advantages:
 
 > [!IMPORTANT]
 > **EDA Version:** 25.8.2 or later required
->
-> **For Containerlab:** EDA must be installed with `Simulate=False` mode ([see docs][sim-false-doc]) and a valid EDA license is required.
->
-> <small>License is not required for CX-based deployment.</small>
-
-[sim-false-doc]: https://docs.eda.dev/user-guide/containerlab-integration/#installing-eda
-
-## Prerequisites
-
-### Common Requirements
 
 1. **Kubernetes with EDA installed:** Check your EDA installation mode matches your deployment choice
 2. **Helm:** Install from <https://helm.sh/docs/intro/install/>
@@ -77,14 +67,13 @@ This lab supports two deployment methods, each with distinct advantages:
 
 ## 🚀 CX Deployment Instructions
 
-### Step 1: Initialize the Lab
-
 The `init.sh` script requires a user to provide the EDA URL and the rest happens automatically:
 
 - Detects CX installation
+- Deploys the topology nodes in the `eda-telemetry` namespace
 - Deploys the telemetry stack
-- Runs namespace bootstrap for CX
-- Configures node prefixes
+- Configures the servers interfaces
+- Configures EDA resources for exporting telemetry, logs and alarms
 
 ```bash
 EDA_URL=https://test.eda.com:9443 ./init.sh
@@ -92,16 +81,8 @@ EDA_URL=https://test.eda.com:9443 ./init.sh
 
 The script will automatically run `edactl namespace bootstrap eda-telemetry` for CX deployments.
 
-### Step 2: Configure EDA Resources
-
-```bash
-kubectl apply -f cx/manifests
-```
-
 > [!NOTE]
 > CX deployment creates SR Linux nodes directly in EDA, so no Containerlab integration is needed.
-
-</details>
 
 ### Verify Deployment
 

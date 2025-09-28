@@ -9,7 +9,7 @@ spec:
     - appId: prom.eda.nokia.com
       catalog: eda-catalog-builtin-apps
       version:
-        value: v4.0.0
+        value: v4.1.0
     - appId: kafka.eda.nokia.com
       catalog: eda-catalog-builtin-apps
       version:

@@ -25,7 +25,6 @@ interswitch_labels: &interswitch_labels
 
 edge_labels: &edge_labels
   eda.nokia.com/role: edge
-  eda.nokia.com/macvrf202: "true"
   eda.nokia.com/macvrf1001: "true"
 
 ####### TOPOLOGY #######
@@ -156,6 +155,7 @@ items:
         - name: l1-l2-eth-1-1-lag-1
           labels:
             <<: *edge_labels
+            eda.nokia.com/macvrf201: "true"
           encapType: dot1q
           spec:
             links:
@@ -171,6 +171,7 @@ items:
         - name: l1-l2-eth-1-2-lag-2
           labels:
             <<: *edge_labels
+            eda.nokia.com/macvrf202: "true"
           encapType: dot1q
           spec:
             links:
@@ -186,6 +187,7 @@ items:
         - name: l3-l4-eth-1-1-lag-1
           labels:
             <<: *edge_labels
+            eda.nokia.com/macvrf201: "true"
           encapType: dot1q
           spec:
             links:
@@ -201,6 +203,7 @@ items:
         - name: l3-l4-eth-1-2-lag-2
           labels:
             <<: *edge_labels
+            eda.nokia.com/macvrf202: "true"
           encapType: dot1q
           spec:
             links:

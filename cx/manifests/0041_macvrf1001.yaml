@@ -5,26 +5,18 @@ metadata:
   namespace: eda-telemetry
 spec:
   bridgeDomains:
-  - name: macvrf1001
-    spec:
-      eviPool: evi-pool
-      l2proxyARPND:
-        proxyARP: false
-        proxyND: false
-      macAging: 300
-      macDuplicationDetection:
-        action: StopLearning
-        enabled: true
-        holdDownTime: 9
-        monitoringWindow: 3
-        numMoves: 5
-      tunnelIndexPool: tunnel-index-pool
-      vniPool: vni-pool
-      macLimit: 250
+    - name: macvrf1001
+      spec:
+        eviPool: evi-pool
+        macAging: 300
+        macLearning: true
+        tunnelIndexPool: tunnel-index-pool
+        type: EVPNVXLAN
+        vniPool: vni-pool
   vlans:
-  - name: macvrf1001
-    spec:
-      bridgeDomain: macvrf1001
-      interfaceSelector:
-      - eda.nokia.com/macvrf1001
-      vlanID: "1001"
+    - name: macvrf1001
+      spec:
+        bridgeDomain: macvrf1001
+        interfaceSelector:
+          - eda.nokia.com/macvrf1001
+        vlanID: "1001"

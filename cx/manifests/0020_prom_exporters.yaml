@@ -48,6 +48,8 @@ spec:
         .namespace.resources.cr.protocols_eda_nokia_com.v1.defaultbgpgroup
       fields:
         - status.operationalState
+        - status.numPeers
+        - status.numPeersOperDown
       metricName:
         regex: namespace_(.+)
         replacement: $1

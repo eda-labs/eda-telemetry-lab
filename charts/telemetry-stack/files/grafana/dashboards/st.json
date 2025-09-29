@@ -896,7 +896,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "resources_cr_protocols_eda_nokia_com_v1alpha1_defaultbgpgroup_status_numPeers{namespace_name='$namespace'} - on(namespace_name, instance, job, defaultbgpgroup_name) resources_cr_protocols_eda_nokia_com_v1alpha1_defaultbgpgroup_status_numPeersOperDown{namespace_name='$namespace'}",
+          "expr": "resources_cr_protocols_eda_nokia_com_v1_defaultbgpgroup_status_numPeers{namespace_name='$namespace'} - on(namespace_name, instance, job, defaultbgpgroup_name) resources_cr_protocols_eda_nokia_com_v1_defaultbgpgroup_status_numPeersOperDown{namespace_name='$namespace'}",
           "instant": false,
           "legendFormat": "{{defaultbgpgroup_name}}",
           "range": true,

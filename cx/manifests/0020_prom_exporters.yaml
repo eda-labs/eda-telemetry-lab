@@ -81,10 +81,16 @@ spec:
   exports:
     - path: .namespace.node.srl.interface
       mappings:
-        - destination: "1"
-          source: up
-        - destination: "0"
-          source: down
+        # admin state mappings
+        - source: enable
+          destination: "1"
+        - source: disable
+          destination: "0"
+        # oper state mappings
+        - source: up
+          destination: "1"
+        - source: down
+          destination: "0"
       metricName:
         regex: namespace_(.+)
         replacement: $1

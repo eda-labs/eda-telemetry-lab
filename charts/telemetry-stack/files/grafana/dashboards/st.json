@@ -359,7 +359,7 @@
       },
       "gridPos": {
         "h": 4,
-        "w": 10,
+        "w": 5,
         "x": 0,
         "y": 8
       },
@@ -2124,6 +2124,79 @@
     },
     {
       "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "axisPlacement": "auto",
+            "fillOpacity": 56,
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 0
+          },
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red"
+              },
+              {
+                "color": "green",
+                "value": 1
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 16,
+        "w": 12,
+        "x": 12,
+        "y": 70
+      },
+      "id": 58,
+      "interval": "5s",
+      "options": {
+        "colWidth": 0.9,
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "rowHeight": 0.8,
+        "showValue": "never",
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.0.2",
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "node_srl_interface_oper_state{node_name=\"$NE\", namespace_name=\"$namespace\"}\n  * on(interface_name, node_name, namespace_name)\n    (node_srl_interface_admin_state{node_name=\"$NE\", namespace_name=\"$namespace\"} == 1)",
+          "legendFormat": "{{interface_name}}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Port Oper State",
+      "type": "status-history"
+    },
+    {
+      "datasource": {
         "default": false,
         "type": "prometheus",
         "uid": "PBFA97CFB590B2093"
@@ -2186,8 +2259,8 @@
       "gridPos": {
         "h": 8,
         "w": 12,
-        "x": 12,
-        "y": 70
+        "x": 0,
+        "y": 78
       },
       "id": 30,
       "options": {
@@ -2226,7 +2299,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 78
+        "y": 86
       },
       "id": 35,
       "panels": [],
@@ -2266,7 +2339,7 @@
         "h": 3,
         "w": 3,
         "x": 0,
-        "y": 79
+        "y": 87
       },
       "id": 52,
       "options": {
@@ -2335,7 +2408,7 @@
         "h": 13,
         "w": 14,
         "x": 3,
-        "y": 79
+        "y": 87
       },
       "id": 37,
       "options": {
@@ -2391,7 +2464,7 @@
         "h": 13,
         "w": 7,
         "x": 17,
-        "y": 79
+        "y": 87
       },
       "id": 51,
       "options": {
@@ -2467,7 +2540,7 @@
         "h": 10,
         "w": 3,
         "x": 0,
-        "y": 82
+        "y": 90
       },
       "id": 54,
       "options": {
@@ -2583,7 +2656,7 @@
         "h": 5,
         "w": 24,
         "x": 0,
-        "y": 92
+        "y": 100
       },
       "id": 38,
       "interval": "1m",
@@ -2626,8 +2699,8 @@
     "list": [
       {
         "current": {
-          "text": "spine1",
-          "value": "spine1"
+          "text": "leaf1",
+          "value": "leaf1"
         },
         "datasource": {
           "type": "prometheus",
@@ -2721,10 +2794,12 @@
       {
         "current": {
           "text": [
-            "leaf1"
+            "leaf2",
+            "leaf3"
           ],
           "value": [
-            "leaf1"
+            "leaf2",
+            "leaf3"
           ]
         },
         "datasource": {
@@ -2799,5 +2874,5 @@
   "timezone": "",
   "title": "Telemetry Playground",
   "uid": "Telemetry_Playground",
-  "version": 6
+  "version": 7
 }

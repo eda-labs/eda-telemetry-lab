@@ -15,6 +15,7 @@ spec:
     linkSelector:
       - eda.nokia.com/role=interSwitch
     unnumbered: IPV6
+    ipMTU: 9200
   systemPoolIPV4: systemipv4-pool
   underlayProtocol:
     protocol:

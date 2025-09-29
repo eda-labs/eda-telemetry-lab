@@ -28,7 +28,7 @@ spec:
           - ipv4Address:
               ipPrefix: 10.20.1.254/24
               primary: false
-        ipMTU: 9394
+        ipMTU: 9200
         router: ipvrf2001
     - name: macvrf202-irb
       spec:
@@ -37,7 +37,7 @@ spec:
           - ipv4Address:
               ipPrefix: 10.20.2.254/24
               primary: false
-        ipMTU: 9394
+        ipMTU: 9200
         router: ipvrf2001
   routers:
     - name: ipvrf2001

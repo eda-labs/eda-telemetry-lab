@@ -45,7 +45,9 @@ metadata:
 spec:
   exports:
     - path: >-
-        .namespace.resources.cr-status.protocols_eda_nokia_com.v1alpha1.defaultbgpgroup.status
+        .namespace.resources.cr.protocols_eda_nokia_com.v1.defaultbgpgroup
+      fields:
+        - status.operationalState
       metricName:
         regex: namespace_(.+)
         replacement: $1
@@ -59,7 +61,10 @@ metadata:
 spec:
   exports:
     - path: >-
-        .namespace.resources.cr-status.routing_eda_nokia_com.v1alpha1.defaultrouter.status
+        .namespace.resources.cr.routing_eda_nokia_com.v1alpha1.defaultrouter
+      fields:
+        - status.health
+        - status.operationalState
       metricName:
         regex: namespace_(.+)
         replacement: $1
@@ -148,7 +153,10 @@ metadata:
 spec:
   exports:
     - path: >-
-        .namespace.resources.cr-status.fabrics_eda_nokia_com.v1alpha1.fabric.status
+        .namespace.resources.cr.fabrics_eda_nokia_com.v1alpha1.fabric
+      fields:
+        - status.health
+        - status.operationalState
       metricName:
         regex: namespace_(.+)
         replacement: $1
@@ -169,7 +177,9 @@ metadata:
 spec:
   exports:
     - path: >-
-        .namespace.resources.cr-status.services_eda_nokia_com.v1alpha1.virtualnetwork.status
+        .namespace.resources.cr.services_eda_nokia_com.v1.virtualnetwork
+      fields:
+        - status.operationalState
       metricName:
         regex: namespace_(.+)
         replacement: $1
@@ -180,3 +190,5 @@ spec:
           destination: "0"
         - source: degraded
           destination: "2"
+        - source: unknown
+          destination: "3"

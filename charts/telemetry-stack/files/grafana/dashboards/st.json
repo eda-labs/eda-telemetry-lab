@@ -107,7 +107,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "resources_cr_status_fabrics_eda_nokia_com_v1alpha1_fabric_status_health{namespace_name='$namespace'}",
+          "expr": "resources_cr_fabrics_eda_nokia_com_v1alpha1_fabric_status_health{namespace_name='$namespace'}",
           "instant": false,
           "legendFormat": " ",
           "range": true,
@@ -260,6 +260,11 @@
                   "color": "orange",
                   "index": 2,
                   "text": "DEGRADED"
+                },
+                "3": {
+                  "color": "#808080",
+                  "index": 3,
+                  "text": "UNKNOWN"
                 }
               },
               "type": "value"
@@ -308,7 +313,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "resources_cr_status_services_eda_nokia_com_v1alpha1_virtualnetwork_status_operationalState",
+          "expr": "resources_cr_services_eda_nokia_com_v1_virtualnetwork_status_operationalState",
           "instant": false,
           "legendFormat": " {{virtualnetwork_name}}",
           "range": true,
@@ -387,7 +392,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "code",
-          "expr": "resources_cr_status_routing_eda_nokia_com_v1alpha1_defaultrouter_status_health{namespace_name='$namespace'}",
+          "expr": "resources_cr_routing_eda_nokia_com_v1alpha1_defaultrouter_status_health{namespace_name='$namespace'}",
           "instant": false,
           "legendFormat": "{{defaultrouter_name}}",
           "range": true,
@@ -891,7 +896,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "resources_cr_status_protocols_eda_nokia_com_v1alpha1_defaultbgpgroup_status_numPeers{namespace_name='$namespace'} - on(namespace_name, instance, job, defaultbgpgroup_name) resources_cr_status_protocols_eda_nokia_com_v1alpha1_defaultbgpgroup_status_numPeersOperDown{namespace_name='$namespace'}",
+          "expr": "resources_cr_protocols_eda_nokia_com_v1alpha1_defaultbgpgroup_status_numPeers{namespace_name='$namespace'} - on(namespace_name, instance, job, defaultbgpgroup_name) resources_cr_protocols_eda_nokia_com_v1alpha1_defaultbgpgroup_status_numPeersOperDown{namespace_name='$namespace'}",
           "instant": false,
           "legendFormat": "{{defaultbgpgroup_name}}",
           "range": true,

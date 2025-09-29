@@ -114,7 +114,7 @@
           "refId": "A"
         }
       ],
-      "title": "Fabric health",
+      "title": "Fabric Health",
       "type": "heatmap"
     },
     {
@@ -408,7 +408,7 @@
           "refId": "B"
         }
       ],
-      "title": "BGP peers",
+      "title": "BGP Peers",
       "transformations": [
         {
           "id": "configFromData",
@@ -821,7 +821,7 @@
           "refId": "A"
         }
       ],
-      "title": "Node Health",
+      "title": "Default VRF Health",
       "transformations": [
         {
           "id": "renameByRegex",
@@ -1655,61 +1655,18 @@
             "fixedColor": "dark-yellow",
             "mode": "thresholds"
           },
+          "fieldMinMax": false,
           "mappings": [],
-          "max": 4,
           "thresholds": {
             "mode": "percentage",
             "steps": [
               {
                 "color": "dark-blue"
-              },
-              {
-                "color": "red",
-                "value": 80
               }
             ]
           }
         },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Up Peers"
-            },
-            "properties": [
-              {
-                "id": "thresholds",
-                "value": {
-                  "mode": "absolute",
-                  "steps": [
-                    {
-                      "color": "dark-blue"
-                    }
-                  ]
-                }
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Total Peers"
-            },
-            "properties": [
-              {
-                "id": "thresholds",
-                "value": {
-                  "mode": "absolute",
-                  "steps": [
-                    {
-                      "color": "dark-blue"
-                    }
-                  ]
-                }
-              }
-            ]
-          }
-        ]
+        "overrides": []
       },
       "gridPos": {
         "h": 5,
@@ -1839,11 +1796,10 @@
             "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "code",
-          "expr": "node_srl_network_instance_protocols_bgp_statistics_total_received_routes{network_instance_name=\"default\",node_name=\"$NE\", namespace_name='$namespace'}",
-          "format": "time_series",
+          "expr": "node_srl_network_instance_protocols_bgp_statistics_total_active_routes{network_instance_name=\"default\",node_name=\"$NE\", namespace_name='$namespace'}",
           "instant": false,
           "interval": "",
-          "legendFormat": "Total Received Routes",
+          "legendFormat": "Total Active Routes",
           "refId": "A"
         },
         {
@@ -1852,10 +1808,11 @@
             "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "code",
-          "expr": "node_srl_network_instance_protocols_bgp_statistics_total_active_routes{network_instance_name=\"default\",node_name=\"$NE\", namespace_name='$namespace'}",
+          "expr": "node_srl_network_instance_protocols_bgp_statistics_total_received_routes{network_instance_name=\"default\",node_name=\"$NE\", namespace_name='$namespace'}",
+          "format": "time_series",
           "instant": false,
           "interval": "",
-          "legendFormat": "Total Active Routes",
+          "legendFormat": "Total Received Routes",
           "refId": "B"
         }
       ],
@@ -1975,17 +1932,13 @@
             "mode": "thresholds"
           },
           "decimals": 0,
+          "fieldMinMax": false,
           "mappings": [],
-          "max": 9,
           "thresholds": {
-            "mode": "absolute",
+            "mode": "percentage",
             "steps": [
               {
-                "color": "green"
-              },
-              {
-                "color": "red",
-                "value": 80
+                "color": "blue"
               }
             ]
           }
@@ -2055,6 +2008,24 @@
         }
       ],
       "title": "Routing Stats",
+      "transformations": [
+        {
+          "id": "configFromData",
+          "options": {
+            "applyTo": {
+              "id": "byName",
+              "options": "IPv4 Active Routes"
+            },
+            "configRefId": "B",
+            "mappings": [
+              {
+                "fieldName": "IPv4 Total Routes",
+                "handlerKey": "max"
+              }
+            ]
+          }
+        }
+      ],
       "type": "gauge"
     },
     {
@@ -2655,8 +2626,8 @@
     "list": [
       {
         "current": {
-          "text": "leaf2",
-          "value": "leaf2"
+          "text": "spine1",
+          "value": "spine1"
         },
         "datasource": {
           "type": "prometheus",
@@ -2828,5 +2799,5 @@
   "timezone": "",
   "title": "Telemetry Playground",
   "uid": "Telemetry_Playground",
-  "version": 5
+  "version": 6
 }

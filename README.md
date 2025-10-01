@@ -108,32 +108,38 @@ The shell is opened for the `admin` user.
   <img src="./docs/eda_telemetry_lab-tooling.drawio.svg" alt="Drawio Example">
 </p>
 
-- **SR Linux Telemetry:**
-  Nodes stream full YANG telemetry data.
-- **EDA Exporters:**
-  - **Prometheus Exporter:** EDA exports detailed telemetry metrics to Prometheus.
-  - **Kafka Exporter:** Alarms and deviations are forwarded via EDA’s Kafka exporter, enabling proactive monitoring and alerting.
-- **Prometheus:**
-  Stores the telemetry data.
-- **Grafana:**
-  Visualize metrics and dashboards at <http://grafana:3000>. For admin tasks, use admin/admin.
+Nokia EDA is the single interface for the telemetry data collection and export. As part of its normal operation, EDA collects telemetry data such as node-scoped metrics, service metrics, alarms and deviations. The data is then exported to the downstream systems using the following EDA applications:
+
+- **Prometheus Exporter:** Using the `Export` resource the admin instructs the application what metrics to make available in a Prometheus format. See the [`0020_prom_exporters.yaml`](./cx/manifests/0020_prom_exporters.yaml) manifest for details.  
+    The Prometheus server running in the k8s cluster is configured to scrape the metrics exported by the Prometheus exporter app.  
+    The Prometheus UI can be accessed via:
+    > `${EDA_URL}/core/httpproxy/v1/prometheus/query`
+- **Kafka Exporter:** Using the `Producer` resource the admin instructs the application to send deviations and alarms to the Kafka broker running in the cluster. See the [`0021_kafka_exporter.yaml`](./cx/manifests/0021_kafka_exporter.yaml) manifest for details.  
+    The Grafana Alloy application is configured to consume the alarms and deviations from Kafka, process them and forward them to Loki for storage.
 
 ### Logging
 
-- **Alloy & Loki:**
-  Alloy collects SR Linux syslogs and processes Kafka data, then sends it to Loki for storage.
-  Alloy has a web interface at <http://alloy:12345>.
-- **Prometheus UI:**
-  Check out real-time graphs at <http://prometheus:9090/graph>.
+The Syslog messages are sent directly from the SR Linux nodes to Grafana Alloy, which processes and forwards them to Loki for storage.
 
-## Traffic Generation & Control
+## Services and Traffic Generation
 
-> [!NOTE]
-> Traffic generation is only available in **Containerlab deployments**. CX deployments do not support iperf3.
+To simulate a datacenter pod, the lab features four Linux containers acting as servers connected to the leaf switches.
 
-### Traffic Script Overview
+Servers are configured with bond interfaces and a pair of VLANs simulating two different tenants in the datacenter. The tenants have their workloads connected using two distinct services:
 
-The `traffic.sh` script orchestrates bidirectional iperf3 tests between server containers to generate realistic network traffic for telemetry observation.
+- Layer 2 service using MAC VRF
+- Layer 3 service using a combination of the MAC VRF and IP VRF
+
+The following diagram illustrates the services and the participating VLANs:
+
+![high-level-svc](https://gitlab.com/-/project/7617705/uploads/641816f3d1380ed2ebdacbee7f7d28c9/CleanShot_2025-10-01_at_15.35.43.png)
+
+<details>
+<summary><b>Detailed connectivity diagram</b></summary>
+![detailed-svc](https://gitlab.com/-/project/7617705/uploads/1f1ccf12b0261b861ae6652d427b79ea/CleanShot_2025-10-01_at_15.36.18.png)
+</details>
+
+The `./cx/traffic.sh` script orchestrates bidirectional iperf3 tests between server containers to generate realistic network traffic for telemetry observation.
 
 ### Traffic Parameters
 
@@ -141,7 +147,7 @@ The `traffic.sh` script orchestrates bidirectional iperf3 tests between server c
 |-----------|--------------|---------------------|
 | Duration | 10000 seconds | `DURATION` |
 | Bandwidth | 120K | - |
-| Parallel Streams | 10 | - |
+| Parallel Streams | 20 | - |
 | MSS | 1400 | - |
 | Report Interval | 1 second | - |
 
@@ -149,17 +155,17 @@ The `traffic.sh` script orchestrates bidirectional iperf3 tests between server c
 
 ```bash
 # Start all traffic flows
-./traffic.sh start all
+./cx/traffic.sh start all
 
 # Start specific server traffic
-./traffic.sh start server3
-./traffic.sh start server4
+./cx/traffic.sh start server3
+./cx/traffic.sh start server4
 
 # Stop all traffic
-./traffic.sh stop all
+./cx/traffic.sh stop all
 
 # Custom duration (60 seconds)
-DURATION=60 ./traffic.sh start all
+DURATION=60 ./cx/traffic.sh start all
 ```
 
 > [!TIP]

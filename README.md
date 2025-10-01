@@ -1,88 +1,76 @@
-# EDA Telemetry Lab
+# Nokia EDA Telemetry Lab
 
 [![Discord][discord-svg]][discord-url]
 
 [discord-svg]: https://gitlab.com/rdodin/pics/-/wikis/uploads/b822984bc95d77ba92d50109c66c7afe/join-discord-btn.svg
 [discord-url]: https://eda.dev/discord
 
-The **EDA Telemetry Lab** demonstrates how to leverage full 100% YANG telemetry support integrated with [EDA (Event Driven Automation)](https://docs.eda.dev/). In this lab, [Nokia SR Linux](https://learn.srlinux.dev/) nodes are dynamically configured via EDA and integrated into a modern telemetry and logging stack that includes Prometheus, Grafana, Loki, Alloy and Kafka exporters for alarms and deviations.
+The great divide between the tools network engineers use for configuration and those used for telemetry and monitoring leaves a significant gap in operational efficiency. As engineers build abstractions to configure the network and deploy the services on top of it, they also need to ensure that they can monitor the health of these services, and not just individual node-scoped metrics.
+
+[**Nokia EDA (Event Driven Automation)**](https://docs.eda.dev/) platform enables its users not only solve the challenge of configuring the infrastructure services, but also to get real-time state associated with them.
+
+In this lab, a leaf and spine network composed of six [Nokia SR Linux](https://learn.srlinux.dev/) data center switches is managed by EDA and integrated into a modern telemetry and logging stack powered by Prometheus, Grafana, Loki, Alloy and Kafka open-source projects.
+
+![pic](https://gitlab.com/-/project/7617705/uploads/fe986438695fb7116fe26807a8509a64/CleanShot_2025-09-30_at_18.06.40.png)
+
+The _all-in-one_ lab features the Grafana dashboard that takes the central stage of this lab, providing real-time insights into the health of the fabric and the network services, as well as serving as a single pane of glass for log aggregation and alarm monitoring:
 
 <https://github.com/user-attachments/assets/38efb03a-c4aa-4a52-820a-b96d8a7005ea>
 
-- **EDA-Driven Configuration:** Automate SR Linux configuration and telemetry subscriptions with EDA.
-- **Modern Telemetry Stack:** Export telemetry data using EDA’s Prometheus exporter and monitor alarms/deviations via the Kafka exporter.
-- **Enhanced Logging:** Capture and aggregate system logs using Alloy and Loki.
-- **Deployment Options:** Deploy with either Containerlab (clab) for live traffic or CX (Simulation Platform) for license-flexible testing.
-- **Traffic:** Generate and control iperf3 traffic to see dynamic network metrics in action.
-
 ## Lab Components
 
-- **Fabric:** A Clos topology of Nokia SR Linux nodes.
-- **Telemetry:** SR Linux nodes stream full YANG telemetry data. EDA exports these metrics via its Prometheus exporter and sends alarms/deviations using its Kafka exporter.
-- **Visualization:** Grafana dashboards (with the [Flow Plugin](https://grafana.com/grafana/plugins/andrewbmchugh-flow-panel/)) provide real-time insights into network metrics.
-- **Alarms:** Data is collected by Kafka, processed by Alloy and aggregated in Loki, with logs viewable in Grafana.
-- **Traffic Generation:** Use iperf3 tests and provided scripts to simulate live traffic across the network.
-
-## Deployment Variants
-
-This lab supports two deployment methods, each with distinct advantages:
-
-### 1. CX Deployment
-
-**Best for:** License-free learning and development
-
-- **EDA Mode:** `Simulate=True` - uses EDA's built-in [Digital Twin](https://docs.eda.dev/25.8/digital-twin/) platform, aka CX.
-- **Architecture:** SR Linux nodes spawn directly in EDA CX, telemetry stack runs in Kubernetes
-- **License:** ✅ No license required
-- **Traffic Generation:** ✅ Full iperf3 support for realistic network testing
-- **Node Prefix:** `eda-st-*` (e.g., `eda-st-leaf1`)
-- **Use Case:** Learning EDA, testing configurations, development environments
-
-### 2. Containerlab Deployment
-
-**Best for:** Full-featured testing with live traffic generation
-
-- **EDA Mode:** `Simulate=False` - integrates with external Containerlab nodes
-- **Architecture:** SR Linux nodes and client containers run via Containerlab, telemetry stack runs in Kubernetes
-- **License:** Requires valid EDA hardware license (version 25.8+)
-- **Traffic Generation:** ✅ Full iperf3 support for realistic network testing
-- **Node Prefix:** `clab-eda-st-*` (e.g., `clab-eda-st-leaf1`)
-- **Use Case:** Production-like testing, traffic analysis
+- **Kubernetes platform:** The platform to run Nokia EDA. In this lab also hosts the telemetry stack components. Deployed automatically with [Kind](https://kind.sigs.k8s.io/) in a local lab environment.
+  - **Nokia EDA:** Automation platform managing the network fabric and exporting telemetry data, logs and alarms to the downstream systems.
+    - **Digital Twin (CX):** Horizontally scalable network simulation platform powered by Kubernetes, included with EDA.  
+            A leaf-spine topology is created directly in EDA CX and features Nokia SR Linux nodes that have 100% YANG coverage and support gNMI streaming telemetry for all its paths.  
+            Servers are represented with Linux containers equipped with `iperf3` to generate traffic and see dynamic network metrics in action.
+  - **Kafka Exporter:** EDA application that can export various data from EDA to Kafka brokers. In this lab, it is used to export alarms and deviations.
+  - **Prometheus Exporter:** EDA application that exports telemetry data in Prometheus format. In this lab, it is used to export fabric and services metrics, along with node-specific metrics.
+  - **Telemetry & Logging Stack:**
+    - **Prometheus:** Collects and stores telemetry data exported by EDA Prometheus exporter.
+    - **Kafka:** Message broker that receives alarms and deviations from EDA via its Kafka exporter.
+    - **Alloy:** Stream processing engine that analyzes, parses, transforms and enriches telemetry data received from network nodes (syslog) and Kafka exporter (alarms). Alloy then forwards the processed data to Loki for storage.
+    - **Loki:** Log aggregation system that stores logs and alarms processed by Alloy.
+    - **Grafana:** Visualization platform that provides dashboards for telemetry metrics, logs and alarms.
 
 ## Requirements
 
 > [!IMPORTANT]
-> **EDA Version:** 25.8.2 or later required
+> **Nokia EDA Version:** 25.8.2 or later required. Free and automated [installation available](https://docs.eda.dev/25.8/getting-started/try-eda/).  
+> The EDA platform must be installed and operational before proceeding with the lab deployment.
 
-1. **Kubernetes with EDA installed:** Check your EDA installation mode matches your deployment choice
-2. **Helm:** Install from <https://helm.sh/docs/intro/install/>
-3. **kubectl:** Verify installation with:
+1. **Helm**  
+    Kubernetes package manager. [Copy](https://docs.eda.dev/25.8/user-guide/using-the-clis/#helm) from your EDA playground directory or [install](https://helm.sh/docs/intro/install/).
+2. **Kubectl**  
+    Kubernetes CLI. [Copy](https://docs.eda.dev/25.8/user-guide/using-the-clis/#kubectl) from the playground directory or [install](https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/).
 
-    ```bash
-    kubectl -n eda-system get engineconfig engine-config \
-    -o jsonpath='{.status.run-status}{"\n"}'
-    ```
+Before proceeding with the lab deployment, ensure you have a working EDA installation. You can use either:
 
-    Expected output: `Started`
+```bash
+kubectl -n eda-system get engineconfig engine-config \
+-o jsonpath='{.status.run-status}{"\n"}'
+```
 
-## 🚀 CX Deployment Instructions
+Expected output: `Started`
 
-The `init.sh` script requires a user to provide the EDA URL and the rest happens automatically:
+## 🚀 Lab Deployment
 
-- Detects CX installation
-- Deploys the topology nodes in the `eda-telemetry` namespace
-- Deploys the telemetry stack
+The lab deployment is orchestrated by the `init.sh` script, which automates the setup by performing the following tasks:
+
+- Creates the `eda-telemetry` namespace
+- Deploys the fabric nodes
+- Deploys and configures the telemetry and logging stack
 - Configures the servers interfaces
 - Configures EDA resources for exporting telemetry, logs and alarms
+
+The user must provide the `EDA_URL` environment variable pointing to their EDA UI/API endpoint:
 
 ```bash
 EDA_URL=https://test.eda.com:9443 ./init.sh
 ```
 
-The script will automatically run `edactl namespace bootstrap eda-telemetry` for CX deployments.
-
 > [!NOTE]
-> CX deployment creates SR Linux nodes directly in EDA, so no Containerlab integration is needed.
+> If you want to use Containerlab instead of EDA Digital Twin, refer to the [Containerlab deployment](./clab/README.md) instructions.
 
 ### Verify Deployment
 

@@ -359,7 +359,7 @@
       },
       "gridPos": {
         "h": 4,
-        "w": 10,
+        "w": 5,
         "x": 0,
         "y": 8
       },
@@ -425,6 +425,101 @@
         }
       ],
       "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "description": "1h average uptime measured as a %",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisGridShow": true,
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisSoftMax": 100,
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 5,
+        "x": 5,
+        "y": 8
+      },
+      "id": 59,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.0.2",
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "avg(\n  avg_over_time(\n    (node_srl_interface_oper_state{node_name=~\"leaf.+\",interface_name=~\"ethernet-1/(1|2|49|50)\"}\n      AND on (node_name, interface_name)\n     node_srl_interface_admin_state{node_name=~\"leaf.+\",interface_name=~\"ethernet-1/(1|2|49|50)\"} == 1)[1h:1m]\n  )\n) * 100",
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Interfaces Health",
+      "type": "timeseries"
     },
     {
       "datasource": {
@@ -1238,7 +1333,7 @@
             "type": "loki",
             "uid": "P8E80F9AEF21F6940"
           },
-          "direction": "backward",
+          "direction": "forward",
           "editorMode": "code",
           "expr": "{component=\"kafka-alarms\", namespace_name=\"$namespace\"} | json | line_format \"{{if eq .cleared \\\"true\\\"}}-- CLEARED -- {{end}}Severity: {{.severity}} Name: {{.alarm_name}} Description: {{.description}}\"",
           "queryType": "range",
@@ -2794,12 +2889,10 @@
       {
         "current": {
           "text": [
-            "leaf2",
-            "leaf3"
+            "leaf1"
           ],
           "value": [
-            "leaf2",
-            "leaf3"
+            "leaf1"
           ]
         },
         "datasource": {
@@ -2874,5 +2967,5 @@
   "timezone": "",
   "title": "Telemetry Playground",
   "uid": "Telemetry_Playground",
-  "version": 7
+  "version": 14
 }

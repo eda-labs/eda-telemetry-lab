@@ -74,32 +74,31 @@ EDA_URL=https://test.eda.com:9443 ./init.sh
 
 ### Verify Deployment
 
-After completing either deployment:
+When the deployment completes, you should see the URL to access Grafana dashboard:
 
-1. **Access Grafana:** Navigate to <http://localhost:3000> (admin/admin)
-2. **Check EDA UI:** Verify all nodes and apps are operational
-3. **Test connectivity:** SSH to nodes using their prefixes:
-   - Containerlab: `ssh admin@clab-eda-st-leaf1`
+> Navigate to the ${EDA_URL}/core/httpproxy/v1/grafana/d/Telemetry_Playground/ to access Grafana.
+
+The dashboard should display the deployed topology, and all the panels should be populating with data.
+
+You can also log in to EDA UI and see the `eda-telemetry` namespace in the list of namespaces and the associated resources created by the lab deployment script.
 
 ## Accessing Network Elements
 
-### SR Linux Nodes
+To access the SR Linux nodes, use the provided node-ssh.sh script in the `./cx` directory of the lab:
 
-Access via SSH using the appropriate prefix for your deployment:
+```bash
+./cx/node-ssh leaf1
+```
 
-| Deployment | Node Access Example | Management Network |
-|------------|-------------------|-------------------|
-| Containerlab | `ssh admin@clab-eda-st-leaf1` | 10.58.2.0/24 |
-| CX | `ssh admin@eda-st-leaf1` | Auto-assigned |
+> SR Linux default credentials: `admin` / `NokiaSrl1!`
 
-### Linux Clients (Containerlab only)
+To open up the shell to the server containers, use the provided container-shell script in the `./cx` directory of the lab:
 
-- **SSH Access:** `ssh admin@clab-eda-st-server1` (password: `multit00l`)
-- **WebUI:** <http://localhost:8080> (exposed from server1)
-  - Use the WebUI to simulate network failures by shutting down interfaces
+```bash
+./cx/container-shell server1
+```
 
-> [!TIP]
-> The WebUI on port 8080 allows you to interactively shutdown SR Linux interfaces to test network resilience and observe telemetry changes in real-time.
+The shell is opened for the `admin` user.
 
 ## Telemetry & Logging Stack
 

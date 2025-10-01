@@ -72,3 +72,23 @@ clab-connector integrate \
 ```bash
 kubectl apply -f manifests
 ```
+
+## Accessing Network Elements
+
+### SR Linux Nodes
+
+Access via SSH using the appropriate prefix for your deployment:
+
+| Deployment | Node Access Example | Management Network |
+|------------|-------------------|-------------------|
+| Containerlab | `ssh admin@clab-eda-st-leaf1` | 10.58.2.0/24 |
+| CX | `ssh admin@eda-st-leaf1` | Auto-assigned |
+
+### Linux Clients (Containerlab only)
+
+- **SSH Access:** `ssh admin@clab-eda-st-server1` (password: `multit00l`)
+- **WebUI:** <http://localhost:8080> (exposed from server1)
+  - Use the WebUI to simulate network failures by shutting down interfaces
+
+> [!TIP]
+> The WebUI on port 8080 allows you to interactively shutdown SR Linux interfaces to test network resilience and observe telemetry changes in real-time.

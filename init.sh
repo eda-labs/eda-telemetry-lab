@@ -197,6 +197,6 @@ if [[ "$IS_CX" == "true" ]]; then
     echo "--> Configuring EDA resources..."
     kubectl apply -f cx/manifests
 
-    echo -e "${GREEN}Navigate to the ${EDA_URL}/core/httpproxy/v1/grafana/ to access Grafana${RESET}"
+    echo -e "${GREEN}Navigate to the ${EDA_URL}/core/httpproxy/v1/grafana/d/Telemetry_Playground/ to access Grafana${RESET}"
 fi
 

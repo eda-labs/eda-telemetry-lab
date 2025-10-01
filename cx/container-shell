@@ -1,0 +1,39 @@
+#!/bin/bash
+
+# Script to open shell into a simnode in EDA CX
+# Usage: USER_NS=eda CORE_NS=eda-system ./simnode-shell <simnode-name>
+# Defaults: USER_NS=eda, CORE_NS=eda-system
+# provide the SimNode name as the first argument
+# e.g. bash node-ssh.sh leaf1
+
+SIMNODE_NAME=${1}
+
+# user namespace to look up the TopoNode in
+# default is eda
+USER_NS=${USER_NS:-eda-telemetry}
+
+# core namespace to cx pods in
+# default is eda
+CORE_NS=${CORE_NS:-eda-system}
+
+function list_simnodes() {
+  kubectl --namespace ${USER_NS} get simnodes
+}
+
+if [ -z "${SIMNODE_NAME}" ]; then
+  echo "Usage: $0 <simnode-name>"
+  echo "  Available nodes are:"
+  list_simnodes | sed 's/^/    /'
+  exit 1
+fi
+
+# open shell to the cx pod
+kubectl -n ${CORE_NS} exec -it -c ${SIMNODE_NAME} \
+  $(kubectl get -n ${CORE_NS} pods \
+  -l cx-node-namespace/${USER_NS} -l cx-pod-name=${SIMNODE_NAME} -o jsonpath="{.items[0].metadata.name}") -- su - admin \
+  || {
+  echo "Failed to open shell into node ${SIMNODE_NAME} in ${USER_NS}" namespace.
+  echo "Available nodes are:"
+  list_simnodes | sed 's/^/    /'
+  exit 1
+}

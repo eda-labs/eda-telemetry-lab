@@ -136,7 +136,7 @@ The following diagram illustrates the services and the participating VLANs:
 
 <details>
 <summary><b>Detailed connectivity diagram</b></summary>
-![detailed-svc](https://gitlab.com/-/project/7617705/uploads/1f1ccf12b0261b861ae6652d427b79ea/CleanShot_2025-10-01_at_15.36.18.png)
+<a href="https://gitlab.com/-/project/7617705/uploads/1f1ccf12b0261b861ae6652d427b79ea/CleanShot_2025-10-01_at_15.36.18.png"><img src=https://gitlab.com/-/project/7617705/uploads/1f1ccf12b0261b861ae6652d427b79ea/CleanShot_2025-10-01_at_15.36.18.png/></a>
 </details>
 
 The `./cx/traffic.sh` script orchestrates bidirectional iperf3 tests between server containers to generate realistic network traffic for telemetry observation.

@@ -512,7 +512,7 @@
       "targets": [
         {
           "editorMode": "code",
-          "expr": "avg(\n  avg_over_time(\n    (node_srl_interface_oper_state{node_name=~\"leaf.+\",interface_name=~\"ethernet-1/(1|2|49|50)\"}\n      AND on (node_name, interface_name)\n     node_srl_interface_admin_state{node_name=~\"leaf.+\",interface_name=~\"ethernet-1/(1|2|49|50)\"} == 1)[1h:1m]\n  )\n) * 100",
+          "expr": "avg(\n  avg_over_time(\n    (node_srl_interface_oper_state{node_name=~\"leaf.+\",interface_name=~\"ethernet-1/(1|2|49|50)\",namespace_name='$namespace'}\n      AND on (node_name, interface_name)\n     node_srl_interface_admin_state{node_name=~\"leaf.+\",interface_name=~\"ethernet-1/(1|2|49|50)\",namespace_name='$namespace'} == 1)[1h:1m]\n  )\n) * 100",
           "legendFormat": "health %",
           "range": true,
           "refId": "A"

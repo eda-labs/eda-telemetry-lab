@@ -39,7 +39,7 @@ data:
     {}
 EOF
 
-  kubectl -n ${CORE_NS} exec -it \
+  kubectl -n ${CORE_NS} exec \
     $(kubectl get -n ${CORE_NS} pods \
     -l eda.nokia.com/app=eda-toolbox -o jsonpath="{.items[0].metadata.name}") \
     -- api-server-topo -n ${TOPO_NS}
@@ -91,10 +91,10 @@ if [[ "${CMD}" == "load" ]]; then
   }
 
   echo "Converting /tmp/${TOPO_FILENAME} to JSON format"
-  kubectl -n ${CORE_NS} exec -it "${TOOLBOX_POD}" -- sh -c "yq -o json '.' /tmp/${TOPO_FILENAME} > /tmp/topo.json"
+  kubectl -n ${CORE_NS} exec "${TOOLBOX_POD}" -- sh -c "yq -o json '.' /tmp/${TOPO_FILENAME} > /tmp/topo.json"
   echo "Converting /tmp/${SIMTOPO_FILENAME} to JSON format"
-  kubectl -n ${CORE_NS} exec -it "${TOOLBOX_POD}" -- sh -c "yq -o json '.' /tmp/${SIMTOPO_FILENAME} > /tmp/simtopo.json"
+  kubectl -n ${CORE_NS} exec "${TOOLBOX_POD}" -- sh -c "yq -o json '.' /tmp/${SIMTOPO_FILENAME} > /tmp/simtopo.json"
   echo "Loading topology from /tmp/topo.json and /tmp/simtopo.json on the toolbox pod"
-  kubectl -n ${CORE_NS} exec -it "${TOOLBOX_POD}" -- api-server-topo -n ${TOPO_NS} -f /tmp/topo.json -s /tmp/simtopo.json
+  kubectl -n ${CORE_NS} exec "${TOOLBOX_POD}" -- api-server-topo -n ${TOPO_NS} -f /tmp/topo.json -s /tmp/simtopo.json
   exit $?
 fi

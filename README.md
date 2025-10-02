@@ -210,6 +210,17 @@ Additional CX-specific manifests include:
 > [!NOTE]
 > CX manifests include additional resources for creating and managing simulated nodes directly within EDA.
 
+## Removing the lab
+
+To remove the lab, remove the namespace it was deployed in using [edactl](https://docs.eda.dev/25.8/user-guide/using-the-clis/#edactl) and kubectl:
+
+```bash
+edactl delete namespace eda-telemetry && \
+kubectl wait --for=delete namespace eda-telemetry --timeout=300s
+```
+
+After deleting the namespace, you can redeploy the lab by running the `init.sh` script again.
+
 ## Troubleshooting
 
 ### Common Issues

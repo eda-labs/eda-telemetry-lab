@@ -2,7 +2,7 @@ apiVersion: config.eda.nokia.com/v1alpha1
 kind: Configlet
 metadata:
   name: jsonrpc
-  namespace: clab-eda-st
+  namespace: eda-telemetry
 spec:
   configs:
     - path: .system.json-rpc-server

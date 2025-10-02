@@ -11,7 +11,7 @@ spec:
               "network-instance": "mgmt",
               "remote-server": [
                   {
-                      "host": "10.105.47.137",
+                      "host": "alloy.eda-telemetry",
                       "transport": "udp",
                       "remote-port": 1514,
                       "facility": [

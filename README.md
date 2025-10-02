@@ -173,19 +173,19 @@ DURATION=60 ./cx/traffic.sh start all
 
 ## EDA Configuration
 
-The lab is entirely automated, with all the necessary EDA resources declaratively defined in the manifests located in the `./manifests/` directories. Here is a short summary of the manifests and their purposes:
+The lab is entirely automated, with all the necessary EDA resources declaratively defined in the manifests located in the `./manifests/common` directories. Here is a short summary of the manifests and their purposes:
 
 | File | Description |
 |------|-------------------------|
-| `common/0000_apps.yaml` | Install EDA Prometheus and Kafka exporter apps |
-| `common/0020_prom_exporters.yaml` | Configuring Prometheus exporters to expose metrics for Prometheus |
-| `common/0021_kafka_exporter.yaml` | Configuring Kafka exporter for event streaming (alarms, deviations) |
-| `common/0025_json-rpc.yaml` | Configlet to configure JSON-RPC server on SR Linux nodes |
-| `common/0026_syslog.yaml` | Configlet to configure logging on SR Linux nodes |
-| `common/0030_fabric.yaml` | Fabric resource to deploy EVPN fabric |
-| `common/0040_ipvrf2001.yaml` | L3 Virtual Network to support L3 overlay services |
-| `common/0041_macvrf1001.yaml` | L2 Virtual Network to support L2 overlay services |
-| `cx/0050_http_proxy.yaml` | HTTP proxy service to expose Grafana and Prometheus UI |
+| `0000_apps.yaml` | Install EDA Prometheus and Kafka exporter apps |
+| `0020_prom_exporters.yaml` | Configuring Prometheus exporters to expose metrics for Prometheus |
+| `0021_kafka_exporter.yaml` | Configuring Kafka exporter for event streaming (alarms, deviations) |
+| `0025_json-rpc.yaml` | Configlet to configure JSON-RPC server on SR Linux nodes |
+| `0026_syslog.yaml` | Configlet to configure logging on SR Linux nodes |
+| `0030_fabric.yaml` | Fabric resource to deploy EVPN fabric |
+| `0040_ipvrf2001.yaml` | L3 Virtual Network to support L3 overlay services |
+| `0041_macvrf1001.yaml` | L2 Virtual Network to support L2 overlay services |
+| `0050_http_proxy.yaml` | HTTP proxy service to expose Grafana and Prometheus UI |
 
 ## Removing the lab
 
@@ -199,8 +199,6 @@ kubectl wait --for=delete namespace eda-telemetry --timeout=300s
 After deleting the namespace, you can redeploy the lab by running the `init.sh` script again.
 
 ## Troubleshooting
-
-### Common Issues
 
 <details>
 <summary><b>Pods stuck in pending state</b></summary>

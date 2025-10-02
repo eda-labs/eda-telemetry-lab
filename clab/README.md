@@ -18,6 +18,19 @@
 
 Requires EDA with `Simulate=False`.
 
+## Common Requirements
+
+1. **Kubernetes with EDA installed:** Check your EDA installation mode matches your deployment choice
+2. **Helm:** Install from <https://helm.sh/docs/intro/install/>
+3. **kubectl:** Verify installation with:
+
+    ```bash
+    kubectl -n eda-system get engineconfig engine-config \
+    -o jsonpath='{.status.run-status}{"\n"}'
+    ```
+
+    Expected output: `Started`
+
 ## Step 1: Deploy Containerlab Topology
 
 ```bash
@@ -37,25 +50,7 @@ The `init.sh` script requires a user to provide the EDA URL and the rest happens
 EDA_URL=https://test.eda.com:9443 ./init.sh
 ```
 
-## Step 3: Start Grafana Port-Forward
-
-```bash
-# Foreground (recommended for first-time setup)
-kubectl port-forward -n eda-telemetry service/grafana 3000:3000 --address=0.0.0.0
-
-# Or background
-nohup kubectl port-forward -n eda-telemetry service/grafana 3000:3000 --address=0.0.0.0 >/dev/null 2>&1 &
-```
-
-## Step 4: Install EDA Apps
-
-```bash
-kubectl apply -f manifests/0000_apps.yaml
-```
-
-Wait for apps to be ready in the EDA UI (this may take a few minutes).
-
-## Step 5: Integrate Containerlab with EDA
+## Step 3: Integrate Containerlab with EDA
 
 ```bash
 clab-connector integrate \
@@ -67,11 +62,14 @@ clab-connector integrate \
 > [!IMPORTANT]
 > The `--skip-edge-intfs` flag is mandatory as LAG interfaces are created via manifests.
 
-## Step 6: Deploy Configuration Manifests
+### Verify Deployment
 
-```bash
-kubectl apply -f manifests
-```
+After completing the deployment:
+
+1. **Access Grafana:** Navigate to the Grafana UI using the URL provided in the script output
+2. **Check EDA UI:** Verify all nodes and apps are operational
+3. **Test connectivity:** SSH to nodes using their prefixes:
+   - Containerlab: `ssh admin@clab-eda-st-leaf1`
 
 ## Accessing Network Elements
 
@@ -82,9 +80,8 @@ Access via SSH using the appropriate prefix for your deployment:
 | Deployment | Node Access Example | Management Network |
 |------------|-------------------|-------------------|
 | Containerlab | `ssh admin@clab-eda-st-leaf1` | 10.58.2.0/24 |
-| CX | `ssh admin@eda-st-leaf1` | Auto-assigned |
 
-### Linux Clients (Containerlab only)
+### Linux Clients
 
 - **SSH Access:** `ssh admin@clab-eda-st-server1` (password: `multit00l`)
 - **WebUI:** <http://localhost:8080> (exposed from server1)
@@ -92,3 +89,35 @@ Access via SSH using the appropriate prefix for your deployment:
 
 > [!TIP]
 > The WebUI on port 8080 allows you to interactively shutdown SR Linux interfaces to test network resilience and observe telemetry changes in real-time.
+
+## Traffic Generation & Control
+
+The `./clab/traffic.sh` script orchestrates bidirectional iperf3 tests between server containers to generate realistic network traffic for telemetry observation.
+
+| Parameter | Default Value | Environment Variable |
+|-----------|--------------|---------------------|
+| Duration | 10000 seconds | `DURATION` |
+| Bandwidth | 120K | - |
+| Parallel Streams | 10 | - |
+| MSS | 1400 | - |
+| Report Interval | 1 second | - |
+
+### Usage Examples
+
+```bash
+# Start all traffic flows
+./traffic.sh start all
+
+# Start specific server traffic
+./traffic.sh start server3
+./traffic.sh start server4
+
+# Stop all traffic
+./traffic.sh stop all
+
+# Custom duration (60 seconds)
+DURATION=60 ./traffic.sh start all
+```
+
+> [!TIP]
+> Monitor traffic impact in real-time through Grafana dashboards while tests are running.

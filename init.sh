@@ -116,7 +116,7 @@ MAX_RETRIES=60  # Increased from 30 to 60 for initial deployments
 echo "Checking alloy pod status..." | indent_out
 kubectl wait --for=condition=ready pod -l app=alloy -n ${ST_STACK_NS} --timeout=600s | indent_out
 
-# Get external allow IP when in Containerlab mode
+# Get external alloy IP when in Containerlab mode
 if [[ "$IS_CX" != "true" ]]; then
     # Now wait for the service to get an external IP
     while [ -z "$ALLOY_IP" ] && [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
@@ -135,7 +135,7 @@ if [[ "$IS_CX" != "true" ]]; then
     echo "Got alloy IP: $ALLOY_IP"
 
 
-    SYSLOG_CONFIG_FILE="manifests/0026_syslog.yaml"
+    SYSLOG_CONFIG_FILE="manifests/common/0026_syslog.yaml"
 
 
     if [[ ! -f "$SYSLOG_CONFIG_FILE" ]]; then
@@ -165,27 +165,18 @@ fi
 
 # Install apps and EDA resources
 
-echo -e "${GREEN}--> Installing Prometheus and Kafka exporters EDA apps...${RESET}"
+echo -e "${GREEN}--> Installing EDA apps and creating EDA resources...${RESET}"
 kubectl apply -f ./manifests/common | indent_out
+
+# adding containerlab specific resources
+if [[ "$IS_CX" != "true" ]]; then
+    kubectl apply -f ./manifests/clab | indent_out
+fi
 
 echo -e "${GREEN}--> Waiting for Grafana deployment to be available...${RESET}"
 kubectl -n ${ST_STACK_NS} wait --for=condition=available deployment/grafana --timeout=300s | indent_out
 
-# Exposing services
-if [[ "$IS_CX" == "true" ]]; then
-    kubectl apply -f ./manifests/cx | indent_out
-    echo ""
-    echo -e "${GREEN}--> Navigate to the ${EDA_URL}/core/httpproxy/v1/grafana/d/Telemetry_Playground/ to access Grafana${RESET}"
-fi
-
-if [[ "$IS_CX" != "true" ]]; then
-    # Start port-forward for Grafana when in clab mode
-    echo ""
-    echo ""
-    echo -e "${GREEN}--> Run the following command to access Grafana:${RESET}"
-    echo -e "kubectl port-forward -n ${ST_STACK_NS} service/grafana 3000:3000 --address=0.0.0.0"
-    echo ""
-    echo -e "${GREEN}Or run this in the background:${RESET}"
-    echo -e "nohup kubectl port-forward -n ${ST_STACK_NS} service/grafana 3000:3000 --address=0.0.0.0 >/dev/null 2>&1 &"
-fi
+# Show connection details
+echo ""
+echo -e "${GREEN}--> Navigate to the ${EDA_URL}/core/httpproxy/v1/grafana/d/Telemetry_Playground/ to access Grafana${RESET}"
 

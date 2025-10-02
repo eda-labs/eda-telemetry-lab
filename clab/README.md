@@ -31,13 +31,7 @@ Requires EDA with `Simulate=False`.
 
     Expected output: `Started`
 
-## Step 1: Deploy Containerlab Topology
-
-```bash
-containerlab deploy -t eda-st.clab.yaml
-```
-
-## Step 2: Initialize the Lab
+## Step 1: Initialize the Lab
 
 The `init.sh` script requires a user to provide the EDA URL and the rest happens automatically:
 
@@ -49,6 +43,13 @@ The `init.sh` script requires a user to provide the EDA URL and the rest happens
 ```bash
 EDA_URL=https://test.eda.com:9443 ./init.sh
 ```
+
+## Step 2: Deploy Containerlab Topology
+
+```bash
+containerlab deploy -t eda-st.clab.yaml
+```
+
 
 ## Step 3: Integrate Containerlab with EDA
 

@@ -173,42 +173,19 @@ DURATION=60 ./cx/traffic.sh start all
 
 ## EDA Configuration
 
-### Manifest Structure
+The lab is entirely automated, with all the necessary EDA resources declaratively defined in the manifests located in the `./manifests/` directories. Here is a short summary of the manifests and their purposes:
 
-The lab uses Kubernetes manifests to configure EDA and the network fabric. The manifests differ between deployment types:
-
-#### Containerlab Manifests (`/manifests/`)
-
-| File | Purpose | Key Components |
-|------|---------|----------------|
-| `0000_apps.yaml` | EDA Apps | Prometheus exporter v2.0.0, Kafka exporter v2.0.1 |
-| `0009_interfaces.yaml` | LAG Configuration | LAG interfaces on leaf switches |
-| `0010_topolinks.yaml` | Topology Links | LAG links between leaves and servers |
-| `0020_prom_exporters.yaml` | Telemetry Export | CPU, memory, interface, route metrics |
-| `0021_kafka_exporter.yaml` | Event Streaming | Alarms and deviation notifications |
-| `0025_json-rpc.yaml` | Automation | JSON-RPC for interface shutdown control |
-| `0026_syslog.yaml` | Logging | Centralized syslog configuration |
-| `0030_fabric.yaml` | Network Fabric | Clos topology with eBGP/iBGP |
-| `0040_ipvrf2001.yaml` | L3 Services | IP VRF configuration |
-| `0041_macvrf1001.yaml` | L2 Services | MAC VRF configuration |
-
-#### CX Manifests (`/cx/manifests/`)
-
-Additional CX-specific manifests include:
-
-| File | Purpose | Description |
-|------|---------|-------------|
-| `0001_init.yaml` | Namespace Init | Bootstrap configuration for eda-st namespace |
-| `0003_node-user-group.yaml` | User Management | Node user group definitions |
-| `0005_node-user.yaml` | User Configuration | Node user account setup |
-| `0006_node-profiles.yaml` | Node Profiles | SR Linux node profile definitions |
-| `0007_toponodes.yaml` | Node Creation | SR Linux node instantiation in CX |
-| `0008_topolink-interfaces.yaml` | Interface Config | Interface definitions for CX nodes |
-| `0009_topolinks.yaml` | Topology Links | Inter-node connectivity |
-| `0010_edge-interfaces.yaml` | Edge Config | Edge interface configuration |
-
-> [!NOTE]
-> CX manifests include additional resources for creating and managing simulated nodes directly within EDA.
+| File | Description |
+|------|-------------------------|
+| `common/0000_apps.yaml` | Install EDA Prometheus and Kafka exporter apps |
+| `common/0020_prom_exporters.yaml` | Configuring Prometheus exporters to expose metrics for Prometheus |
+| `common/0021_kafka_exporter.yaml` | Configuring Kafka exporter for event streaming (alarms, deviations) |
+| `common/0025_json-rpc.yaml` | Configlet to configure JSON-RPC server on SR Linux nodes |
+| `common/0026_syslog.yaml` | Configlet to configure logging on SR Linux nodes |
+| `common/0030_fabric.yaml` | Fabric resource to deploy EVPN fabric |
+| `common/0040_ipvrf2001.yaml` | L3 Virtual Network to support L3 overlay services |
+| `common/0041_macvrf1001.yaml` | L2 Virtual Network to support L2 overlay services |
+| `cx/0050_http_proxy.yaml` | HTTP proxy service to expose Grafana and Prometheus UI |
 
 ## Removing the lab
 
@@ -274,26 +251,12 @@ containerlab inspect -t eda-st.clab.yaml
 
 </details>
 
-### Quick Cleanup
-
-```bash
-# Containerlab deployment
-containerlab destroy -t eda-st.clab.yaml
-kubectl delete -f manifests/
-helm uninstall telemetry-stack -n eda-telemetry
-
-# CX deployment
-kubectl delete -f cx/manifests/
-kubectl delete namespace eda-st
-helm uninstall telemetry-stack -n eda-telemetry
-```
-
 ## Resources
 
 - **Documentation:** [EDA Docs](https://docs.eda.dev/)
+- **Support:** [EDA Discord Community](https://eda.dev/discord)
 - **SR Linux Learn:** [SR Linux Learning Platform](https://learn.srlinux.dev/)
 - **Containerlab:** [Containerlab Documentation](https://containerlab.dev/)
-- **Support:** [EDA Discord Community](https://eda.dev/discord)
 
 ---
 

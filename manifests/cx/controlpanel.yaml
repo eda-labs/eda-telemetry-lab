@@ -46,3 +46,12 @@ spec:
       port: 80
       targetPort: 80
   type: ClusterIP
+---
+apiVersion: core.eda.nokia.com/v1
+kind: HttpProxy
+metadata:
+  name: control-panel
+  namespace: eda-system
+spec:
+  authType: atDestination
+  rootUrl: http://control-panel.eda-telemetry.svc.cluster.local/

@@ -1,4 +1,19 @@
 #!/bin/bash
+
+# Render control panel web UI when running in containerlab
+TEMPLATE="/configs/webui/index.tmpl.html"
+TARGET="/usr/share/nginx/html/index.html"
+if [ -f "$TEMPLATE" ]; then
+  mkdir -p "$(dirname "$TARGET")"
+  sed -e "s/__leaf1_addr__/10.58.2.11/g" \
+      -e "s/__leaf2_addr__/10.58.2.12/g" \
+      -e "s/__leaf3_addr__/10.58.2.13/g" \
+      -e "s/__leaf4_addr__/10.58.2.14/g" \
+      -e "s/__spine1_addr__/10.58.2.21/g" \
+      -e "s/__spine2_addr__/10.58.2.22/g" \
+      "$TEMPLATE" > "$TARGET"
+fi
+
 ip link add bond0 type bond mode 802.3ad xmit_hash_policy layer3+4
 ip link set addr 00:c1:ab:01:01:01 dev bond0
 ip link set eth1 down

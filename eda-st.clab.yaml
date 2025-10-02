@@ -44,7 +44,6 @@ topology:
       binds:
         - configs/servers:/configs
         - configs/servers/webui/nginx.conf:/etc/nginx/nginx.conf
-        - configs/servers/webui/index.html:/usr/share/nginx/html/index.html
       exec:
         - bash /configs/__clabNodeName__.sh
       ports:

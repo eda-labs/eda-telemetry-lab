@@ -56,7 +56,8 @@ EDA_URL=https://test.eda.com:9443 ./init.sh
 clab-connector integrate \
   --topology-data clab-eda-st/topology-data.json \
   --eda-url "https://$(cat .eda_api_address)" \
-  --skip-edge-intfs
+  --skip-edge-intfs \
+  --namespace eda-telemetry
 ```
 
 > [!IMPORTANT]
@@ -106,17 +107,17 @@ The `./clab/traffic.sh` script orchestrates bidirectional iperf3 tests between s
 
 ```bash
 # Start all traffic flows
-./traffic.sh start all
+./clab/traffic.sh start all
 
 # Start specific server traffic
-./traffic.sh start server3
-./traffic.sh start server4
+./clab/traffic.sh start server3
+./clab/traffic.sh start server4
 
 # Stop all traffic
-./traffic.sh stop all
+./clab/traffic.sh stop all
 
 # Custom duration (60 seconds)
-DURATION=60 ./traffic.sh start all
+DURATION=60 ./clab/traffic.sh start all
 ```
 
 > [!TIP]

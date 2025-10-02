@@ -7,7 +7,7 @@ metadata:
     eda.nokia.com/macvrf1001: "true"
     eda.nokia.com/role: edge
   name: lag1-l1-l2-eth-1-1
-  namespace: clab-eda-st
+  namespace: eda-telemetry
 spec:
   links:
     - local:
@@ -32,7 +32,7 @@ metadata:
     eda.nokia.com/macvrf1001: "true"
     eda.nokia.com/role: edge
   name: lag2-l1-l2-eth-1-2
-  namespace: clab-eda-st
+  namespace: eda-telemetry
 spec:
   links:
     - local:
@@ -57,7 +57,7 @@ metadata:
     eda.nokia.com/macvrf1001: "true"
     eda.nokia.com/role: edge
   name: lag3-l3-l4-eth-1-1
-  namespace: clab-eda-st
+  namespace: eda-telemetry
 spec:
   links:
     - local:
@@ -82,7 +82,7 @@ metadata:
     eda.nokia.com/macvrf1001: "true"
     eda.nokia.com/role: edge
   name: lag4-l3-l4-eth-1-2
-  namespace: clab-eda-st
+  namespace: eda-telemetry
 spec:
   links:
     - local:

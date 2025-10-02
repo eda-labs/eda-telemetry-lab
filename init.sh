@@ -207,7 +207,7 @@ if [[ "$IS_CX" == "true" ]]; then
         > ./configs/servers/webui/index.html
 
     kubectl create configmap control-panel-index-html \
-    --from-file=index.html=./build/index.html \
+    --from-file=index.html=./configs/servers/webui/index.html \
     -n ${ST_STACK_NS} --dry-run=client -o yaml | kubectl apply -f - | indent_out
 
     kubectl apply -f ./manifests/cx/controlpanel.yaml | indent_out

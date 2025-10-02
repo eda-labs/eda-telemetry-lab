@@ -73,6 +73,16 @@ else
     install-uv
     uv tool install git+https://github.com/eda-labs/clab-connector.git
     uv tool upgrade clab-connector
+
+        # Replace markers in the template and output to index.html
+    sed -e "s/__leaf1_addr__/10.58.2.11/g" \
+        -e "s/__leaf2_addr__/10.58.2.12/g" \
+        -e "s/__leaf3_addr__/10.58.2.13/g" \
+        -e "s/__leaf4_addr__/10.58.2.14/g" \
+        -e "s/__spine1_addr__/10.58.2.21/g" \
+        -e "s/__spine2_addr__/10.58.2.22/g" \
+        ./configs/servers/webui/index.tmpl.html \
+        > ./configs/servers/webui/index.html
 fi
 
 # Update Grafana dashboard with correct node prefix
@@ -164,13 +174,43 @@ fi
 
 
 # Install apps and EDA resources
-
 echo -e "${GREEN}--> Installing EDA apps and creating EDA resources...${RESET}"
 kubectl apply -f ./manifests/common | indent_out
 
 # adding containerlab specific resources
 if [[ "$IS_CX" != "true" ]]; then
     kubectl apply -f ./manifests/clab | indent_out
+fi
+
+# add control panel for cx
+if [[ "$IS_CX" == "true" ]]; then
+    kubectl create configmap control-panel-nginx-conf \
+    --from-file=nginx.conf=configs/servers/webui/nginx.conf \
+    -n ${ST_STACK_NS} --dry-run=client -o yaml | kubectl apply -f - | indent_out
+
+    # Get addresses for each node
+    leaf1_addr=$(kubectl get -n ${ST_STACK_NS} targetnode leaf1 -o jsonpath='{.spec.address}')
+    leaf2_addr=$(kubectl get -n ${ST_STACK_NS} targetnode leaf2 -o jsonpath='{.spec.address}')
+    leaf3_addr=$(kubectl get -n ${ST_STACK_NS} targetnode leaf3 -o jsonpath='{.spec.address}')
+    leaf4_addr=$(kubectl get -n ${ST_STACK_NS} targetnode leaf4 -o jsonpath='{.spec.address}')
+    spine1_addr=$(kubectl get -n ${ST_STACK_NS} targetnode spine1 -o jsonpath='{.spec.address}')
+    spine2_addr=$(kubectl get -n ${ST_STACK_NS} targetnode spine2 -o jsonpath='{.spec.address}')
+
+    # Replace markers in the template and output to index.html
+    sed -e "s/__leaf1_addr__/$leaf1_addr/g" \
+        -e "s/__leaf2_addr__/$leaf2_addr/g" \
+        -e "s/__leaf3_addr__/$leaf3_addr/g" \
+        -e "s/__leaf4_addr__/$leaf4_addr/g" \
+        -e "s/__spine1_addr__/$spine1_addr/g" \
+        -e "s/__spine2_addr__/$spine2_addr/g" \
+        ./configs/servers/webui/index.tmpl.html \
+        > ./configs/servers/webui/index.html
+
+    kubectl create configmap control-panel-index-html \
+    --from-file=index.html=./build/index.html \
+    -n ${ST_STACK_NS} --dry-run=client -o yaml | kubectl apply -f - | indent_out
+
+    kubectl apply -f ./manifests/cx/controlpanel.yaml | indent_out
 fi
 
 echo -e "${GREEN}--> Waiting for Grafana deployment to be available...${RESET}"

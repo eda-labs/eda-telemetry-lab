@@ -130,17 +130,17 @@
     <div class="container-line">
       <div class="div-group">
         <!-- We'll use radio buttons for each device IP -->
-        <input type="radio" id="leaf1" name="device" value="10.58.2.11" checked />
+        <input type="radio" id="leaf1" name="device" value="__leaf1_addr__" checked />
         <label for="leaf1">leaf1</label>
-        <input type="radio" id="leaf2" name="device" value="10.58.2.12" />
+        <input type="radio" id="leaf2" name="device" value="__leaf2_addr__" />
         <label for="leaf2">leaf2</label>
-        <input type="radio" id="leaf3" name="device" value="10.58.2.13" />
+        <input type="radio" id="leaf3" name="device" value="__leaf3_addr__" />
         <label for="leaf3">leaf3</label>
-        <input type="radio" id="leaf4" name="device" value="10.58.2.14" />
+        <input type="radio" id="leaf4" name="device" value="__leaf4_addr__" />
         <label for="leaf4">leaf4</label>
-        <input type="radio" id="spine1" name="device" value="10.58.2.21" />
+        <input type="radio" id="spine1" name="device" value="__spine1_addr__" />
         <label for="spine1">spine1</label>
-        <input type="radio" id="spine2" name="device" value="10.58.2.22" />
+        <input type="radio" id="spine2" name="device" value="__spine2_addr__" />
         <label for="spine2">spine2</label>
       </div>
     </div>
@@ -342,22 +342,22 @@
         s1Options.style.display = 'none';
         s2Options.style.display = 'none';
 
-        if (this.value === '10.58.2.11') {
+        if (this.value === '__leaf1_addr__') {
           l1Options.style.display = 'block';
           l1DefOption.checked = true;
-        } else if (this.value === '10.58.2.12') {
+        } else if (this.value === '__leaf2_addr__') {
           l2Options.style.display = 'block';
           l2DefOption.checked = true;
-        } else if (this.value === '10.58.2.13') {
+        } else if (this.value === '__leaf3_addr__') {
           l3Options.style.display = 'block';
           l3DefOption.checked = true;
-        } else if (this.value === '10.58.2.14') {
+        } else if (this.value === '__leaf4_addr__') {
           l4Options.style.display = 'block';
           l4DefOption.checked = true;
-        } else if (this.value === '10.58.2.21') {
+        } else if (this.value === '__spine1_addr__') {
           s1Options.style.display = 'block';
           s1DefOption.checked = true;
-        } else if (this.value === '10.58.2.22') {
+        } else if (this.value === '__spine2_addr__') {
           s2Options.style.display = 'block';
           s2DefOption.checked = true;
         }

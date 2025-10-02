@@ -12,3 +12,4 @@ configs/grafana/*
 prometheus.yml.bak
 .eda_api_address
 **.bak
+configs/servers/webui/index.html

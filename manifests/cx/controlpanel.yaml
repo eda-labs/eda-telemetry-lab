@@ -1,0 +1,48 @@
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: control-panel
+  namespace: eda-telemetry
+  labels:
+    app: control-panel
+spec:
+  containers:
+    - name: nginx
+      image: nginx:latest
+      ports:
+        - containerPort: 80
+      volumeMounts:
+        - name: control-panel-index-html
+          mountPath: /usr/share/nginx/html/index.html
+          subPath: index.html
+        - name: control-panel-nginx-conf
+          mountPath: /etc/nginx/nginx.conf
+          subPath: nginx.conf
+  volumes:
+    - name: control-panel-index-html
+      configMap:
+        name: control-panel-index-html
+        items:
+          - key: index.html
+            path: index.html
+    - name: control-panel-nginx-conf
+      configMap:
+        name: control-panel-nginx-conf
+        items:
+          - key: nginx.conf
+            path: nginx.conf
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: control-panel
+  namespace: eda-telemetry
+spec:
+  selector:
+    app: control-panel
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  type: ClusterIP

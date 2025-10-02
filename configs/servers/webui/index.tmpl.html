@@ -259,6 +259,7 @@
     const jsonUrl = document.getElementById('url');
     const jsonReq = document.getElementById('request');
     const jsonResp = document.getElementById('response');
+    const baseUrl = new URL('.', window.location.href);
 
     // When the user clicks either button:
     // isEnable = true for enabling, false for shutdown
@@ -296,10 +297,10 @@
       };
 
       // We'll call /proxy/<device>/jsonrpc via same origin
-      const url = `/proxy/${selectedDeviceIp}/jsonrpc`;
+      const url = new URL(`proxy/${selectedDeviceIp}/jsonrpc`, baseUrl);
 
       // Display request info in the black "json" area
-      jsonUrl.textContent = url;
+      jsonUrl.textContent = url.pathname;
       jsonReq.innerHTML = prettyPrintJson.toHtml(data, { quoteKeys: true });
       jsonContainer.style.display = 'block';
 

@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Renegade network admin control panel</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      background-color: #f0f0f0;
+    }
+
+    .container {
+      margin: 20px auto;
+      background-color: white;
+      padding: 10px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      width: 550px;
+      text-align: center;
+    }
+
+    .json {
+      margin: 20px auto;
+      background-color: black;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      min-width: 1000px;
+      width: 50%;
+      display: none;
+    }
+
+    .container h1 {
+      text-align: center;
+    }
+
+    .container-line {
+      display: inline-block;
+      width: 100%;
+    }
+
+    .json-line {
+      display: flex;
+      gap: 20px;
+      width: 100%;
+      margin: 0 10px;
+    }
+
+    .div-group {
+      display: inline-block;
+      margin-top: 10px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    input[type="radio"] {
+      display: none;
+    }
+
+    input[type="radio"]:checked+label {
+      background-color: #4c5eaf;
+      padding: 10px;
+      color: white;
+      border-radius: 5px;
+    }
+
+    label {
+      display: inline-block;
+      text-align: center;
+      width: 60px;
+      font-size: 20px;
+      padding: 10px;
+      border: 2px solid #ccc;
+      cursor: pointer;
+      transition: 0.3s;
+      border-radius: 5px;
+    }
+
+    label:hover {
+      background-color: #f0f0f0;
+    }
+
+    button {
+      background-color: white;
+      font-size: 20px;
+      padding: 10px;
+      border: 2px solid #ccc;
+      cursor: pointer;
+      border-radius: 5px;
+      margin: 5px;
+    }
+
+    button:hover {
+      background-color: #f0f0f0;
+    }
+
+    button:active {
+      background-color: #4c5eaf;
+    }
+
+    .json-line h4 {
+      color: white;
+      font-family: menlo, consolas, monospace;
+    }
+
+    .json-container {
+      font-size: 0.8rem !important;
+      color: #ffffff;
+    }
+
+    .button-group {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+    }
+  </style>
+  <link rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/pretty-print-json@3.0/dist/css/pretty-print-json.dark-mode.css" />
+  <script src="https://cdn.jsdelivr.net/npm/pretty-print-json@3.0/dist/pretty-print-json.min.js"></script>
+</head>
+
+<body>
+  <div class="container">
+    <h1>🧨 Interface Control Panel 🧨</h1>
+    <!-- Device selection -->
+    <div class="container-line">
+      <div class="div-group">
+        <!-- We'll use radio buttons for each device IP -->
+        <input type="radio" id="leaf1" name="device" value="10.58.2.11" checked />
+        <label for="leaf1">leaf1</label>
+        <input type="radio" id="leaf2" name="device" value="10.58.2.12" />
+        <label for="leaf2">leaf2</label>
+        <input type="radio" id="leaf3" name="device" value="10.58.2.13" />
+        <label for="leaf3">leaf3</label>
+        <input type="radio" id="leaf4" name="device" value="10.58.2.14" />
+        <label for="leaf4">leaf4</label>
+        <input type="radio" id="spine1" name="device" value="10.58.2.21" />
+        <label for="spine1">spine1</label>
+        <input type="radio" id="spine2" name="device" value="10.58.2.22" />
+        <label for="spine2">spine2</label>
+      </div>
+    </div>
+
+    <!-- Interface selection -->
+    <div class="container-line">
+      <div class="div-group">
+        <!-- We'll show/hide these interface groups depending on the selected device -->
+        <div id="leaf1-options" style="display: block;">
+          <input type="radio" id="leaf1-e1-1" name="interface" value="ethernet-1/1" />
+          <label for="leaf1-e1-1">e-1/1</label>
+          <input type="radio" id="leaf1-e1-2" name="interface" value="ethernet-1/2" />
+          <label for="leaf1-e1-2">e-1/2</label>
+          <input type="radio" id="leaf1-e1-49" name="interface" value="ethernet-1/49" checked />
+          <label for="leaf1-e1-49">e-1/49</label>
+          <input type="radio" id="leaf1-e1-50" name="interface" value="ethernet-1/50" />
+          <label for="leaf1-e1-50">e-1/50</label>
+        </div>
+        <div id="leaf2-options" style="display: none;">
+          <input type="radio" id="leaf2-e1-1" name="interface" value="ethernet-1/1" />
+          <label for="leaf2-e1-1">e-1/1</label>
+          <input type="radio" id="leaf2-e1-2" name="interface" value="ethernet-1/2" />
+          <label for="leaf2-e1-2">e-1/2</label>
+          <input type="radio" id="leaf2-e1-49" name="interface" value="ethernet-1/49" />
+          <label for="leaf2-e1-49">e-1/49</label>
+          <input type="radio" id="leaf2-e1-50" name="interface" value="ethernet-1/50" />
+          <label for="leaf2-e1-50">e-1/50</label>
+        </div>
+        <div id="leaf3-options" style="display: none;">
+          <input type="radio" id="leaf3-e1-1" name="interface" value="ethernet-1/1" />
+          <label for="leaf3-e1-1">e-1/1</label>
+          <input type="radio" id="leaf3-e1-2" name="interface" value="ethernet-1/2" />
+          <label for="leaf3-e1-2">e-1/2</label>
+          <input type="radio" id="leaf3-e1-49" name="interface" value="ethernet-1/49" />
+          <label for="leaf3-e1-49">e-1/49</label>
+          <input type="radio" id="leaf3-e1-50" name="interface" value="ethernet-1/50" />
+          <label for="leaf3-e1-50">e-1/50</label>
+        </div>
+        <div id="leaf4-options" style="display: none;">
+          <input type="radio" id="leaf4-e1-1" name="interface" value="ethernet-1/1" />
+          <label for="leaf4-e1-1">e-1/1</label>
+          <input type="radio" id="leaf4-e1-2" name="interface" value="ethernet-1/2" />
+          <label for="leaf4-e1-2">e-1/2</label>
+          <input type="radio" id="leaf4-e1-49" name="interface" value="ethernet-1/49" />
+          <label for="leaf4-e1-49">e-1/49</label>
+          <input type="radio" id="leaf4-e1-50" name="interface" value="ethernet-1/50" />
+          <label for="leaf4-e1-50">e-1/50</label>
+        </div>
+        <div id="spine1-options" style="display: none;">
+          <input type="radio" id="spine1-e1-1" name="interface" value="ethernet-1/1" />
+          <label for="spine1-e1-1">e-1/1</label>
+          <input type="radio" id="spine1-e1-2" name="interface" value="ethernet-1/2" />
+          <label for="spine1-e1-2">e-1/2</label>
+          <input type="radio" id="spine1-e1-3" name="interface" value="ethernet-1/3" />
+          <label for="spine1-e1-3">e-1/3</label>
+          <input type="radio" id="spine1-e1-4" name="interface" value="ethernet-1/4" />
+          <label for="spine1-e1-4">e-1/4</label>
+        </div>
+        <div id="spine2-options" style="display: none;">
+          <input type="radio" id="spine2-e1-1" name="interface" value="ethernet-1/1" />
+          <label for="spine2-e1-1">e-1/1</label>
+          <input type="radio" id="spine2-e1-2" name="interface" value="ethernet-1/2" />
+          <label for="spine2-e1-2">e-1/2</label>
+          <input type="radio" id="spine2-e1-3" name="interface" value="ethernet-1/3" />
+          <label for="spine2-e1-3">e-1/3</label>
+          <input type="radio" id="spine2-e1-4" name="interface" value="ethernet-1/4" />
+          <label for="spine2-e1-4">e-1/4</label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Interface control buttons -->
+    <div class="container-line">
+      <div class="div-group button-group">
+        <button type="button" id="shutdownButton" onclick="sendData(false)">💥 Shutdown interface!</button>
+        <button type="button" id="enableButton" onclick="sendData(true)">✅ Enable interface</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- JSON request/response display -->
+  <div id="jsoncont" class="json">
+    <div class="json-line">
+      <h4 id="url"></h4>
+    </div>
+    <div class="json-line">
+      <pre id="request" class="json-container"></pre>
+      <pre id="response" class="json-container"></pre>
+    </div>
+  </div>
+
+  <script>
+    // Grab references to the relevant elements
+    const deviceSelector = document.querySelectorAll('input[name="device"]');
+    const interfaceSelector = document.querySelectorAll('input[name="interface"]');
+
+    const l1Options = document.getElementById('leaf1-options');
+    const l1DefOption = document.getElementById('leaf1-e1-49');
+
+    const l2Options = document.getElementById('leaf2-options');
+    const l2DefOption = document.getElementById('leaf2-e1-49');
+
+    const l3Options = document.getElementById('leaf3-options');
+    const l3DefOption = document.getElementById('leaf3-e1-49');
+
+    const l4Options = document.getElementById('leaf4-options');
+    const l4DefOption = document.getElementById('leaf4-e1-49');
+
+    const s1Options = document.getElementById('spine1-options');
+    const s1DefOption = document.getElementById('spine1-e1-1');
+
+    const s2Options = document.getElementById('spine2-options');
+    const s2DefOption = document.getElementById('spine2-e1-1');
+
+    const jsonContainer = document.getElementById('jsoncont');
+    const jsonUrl = document.getElementById('url');
+    const jsonReq = document.getElementById('request');
+    const jsonResp = document.getElementById('response');
+    const baseUrl = new URL('.', window.location.href);
+
+    // When the user clicks either button:
+    // isEnable = true for enabling, false for shutdown
+    function sendData(isEnable) {
+      // Gather the selected device IP
+      let selectedDeviceIp = null;
+      deviceSelector.forEach(radio => {
+        if (radio.checked) {
+          selectedDeviceIp = radio.value;
+        }
+      });
+
+      // Gather the selected interface
+      let selectedIface = null;
+      interfaceSelector.forEach(radio => {
+        if (radio.checked) {
+          selectedIface = radio.value;
+        }
+      });
+
+      // Construct the final JSON-RPC payload
+      const data = {
+        jsonrpc: '2.0',
+        id: 0,
+        method: 'set',
+        params: {
+          commands: [
+            {
+              action: 'update',
+              // Set admin-state based on isEnable value
+              path: `/interface[name=${selectedIface}]/admin-state:${isEnable ? 'enable' : 'disable'}`
+            }
+          ]
+        }
+      };
+
+      // We'll call /proxy/<device>/jsonrpc via same origin
+      const url = new URL(`proxy/${selectedDeviceIp}/jsonrpc`, baseUrl);
+
+      // Display request info in the black "json" area
+      jsonUrl.textContent = url.pathname;
+      jsonReq.innerHTML = prettyPrintJson.toHtml(data, { quoteKeys: true });
+      jsonContainer.style.display = 'block';
+
+      fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      })
+        .then((response) => response.text())
+        .then((body) => {
+          // Show the raw text body from the device (or from the proxy)
+          jsonResp.innerHTML = body
+            ? prettyPrintJson.toHtml(JSON.parse(body), { quoteKeys: true })
+            : '(no response body)';
+
+          // Clear out after 8 seconds
+          setTimeout(() => {
+            jsonUrl.textContent = '';
+            jsonReq.innerHTML = '';
+            jsonResp.innerHTML = '';
+            jsonContainer.style.display = 'none';
+          }, 8000);
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+          alert('Error occurred! Check console/logs.');
+          jsonContainer.style.display = 'none';
+        });
+    }
+
+    // Listen for device radio changes, so we show/hide the relevant interface radios
+    deviceSelector.forEach(radio => {
+      radio.addEventListener('change', function () {
+        l1Options.style.display = 'none';
+        l2Options.style.display = 'none';
+        l3Options.style.display = 'none';
+        l4Options.style.display = 'none';
+        s1Options.style.display = 'none';
+        s2Options.style.display = 'none';
+
+        if (this.value === '10.58.2.11') {
+          l1Options.style.display = 'block';
+          l1DefOption.checked = true;
+        } else if (this.value === '10.58.2.12') {
+          l2Options.style.display = 'block';
+          l2DefOption.checked = true;
+        } else if (this.value === '10.58.2.13') {
+          l3Options.style.display = 'block';
+          l3DefOption.checked = true;
+        } else if (this.value === '10.58.2.14') {
+          l4Options.style.display = 'block';
+          l4DefOption.checked = true;
+        } else if (this.value === '10.58.2.21') {
+          s1Options.style.display = 'block';
+          s1DefOption.checked = true;
+        } else if (this.value === '10.58.2.22') {
+          s2Options.style.display = 'block';
+          s2DefOption.checked = true;
+        }
+      });
+    });
+  </script>
+</body>
+
+</html>

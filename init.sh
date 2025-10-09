@@ -14,8 +14,7 @@ function check-required-binaries {
     if [ ${#missing_binaries[@]} -gt 0 ]; then
         echo "Error: Required binaries not found: ${missing_binaries[*]}"
         echo "Please install the missing binaries before running this script."
-        echo "  - kubectl: https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/"
-        echo "  - helm: https://helm.sh/docs/intro/install/"
+        echo "  https://github.com/eda-labs/eda-telemetry-lab?tab=readme-ov-file#requirements"
         exit 1
     fi
 }

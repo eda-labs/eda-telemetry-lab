@@ -173,7 +173,7 @@ DURATION=60 ./cx/traffic.sh start all
 
 ## EDA Configuration
 
-The lab is entirely automated, with all the necessary EDA resources declaratively defined in the manifests located in the `./manifests/common` directories. Here is a short summary of the manifests and their purposes:
+The lab is entirely automated, with all the necessary EDA resources declaratively defined in the manifests located in the `./manifests` and `./manifests/common` directories. Here is a short summary of the manifests and their purposes:
 
 | File | Description |
 |------|-------------------------|

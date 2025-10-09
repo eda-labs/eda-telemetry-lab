@@ -43,6 +43,8 @@ RESET="\033[0m"
 # and in case of CX variant, where the nodes will be created
 ST_STACK_NS=eda-telemetry
 
+EDA_CORE_NS=eda-system
+
 EDA_URL=${EDA_URL:-""} # e.g. https://my.eda.com or https://10.1.0.1:9443
 
 # namespace where default EDA resources are
@@ -64,7 +66,7 @@ if [[ -n "$CX_DEP" ]]; then
     
     # Define edactl alias function
     edactl() {
-        kubectl -n eda-system exec $(kubectl -n eda-system get pods \
+        kubectl -n ${EDA_CORE_NS} exec $(kubectl -n ${EDA_CORE_NS} get pods \
             -l eda.nokia.com/app=eda-toolbox -o jsonpath="{.items[0].metadata.name}") \
             -- edactl "$@"
     }
@@ -196,7 +198,11 @@ fi
 
 
 # Install apps and EDA resources
-echo -e "${GREEN}--> Installing EDA apps and creating EDA resources...${RESET}"
+echo -e "${GREEN}--> Installing Prometheus and Kafka exporter EDA apps...${RESET}"
+kubectl apply -f ./manifests/0000_apps.yaml | indent_out
+kubectl -n ${EDA_CORE_NS} wait --for=jsonpath='{.status.result}'=Completed appinstallers.appstore.eda.nokia.com --all --timeout=300s | indent_out
+
+echo -e "${GREEN}--> Creating EDA resources...${RESET}"
 kubectl apply -f ./manifests/common | indent_out
 
 # adding containerlab specific resources

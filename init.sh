@@ -36,6 +36,7 @@ check-required-binaries
 
 # Term colors
 GREEN="\033[0;32m"
+RED="\033[0;31m"
 RESET="\033[0m"
 
 # k8s and cx namespace
@@ -53,6 +54,14 @@ DEFAULT_USER_NS=eda
 # Check if EDA CX deployment is present
 CX_DEP=$(kubectl get -A deployment -l eda.nokia.com/app=cx 2>/dev/null | grep eda-cx || true)
 
+# get toolbox pod name and error if not found
+TOOLBOX_POD=$(kubectl -n ${EDA_CORE_NS} get pods -l eda.nokia.com/app=eda-toolbox -o jsonpath="{.items[0].metadata.name}")
+
+if [[ -z "$TOOLBOX_POD" ]]; then
+    echo -e "${RED}Error: Toolbox pod not found.${RESET}"
+    exit 1
+fi
+
 if [[ -n "$CX_DEP" ]]; then
     echo -e "${GREEN}--> EDA CX variant detected.${RESET}"
     IS_CX=true
@@ -66,8 +75,7 @@ if [[ -n "$CX_DEP" ]]; then
     
     # Define edactl alias function
     edactl() {
-        kubectl -n ${EDA_CORE_NS} exec $(kubectl -n ${EDA_CORE_NS} get pods \
-            -l eda.nokia.com/app=eda-toolbox -o jsonpath="{.items[0].metadata.name}") \
+        kubectl -n ${EDA_CORE_NS} exec ${TOOLBOX_POD} \
             -- edactl "$@"
     }
 
@@ -199,15 +207,22 @@ fi
 
 # Install apps and EDA resources
 echo -e "${GREEN}--> Installing Prometheus and Kafka exporter EDA apps...${RESET}"
+# dir where manifests will be copied from the host to the toolbox pod
+TB_LAB_DIR="/tmp/eda-telemetry-lab"
+# copy manifests to the toolbox under /tmp/eda-telemetry-lab/manifests
+# first exec rm -rf /tmp/eda-telemetry-lab/manifests to avoid conflicts
+kubectl -n ${EDA_CORE_NS} exec ${TOOLBOX_POD} -- bash -c "rm -rf ${TB_LAB_DIR} && mkdir -p ${TB_LAB_DIR}"
+kubectl -n ${EDA_CORE_NS} cp ./manifests ${TOOLBOX_POD}:${TB_LAB_DIR}/manifests
+
 kubectl apply -f ./manifests/0000_apps.yaml | indent_out
 kubectl -n ${EDA_CORE_NS} wait --for=jsonpath='{.status.result}'=Completed appinstallers.appstore.eda.nokia.com --all --timeout=300s | indent_out
 
 echo -e "${GREEN}--> Creating EDA resources...${RESET}"
-kubectl apply -f ./manifests/common | indent_out
+edactl apply --commit-message "installing eda-telemetry-lab common resources" -f ${TB_LAB_DIR}/manifests/common | indent_out
 
 # adding containerlab specific resources
 if [[ "$IS_CX" != "true" ]]; then
-    kubectl apply -f ./manifests/clab | indent_out
+    edactl apply --commit-message "installing topolinks and interfaces" -f ${TB_LAB_DIR}/manifests/clab | indent_out
 fi
 
 # add control panel for cx

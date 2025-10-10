@@ -20,7 +20,7 @@ metadata:
 spec:
   authType: atDestination
   rootUrl: http://prometheus.eda-telemetry.svc.cluster.local:9090/
----
+# ---
 # # Alloy
 # # ${EDA_URL}/core/httpproxy/v1/alloy
 # apiVersion: core.eda.nokia.com/v1

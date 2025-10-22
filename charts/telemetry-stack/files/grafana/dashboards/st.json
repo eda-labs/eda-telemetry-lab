@@ -313,7 +313,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "resources_cr_services_eda_nokia_com_v1_virtualnetwork_status_operationalState",
+          "expr": "resources_cr_services_eda_nokia_com_v1_virtualnetwork_status_operationalState{namespace_name='$namespace'}",
           "instant": false,
           "legendFormat": " {{virtualnetwork_name}}",
           "range": true,

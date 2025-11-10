@@ -62,6 +62,12 @@ if [[ -z "$TOOLBOX_POD" ]]; then
     exit 1
 fi
 
+# Define edactl alias function
+edactl() {
+    kubectl -n ${EDA_CORE_NS} exec ${TOOLBOX_POD} \
+        -- edactl "$@"
+}
+
 if [[ -n "$CX_DEP" ]]; then
     echo -e "${GREEN}--> EDA CX variant detected.${RESET}"
     IS_CX=true
@@ -72,12 +78,6 @@ if [[ -n "$CX_DEP" ]]; then
     kubectl -n ${DEFAULT_USER_NS} label nodeprofile srlinux-ghcr-25.7.2 eda.nokia.com/bootstrap=true | indent_out
 
     echo -e "${GREEN}--> Running namespace bootstrap for CX variant...${RESET}"
-    
-    # Define edactl alias function
-    edactl() {
-        kubectl -n ${EDA_CORE_NS} exec ${TOOLBOX_POD} \
-            -- edactl "$@"
-    }
 
     # Run namespace bootstrap
     edactl namespace bootstrap ${ST_STACK_NS} | indent_out

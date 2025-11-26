@@ -135,13 +135,13 @@ if [[ -n "$proxy_var" ]]; then
     echo "Using proxy for grafana deployment: $proxy_var"
     noproxy="localhost\,127.0.0.1\,.local\,.internal\,.svc"
 
-    helm install telemetry-stack ./charts/telemetry-stack \
+    helm upgrade --install telemetry-stack ./charts/telemetry-stack \
     --set https_proxy="$proxy_var" \
     --set no_proxy="$noproxy" \
     --set eda_url="${EDA_URL}" \
     --create-namespace -n ${ST_STACK_NS} | indent_out
 else
-    helm install telemetry-stack ./charts/telemetry-stack \
+    helm upgrade --install telemetry-stack ./charts/telemetry-stack \
     --set eda_url="${EDA_URL}" \
     --create-namespace -n ${ST_STACK_NS} | indent_out
 fi

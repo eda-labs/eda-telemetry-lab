@@ -68,6 +68,15 @@ edactl() {
         -- edactl "$@"
 }
 
+# Run namespace bootstrap
+edactl namespace bootstrap ${ST_STACK_NS} | indent_out
+
+if [ $? -eq 0 ]; then
+    echo "Namespace ${ST_STACK_NS} bootstrap completed successfully." | indent_out
+else
+    echo "--> Warning: Namespace ${ST_STACK_NS} bootstrap failed. It may have been already bootstrapped, or you may need to run it manually."
+fi
+
 if [[ -n "$CX_DEP" ]]; then
     echo -e "${GREEN}--> EDA CX variant detected.${RESET}"
     IS_CX=true
@@ -78,15 +87,6 @@ if [[ -n "$CX_DEP" ]]; then
     kubectl -n ${DEFAULT_USER_NS} label nodeprofile srlinux-ghcr-25.7.2 eda.nokia.com/bootstrap=true | indent_out
 
     echo -e "${GREEN}--> Running namespace bootstrap for CX variant...${RESET}"
-
-    # Run namespace bootstrap
-    edactl namespace bootstrap ${ST_STACK_NS} | indent_out
-
-    if [ $? -eq 0 ]; then
-        echo "Namespace ${ST_STACK_NS} bootstrap completed successfully." | indent_out
-    else
-        echo "--> Warning: Namespace ${ST_STACK_NS} bootstrap failed. It may have been already bootstrapped, or you may need to run it manually."
-    fi
 
     echo -e "${GREEN}--> Deploying topology in EDA Digital Twin (CX)${RESET}"
     bash ./cx/topology/topo.sh load cx/topology/topo.yaml cx/topology/simtopo.yaml 2>&1> /dev/null

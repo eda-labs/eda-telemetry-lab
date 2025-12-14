@@ -1,0 +1,209 @@
+apiVersion: topologies.eda.nokia.com/v1alpha1
+kind: NetworkTopology
+metadata:
+  generateName: telemetry-lab-
+  namespace: eda-telemetry
+spec:
+  operation: replaceAll
+  nodeTemplates:
+    - name: leaf
+      nodeProfile: srlinux-ghcr-25.10.1
+      platform: 7220 IXR-D2L
+      labels:
+        eda.nokia.com/security-profile: managed
+        eda.nokia.com/role: leaf
+    - name: spine
+      nodeProfile: srlinux-ghcr-25.10.1
+      platform: 7220 IXR-D3L
+      labels:
+        eda.nokia.com/security-profile: managed
+        eda.nokia.com/role: leaf
+
+  nodes:
+    - name: leaf1
+      template: leaf
+    - name: leaf2
+      template: leaf
+    - name: leaf3
+      template: leaf
+    - name: leaf4
+      template: leaf
+    - name: spine1
+      template: spine
+    - name: spine2
+      template: spine
+
+  linkTemplates:
+    - name: isl
+      type: interSwitch
+      labels:
+        eda.nokia.com/role: interSwitch
+    - name: edge
+      type: edge
+      encapType: dot1q
+      labels:
+        eda.nokia.com/role: edge
+        eda.nokia.com/macvrf1001: "true" # all access ports are part of the macvrf1001
+
+  links:
+    - name: leaf1-spine1
+      template: isl
+      endpoints:
+        - local:
+            node: leaf1
+            interface: ethernet-1-49
+          remote:
+            node: spine1
+            interface: ethernet-1-1
+    - name: leaf1-spine2
+      template: isl
+      endpoints:
+        - local:
+            node: leaf1
+            interface: ethernet-1-50
+          remote:
+            node: spine2
+            interface: ethernet-1-1
+    - name: leaf2-spine1
+      template: isl
+      endpoints:
+        - local:
+            node: leaf2
+            interface: ethernet-1-49
+          remote:
+            node: spine1
+            interface: ethernet-1-1
+    - name: leaf2-spine2
+      template: isl
+      endpoints:
+        - local:
+            node: leaf2
+            interface: ethernet-1-50
+          remote:
+            node: spine2
+            interface: ethernet-1-2
+    - name: leaf3-spine1
+      template: isl
+      endpoints:
+        - local:
+            node: leaf3
+            interface: ethernet-1-49
+          remote:
+            node: spine1
+            interface: ethernet-1-3
+    - name: leaf3-spine2
+      template: isl
+      endpoints:
+        - local:
+            node: leaf3
+            interface: ethernet-1-50
+          remote:
+            node: spine2
+            interface: ethernet-1-3
+    - name: leaf4-spine1
+      template: isl
+      endpoints:
+        - local:
+            node: leaf4
+            interface: ethernet-1-49
+          remote:
+            node: spine1
+            interface: ethernet-1-4
+    - name: leaf4-spine2
+      template: isl
+      endpoints:
+        - local:
+            node: leaf4
+            interface: ethernet-1-50
+          remote:
+            node: spine2
+            interface: ethernet-1-4
+    ##############
+    # EDGE LINKS
+    ##############
+    - name: l1-l2-e1-1-lag-1
+      template: edge
+      labels:
+        eda.nokia.com/macvrf201: "true"
+      endpoints:
+        - local:
+            node: leaf1
+            interface: ethernet-1-1
+          sim:
+            simNode: server1
+            simNodeInterface: eth1
+        - local:
+            node: leaf2
+            interface: ethernet-1-1
+          sim:
+            simNode: server1
+            simNodeInterface: eth2
+
+    - name: l1-l2-e1-2-lag-2
+      template: edge
+      labels:
+        eda.nokia.com/macvrf202: "true"
+      endpoints:
+        - local:
+            node: leaf1
+            interface: ethernet-1-2
+          sim:
+            simNode: server2
+            simNodeInterface: eth1
+        - local:
+            node: leaf2
+            interface: ethernet-1-2
+          sim:
+            simNode: server2
+            simNodeInterface: eth2
+
+    - name: l3-l4-e1-1-lag-1
+      template: edge
+      labels:
+        eda.nokia.com/macvrf201: "true"
+      endpoints:
+        - local:
+            node: leaf3
+            interface: ethernet-1-1
+          sim:
+            simNode: server3
+            simNodeInterface: eth1
+        - local:
+            node: leaf4
+            interface: ethernet-1-1
+          sim:
+            simNode: server3
+            simNodeInterface: eth2
+
+    - name: l3-l4-e1-2-lag-2
+      template: edge
+      labels:
+        eda.nokia.com/macvrf202: "true"
+      endpoints:
+        - local:
+            node: leaf3
+            interface: ethernet-1-2
+          sim:
+            simNode: server4
+            simNodeInterface: eth1
+        - local:
+            node: leaf4
+            interface: ethernet-1-2
+          sim:
+            simNode: server4
+            simNodeInterface: eth2
+
+  simulation:
+    simNodeTemplates:
+      - name: multitool
+        type: Linux
+        image: ghcr.io/srl-labs/network-multitool:v0.5.0
+    simNodes:
+      - name: server1
+        template: multitool
+      - name: server2
+        template: multitool
+      - name: server3
+        template: multitool
+      - name: server4
+        template: multitool

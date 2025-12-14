@@ -68,13 +68,14 @@ edactl() {
         -- edactl "$@"
 }
 
-# Run namespace bootstrap
-edactl namespace bootstrap ${ST_STACK_NS} | indent_out
+# Run namespace bootstrap (25.12 and newer)
+echo -e "${GREEN}--> Creating ${ST_STACK_NS} namespace...${RESET}"
+edactl namespace bootstrap create --from-namespace eda ${ST_STACK_NS} | indent_out
 
 if [ $? -eq 0 ]; then
     echo "Namespace ${ST_STACK_NS} bootstrap completed successfully." | indent_out
 else
-    echo "--> Warning: Namespace ${ST_STACK_NS} bootstrap failed. It may have been already bootstrapped, or you may need to run it manually."
+    echo "--> Warning: Namespace ${ST_STACK_NS} bootstrap failed. Only EDA 25.12.1 and newer are supported."
 fi
 
 if [[ -n "$CX_DEP" ]]; then
@@ -82,14 +83,26 @@ if [[ -n "$CX_DEP" ]]; then
     IS_CX=true
     NODE_PREFIX=${ST_STACK_NS}
 
-    echo "Adding eda.nokia.com/bootstrap=true label to resources before bootstrapping the namespace" | indent_out
-
-    kubectl -n ${DEFAULT_USER_NS} label nodeprofile srlinux-ghcr-25.7.2 eda.nokia.com/bootstrap=true | indent_out
-
-    echo -e "${GREEN}--> Running namespace bootstrap for CX variant...${RESET}"
-
     echo -e "${GREEN}--> Deploying topology in EDA Digital Twin (CX)${RESET}"
-    bash ./cx/topology/topo.sh load cx/topology/topo.yaml cx/topology/simtopo.yaml 2>&1> /dev/null
+    TOPO_OUTPUT=$(kubectl -n ${ST_STACK_NS} create -f ./cx/topology/lab-topo.yaml)
+    echo "$TOPO_OUTPUT" | indent_out
+
+    # Extract the topology resource name from the output
+    TOPO_NAME=$(echo "$TOPO_OUTPUT" | awk '{print $1}')
+
+    echo -e "${GREEN}--> Waiting for topology to be ready...${RESET}"
+    if ! kubectl -n ${ST_STACK_NS} wait --for=jsonpath='{.status.result}'=Success "$TOPO_NAME" --timeout=300s 2>&1 | indent_out; then
+        # Check if result is Failed
+        TOPO_RESULT=$(kubectl -n ${ST_STACK_NS} get "$TOPO_NAME" -o jsonpath='{.status.result}' 2>/dev/null)
+        if [[ "$TOPO_RESULT" == "Failed" ]]; then
+            echo -e "${RED}Error: Topology deployment failed.${RESET}"
+            TOPO_MESSAGE=$(kubectl -n ${ST_STACK_NS} get "$TOPO_NAME" -o jsonpath='{.status.message}' 2>/dev/null)
+            echo -e "${RED}Status message: $TOPO_MESSAGE${RESET}"
+        else
+            echo -e "${RED}Error: Timeout waiting for topology to complete.${RESET}"
+        fi
+        exit 1
+    fi
 
     echo -e "${GREEN}--> Waiting for nodes to sync...${RESET}"
     kubectl -n ${ST_STACK_NS} wait --for=jsonpath='{.status.node-state}'=Synced toponode --all --timeout=300s | indent_out

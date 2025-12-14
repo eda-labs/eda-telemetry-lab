@@ -9,10 +9,16 @@ TOPO_NS=${TOPO_NS:-eda-telemetry}
 CORE_NS=${CORE_NS:-eda-system}
 
 echo "Waiting for simlinks to be created"
-kubectl -n ${TOPO_NS} wait --for=create simlink leaf1-ethernet-1-1 --timeout=120s
-kubectl -n ${TOPO_NS} wait --for=create simlink leaf1-ethernet-1-2 --timeout=120s
-kubectl -n ${TOPO_NS} wait --for=create simlink leaf3-ethernet-1-1 --timeout=120s
-kubectl -n ${TOPO_NS} wait --for=create simlink leaf3-ethernet-1-2 --timeout=120s
+kubectl -n ${TOPO_NS} wait --for=create simlink l1-l2-e1-1-lag-1 --timeout=120s
+kubectl -n ${TOPO_NS} wait --for=create simlink l1-l2-e1-2-lag-2 --timeout=120s
+kubectl -n ${TOPO_NS} wait --for=create simlink l3-l4-e1-1-lag-1 --timeout=120s
+kubectl -n ${TOPO_NS} wait --for=create simlink l3-l4-e1-2-lag-2 --timeout=120s
+
+echo "Waiting for server pods to be ready..."
+for server in server1 server2 server3 server4; do
+  echo "Waiting for $server pod..."
+  kubectl -n ${CORE_NS} wait --for=condition=ready pod -l eda.nokia.com/app=sim-${server} --timeout=300s
+done
 
 for server in server1 server2 server3 server4; do
   echo "Waiting for $server eth1/eth2 interfaces to appear..."

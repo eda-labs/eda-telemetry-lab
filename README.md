@@ -36,13 +36,13 @@ The _all-in-one_ lab features the Grafana dashboard that takes the central stage
 ## Requirements
 
 > [!IMPORTANT]
-> **Nokia EDA Version:** 25.8.2 or later required. Free and automated [installation available](https://docs.eda.dev/25.8/getting-started/try-eda/).  
+> **Nokia EDA Version:** 25.12.1 or later required. Free and automated [installation available](https://docs.eda.dev/25.12/getting-started/try-eda/).  
 > The EDA platform must be installed and operational before proceeding with the lab deployment.
 
 1. **Helm**  
-    Kubernetes package manager. [Copy](https://docs.eda.dev/25.8/user-guide/using-the-clis/#helm) from your EDA playground directory or [install](https://helm.sh/docs/intro/install/).
+    Kubernetes package manager. [Copy](https://docs.eda.dev/25.12/user-guide/using-the-clis/#helm) from your EDA playground directory or [install](https://helm.sh/docs/intro/install/).
 2. **Kubectl**  
-    Kubernetes CLI. [Copy](https://docs.eda.dev/25.8/user-guide/using-the-clis/#kubectl) from the playground directory or [install](https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/).
+    Kubernetes CLI. [Copy](https://docs.eda.dev/25.12/user-guide/using-the-clis/#kubectl) from the playground directory or [install](https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/).
 
 Before proceeding with the lab deployment, ensure you have a working EDA installation. You can use either:
 
@@ -74,7 +74,7 @@ EDA_URL=https://test.eda.com:9443 ./init.sh
 
 ### Verify Deployment
 
-When the deployment completes, you should see the URL to access Grafana dashboard:
+When the deployment completes, you should see the URL to access Grafana dashboard. Note, that Grafana may take a few minutes to start up, until then you may see a proxy server error when accessing the URL.
 
 > Navigate to the ${EDA_URL}/core/httpproxy/v1/grafana/d/Telemetry_Playground/ to access Grafana.
 
@@ -189,7 +189,7 @@ The lab is entirely automated, with all the necessary EDA resources declarativel
 
 ## Removing the lab
 
-To remove the lab, remove the namespace it was deployed in using [edactl](https://docs.eda.dev/25.8/user-guide/using-the-clis/#edactl) and kubectl:
+To remove the lab, remove the namespace it was deployed in using [edactl](https://docs.eda.dev/25.12/user-guide/using-the-clis/#edactl) and kubectl:
 
 ```bash
 edactl delete namespace eda-telemetry && \

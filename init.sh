@@ -227,8 +227,12 @@ TB_LAB_DIR="/tmp/eda-telemetry-lab"
 kubectl -n ${EDA_CORE_NS} exec ${TOOLBOX_POD} -- bash -c "rm -rf ${TB_LAB_DIR} && mkdir -p ${TB_LAB_DIR}"
 kubectl -n ${EDA_CORE_NS} cp ./manifests ${TOOLBOX_POD}:${TB_LAB_DIR}/manifests
 
-kubectl apply -f ./manifests/0000_apps.yaml | indent_out
-kubectl -n ${EDA_CORE_NS} wait --for=jsonpath='{.status.result}'=Completed appinstallers.appstore.eda.nokia.com --all --timeout=300s | indent_out
+APP_INSTALL_WF=$(kubectl create -f ./manifests/0000_apps.yaml)
+APP_INSTALL_WF_NAME=$(echo "$APP_INSTALL_WF" | awk '{print $1}')
+echo "Workflow $APP_INSTALL_WF_NAME created" | indent_out
+
+echo -e "${GREEN}--> Waiting for EDA apps installation to complete...${RESET}"
+kubectl -n ${EDA_CORE_NS} wait --for=jsonpath='{.status.result}'=Completed $APP_INSTALL_WF_NAME --timeout=300s | indent_out
 
 echo -e "${GREEN}--> Creating EDA resources...${RESET}"
 edactl apply --commit-message "installing eda-telemetry-lab common resources" -f ${TB_LAB_DIR}/manifests/common | indent_out

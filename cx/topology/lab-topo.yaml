@@ -17,7 +17,7 @@ spec:
       platform: 7220 IXR-D3L
       labels:
         eda.nokia.com/security-profile: managed
-        eda.nokia.com/role: leaf
+        eda.nokia.com/role: spine
 
   nodes:
     - name: leaf1
@@ -72,7 +72,7 @@ spec:
             interface: ethernet-1-49
           remote:
             node: spine1
-            interface: ethernet-1-1
+            interface: ethernet-1-2
     - name: leaf2-spine2
       template: isl
       endpoints:

@@ -43,7 +43,7 @@ spec:
     - name: ipvrf2001
       spec:
         eviPool: evi-pool
-        routerID: "2001"
+        routerID: 2.0.0.1
         tunnelIndexPool: tunnel-index-pool
         type: EVPNVXLAN
         vniPool: vni-pool

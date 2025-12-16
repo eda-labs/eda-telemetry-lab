@@ -281,7 +281,4 @@ kubectl -n ${ST_STACK_NS} wait --for=condition=available deployment/grafana --ti
 echo ""
 echo -e "${GREEN}--> Access Grafana: ${EDA_URL}/core/httpproxy/v1/grafana/d/Telemetry_Playground/${RESET}"
 echo -e "${GREEN}--> Access Prometheus: ${EDA_URL}/core/httpproxy/v1/prometheus/query${RESET}"
-
-if [[ "$IS_CX" == "true" ]]; then
-    echo -e "${GREEN}--> Access Control Panel: ${EDA_URL}/core/httpproxy/v1/control-panel/${RESET}"
-fi
+echo -e "${GREEN}--> Access Control Panel: ${EDA_URL}/core/httpproxy/v1/control-panel/${RESET}"

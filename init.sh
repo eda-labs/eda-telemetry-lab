@@ -243,11 +243,11 @@ if [[ "$IS_CX" != "true" ]]; then
 fi
 
 # add control panel for cx
-if [[ "$IS_CX" == "true" ]]; then
-    kubectl create configmap control-panel-nginx-conf \
-    --from-file=nginx.conf=configs/servers/webui/nginx.conf \
-    -n ${ST_STACK_NS} --dry-run=client -o yaml | kubectl apply -f - | indent_out
+kubectl create configmap control-panel-nginx-conf \
+--from-file=nginx.conf=configs/servers/webui/nginx.conf \
+-n ${ST_STACK_NS} --dry-run=client -o yaml | kubectl apply -f - | indent_out
 
+if [[ "$IS_CX" == "true" ]]; then
     # Get addresses for each node
     leaf1_addr=$(kubectl get -n ${ST_STACK_NS} targetnode leaf1 -o jsonpath='{.spec.address}')
     leaf2_addr=$(kubectl get -n ${ST_STACK_NS} targetnode leaf2 -o jsonpath='{.spec.address}')
@@ -265,13 +265,14 @@ if [[ "$IS_CX" == "true" ]]; then
         -e "s/__spine2_addr__/$spine2_addr/g" \
         ./configs/servers/webui/index.tmpl.html \
         > ./configs/servers/webui/index.html
-
-    kubectl create configmap control-panel-index-html \
-    --from-file=index.html=./configs/servers/webui/index.html \
-    -n ${ST_STACK_NS} --dry-run=client -o yaml | kubectl apply -f - | indent_out
-
-    kubectl apply -f ./manifests/cx/controlpanel.yaml | indent_out
 fi
+
+kubectl create configmap control-panel-index-html \
+--from-file=index.html=./configs/servers/webui/index.html \
+-n ${ST_STACK_NS} --dry-run=client -o yaml | kubectl apply -f - | indent_out
+
+kubectl apply -f ./manifests/cx/controlpanel.yaml | indent_out
+
 
 echo -e "${GREEN}--> Waiting for Grafana deployment to be available...${RESET}"
 kubectl -n ${ST_STACK_NS} wait --for=condition=available deployment/grafana --timeout=300s | indent_out

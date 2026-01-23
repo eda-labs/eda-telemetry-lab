@@ -1,6 +1,6 @@
 {
     "name": "Nokia EDA Telemetry Lab - Codespaces",
-    "image": "ghcr.io/eda-labs/codespaces/base:25.12.1-1",
+    "image": "ghcr.io/eda-labs/codespaces/base:no-hardcoded-paths",
     "features": {
         "ghcr.io/devcontainers/features/docker-in-docker:2": {
             "version": "latest",

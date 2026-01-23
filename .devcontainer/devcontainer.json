@@ -10,7 +10,6 @@
     "customizations": {
         "vscode": {
             "extensions": [
-                "entuent.fira-code-nerd-font",
                 "ms-kubernetes-tools.vscode-kubernetes-tools",
                 "eda-labs.vscode-eda"
             ],
@@ -58,9 +57,9 @@
         }
     },
     "hostRequirements": {
-        "cpus": 4,
-        "memory": "16gb",
-        "storage": "30gb"
+        "cpus": 8,
+        "memory": "32gb",
+        "storage": "64gb"
     },
     "privileged": true,
     "remoteUser": "vscode"

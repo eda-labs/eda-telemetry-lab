@@ -1,12 +1,12 @@
 # Nokia EDA Telemetry Lab
 
-[![Codespaces][codespaces-4vcpu-svg]][codespaces-4vcpu-url]
+[![Codespaces][codespaces-8vcpu-svg]][codespaces-8vcpu-url]
 [![Discord][discord-svg]][discord-url]  
 
 [Learn more about EDA in Codespaces](https://docs.eda.dev/getting-started/codespaces)
 
-[codespaces-4vcpu-svg]: <https://gitlab.com/-/project/7617705/uploads/3f69f403e1371b3b578ee930df8930e8/codespaces-btn-4vcpu-export.svg>
-[codespaces-4vcpu-url]: <https://github.com/codespaces/new?repo=924180825&ref=main>
+[codespaces-8vcpu-svg]: https://gitlab.com/-/project/7617705/uploads/81362429e362ce7c5750bc51d23a4905/codespaces-btn-8vcpu-export.svg
+[codespaces-8vcpu-url]: https://github.com/codespaces/new?machine=premiumLinux&repo=924180825&ref=main
 [discord-svg]: <https://gitlab.com/rdodin/pics/-/wikis/uploads/b822984bc95d77ba92d50109c66c7afe/join-discord-btn.svg>
 [discord-url]: <https://eda.dev/discord>
 
@@ -72,6 +72,12 @@ The user must provide the `EDA_URL` environment variable pointing to their EDA U
 
 ```bash
 EDA_URL=https://test.eda.com:9443 ./init.sh
+```
+
+if you are running this lab in Codespaces, use the following command to set the `EDA_URL` automatically:
+
+```bash
+EDA_URL=${EDA_CS_URL} ./init.sh
 ```
 
 > [!NOTE]

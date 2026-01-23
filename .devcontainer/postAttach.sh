@@ -2,6 +2,7 @@
 source .devcontainer/utils.sh
 
 if check_eda_api_reachability; then
+  export EDA_CS_URL="https://${CODESPACE_NAME}-${EDA_PORT}.${GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN}"
   clear
    printf "
        \033[38;2;255;124;88m⢀\033[38;2;255;218;152m⢀\033[38;2;255;115;123m⡄\033[38;2;255;197;123m⣠\033[38;2;255;179;106m⣦\033[38;2;252;111;48m⣴\033[38;2;255;195;123m⣎\033[38;2;255;197;129m⣤\033[38;2;255;197;128m⠖\033[38;2;255;170;142m⢀\033[38;2;255;136;135m⡀\033[0m     \033[0m          
@@ -16,7 +17,7 @@ if check_eda_api_reachability; then
          \033[38;2;109;240;255m⠉\033[38;2;105;231;245m⠛\033[38;2;24;75;129m⠉\033[38;2;44;12;58m⠙\033[38;2;55;26;87m⠋\033[38;2;15;0;29m⠘\033[38;2;16;0;31m⠁\033[38;2;16;0;29m⠉\033[0m      \033[0m          
 "
   echo "
-   ⚡ EDA UI: https://${CODESPACE_NAME}-${EDA_PORT}.${GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN}"
+   ⚡ EDA UI: ${EDA_CS_URL}"
 else
   log "Unable to reach EDA API server. Dumping system info"
   dump_system_info

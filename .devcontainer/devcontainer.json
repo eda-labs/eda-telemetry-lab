@@ -1,0 +1,67 @@
+{
+    "name": "Nokia EDA Telemetry Lab - Codespaces",
+    "image": "ghcr.io/eda-labs/codespaces/base:25.12.1-1",
+    "features": {
+        "ghcr.io/devcontainers/features/docker-in-docker:2": {
+            "version": "latest",
+            "dockerDashComposeVersion": "v2"
+        }
+    },
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "entuent.fira-code-nerd-font",
+                "ms-kubernetes-tools.vscode-kubernetes-tools",
+                "eda-labs.vscode-eda"
+            ],
+            "settings": {
+                "chat.disableAIFeatures": true,
+                "terminal.integrated.defaultProfile.linux": "zsh",
+                "terminal.integrated.profiles.linux": {
+                    "zsh": {
+                        "path": "/bin/zsh"
+                    }
+                },
+                "terminal.integrated.fontFamily": "JetBrainsMono Nerd Font, JetBrainsMono, JetBrains Mono, fira-code-nerd, Fira Code Nerd Font, FiraCode Nerd Font, Fira Code, Consolas, Hasklig, Menlo, Monaco, 'Courier New', monospace",
+                "vscode-eda.edaTargets": {
+                    "https://127.0.0.1:9443": {
+                        "edaUsername": "admin",
+                        "edaPassword": "admin",
+                        "kcUsername": "admin",
+                        "kcPassword": "admin",
+                        "skipTlsVerify": true,
+                        "coreNamespace": "eda-system",
+                        "context": "k3d-eda-demo"
+                    }
+                }
+            }
+        }
+    },
+    "initializeCommand": ".devcontainer/initCommand.sh",
+    "onCreateCommand": ".devcontainer/onCreate.sh",
+    "postCreateCommand": ".devcontainer/postCreate.sh",
+    "postAttachCommand": ".devcontainer/postAttach.sh",
+    "containerEnv": {
+        "EDA_PORT": "9443",
+        "TRY_EDA_OVERRIDES_FILE": "/workspaces/codespaces/.devcontainer/overrides.mk",
+        "TRY_EDA_KPT_SETTERS_FILE": "/eda-codespaces/codespaces-4vcpu-kpt-setters.yaml",
+        "K9S_SKIN": "dracula"
+    },
+    "forwardPorts": [
+        9443
+    ],
+    "portsAttributes": {
+        "9443": {
+            "protocol": "https",
+            "label": "EDA UI",
+            "onAutoForward": "openBrowser"
+        }
+    },
+    "hostRequirements": {
+        "cpus": 4,
+        "memory": "16gb",
+        "storage": "30gb"
+    },
+    "privileged": true,
+    "remoteUser": "vscode"
+}

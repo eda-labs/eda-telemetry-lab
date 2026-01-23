@@ -1,0 +1,7 @@
+customSettings:
+  - applicationName: cx
+    settings:
+      - name: SrlCpuRequest
+        value: 1m
+      - name: CxdpCpuRequest
+        value: 1m

@@ -1,0 +1,37 @@
+# This setters file is meant for use in codespaces (4vcpu) VMs
+# to provide configuration for the EDA platform
+# It is applied in the codespaces post-create script as an argument to `make try-eda.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: codespaces-4vcpu-apply-setter-fn-config
+data:
+  # AI Engine
+  EAE_REQ_CPU: 10m
+  # Artifact server
+  ASVR_REQ_CPU: 10m
+  # Bootstrap server
+  BSVR_REQ_CPU: 10m
+  # EDA Cert Checker
+  ECC_REQ_CPU: 10m
+  # EDA Metrics Server
+  EMS_REQ_CPU: 10m
+  # Identity Server - Keycloak
+  KC_REQ_CPU: 10m
+  # Appstore Controller
+  ASC_REQ_CPU: 10m
+  # Identity Server Database - Postgres
+  PG_REQ_CPU: 10m
+  # Flow Engine
+  FE_REQ_CPU: 10m
+  # NPP
+  NPP_REQ_CPU: 10m
+  # TestMan
+  TM_REQ_CPU: 10m
+
+  CX_REQ_CPU: 10m
+  SE_REQ_CPU: 10m
+  SA_REQ_CPU: 10m
+  SC_REQ_CPU: 10m
+
+  GOGS_PV_CLAIM_SIZE: 5Gi

@@ -1,9 +1,14 @@
 # Nokia EDA Telemetry Lab
 
-[![Discord][discord-svg]][discord-url]
+[![Codespaces][codespaces-4vcpu-svg]][codespaces-4vcpu-url]
+[![Discord][discord-svg]][discord-url]  
 
-[discord-svg]: https://gitlab.com/rdodin/pics/-/wikis/uploads/b822984bc95d77ba92d50109c66c7afe/join-discord-btn.svg
-[discord-url]: https://eda.dev/discord
+[Learn more about EDA in Codespaces](https://docs.eda.dev/getting-started/codespaces)
+
+[codespaces-4vcpu-svg]: <https://gitlab.com/-/project/7617705/uploads/3f69f403e1371b3b578ee930df8930e8/codespaces-btn-4vcpu-export.svg>
+[codespaces-4vcpu-url]: <https://github.com/codespaces/new?repo=1129099670&ref=main>
+[discord-svg]: <https://gitlab.com/rdodin/pics/-/wikis/uploads/b822984bc95d77ba92d50109c66c7afe/join-discord-btn.svg>
+[discord-url]: <https://eda.dev/discord>
 
 The great divide between the tools network engineers use for configuration and those used for telemetry and monitoring leaves a significant gap in operational efficiency. As engineers build abstractions to configure the network and deploy the services on top of it, they also need to ensure that they can monitor the health of these services, and not just individual node-scoped metrics.
 

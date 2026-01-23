@@ -6,7 +6,7 @@
 [Learn more about EDA in Codespaces](https://docs.eda.dev/getting-started/codespaces)
 
 [codespaces-4vcpu-svg]: <https://gitlab.com/-/project/7617705/uploads/3f69f403e1371b3b578ee930df8930e8/codespaces-btn-4vcpu-export.svg>
-[codespaces-4vcpu-url]: <https://github.com/codespaces/new?repo=1129099670&ref=main>
+[codespaces-4vcpu-url]: <https://github.com/codespaces/new?repo=924180825&ref=main>
 [discord-svg]: <https://gitlab.com/rdodin/pics/-/wikis/uploads/b822984bc95d77ba92d50109c66c7afe/join-discord-btn.svg>
 [discord-url]: <https://eda.dev/discord>
 

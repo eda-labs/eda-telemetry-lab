@@ -1,7 +1,9 @@
 # Nokia EDA Telemetry Lab
 
-[![Discord][discord-svg]][discord-url]
+[![Codespaces][codespaces-8vcpu-svg]][codespaces-8vcpu-url] [![Discord][discord-svg]][discord-url]
 
+[codespaces-8vcpu-svg]: https://gitlab.com/-/project/7617705/uploads/81362429e362ce7c5750bc51d23a4905/codespaces-btn-8vcpu-export.svg
+[codespaces-8vcpu-url]: https://codespaces.new/eda-labs/eda-telemetry-lab?machine=premiumLinux
 [discord-svg]: https://gitlab.com/rdodin/pics/-/wikis/uploads/b822984bc95d77ba92d50109c66c7afe/join-discord-btn.svg
 [discord-url]: https://eda.dev/discord
 

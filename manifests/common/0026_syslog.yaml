@@ -11,7 +11,7 @@ spec:
               "network-instance": "mgmt",
               "remote-server": [
                   {
-                      "host": "172.19.255.3",
+                      "host": "alloy.eda-telemetry.svc.cluster.local",
                       "transport": "udp",
                       "remote-port": 1514,
                       "facility": [

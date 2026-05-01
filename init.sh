@@ -203,6 +203,16 @@ if [[ "$IS_CX" != "true" ]]; then
     sed -i.bak -E "s/(\"host\": \")[^\"]+(\",)/\1${ALLOY_IP}\2/" "$SYSLOG_CONFIG_FILE"
     echo "--> Updated syslog host to '$ALLOY_IP' in $SYSLOG_CONFIG_FILE"
 
+    CLAB_K8S_ROUTE_FILE="manifests/clab/0008_mgmt_route_to_k8s.yaml"
+    if [[ -f "$CLAB_K8S_ROUTE_FILE" ]]; then
+        K8S_LB_PREFIX=${K8S_LB_PREFIX:-$(kubectl -n metallb-system get ipaddresspool -o jsonpath='{range .items[*].spec.addresses[*]}{.}{"\n"}{end}' 2>/dev/null | grep -E '^[0-9]+\.' | head -n1)}
+        if [[ -z "$K8S_LB_PREFIX" ]]; then
+            K8S_LB_PREFIX=$(echo "$ALLOY_IP" | awk -F. '{print $1"."$2"."$3".0/24"}')
+        fi
+        sed -i.bak -E "s#(\"prefix\": \")(__K8S_LB_PREFIX__|[^\"]+)(\",)#\1${K8S_LB_PREFIX}\3#" "$CLAB_K8S_ROUTE_FILE"
+        echo "--> Updated clab Kubernetes route prefix to '$K8S_LB_PREFIX' in $CLAB_K8S_ROUTE_FILE"
+    fi
+
     # Fetch EDA ext domain name from engine config
     EDA_API=$(uv run ./scripts/get_eda_api.py)
 

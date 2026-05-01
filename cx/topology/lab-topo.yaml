@@ -7,13 +7,13 @@ spec:
   operation: ReplaceAll
   nodeTemplates:
     - name: leaf
-      nodeProfile: srlinux-ghcr-25.10.1
+      nodeProfile: srlinux-ghcr-25.10.3
       platform: 7220 IXR-D2L
       labels:
         eda.nokia.com/security-profile: managed
         eda.nokia.com/role: leaf
     - name: spine
-      nodeProfile: srlinux-ghcr-25.10.1
+      nodeProfile: srlinux-ghcr-25.10.3
       platform: 7220 IXR-D3L
       labels:
         eda.nokia.com/security-profile: managed

@@ -70,6 +70,10 @@ spec:
       app: grafana
   template:
     metadata:
+      annotations:
+        checksum/grafana-datasource: {{ .Files.Get "files/grafana/datasource.yml" | sha256sum }}
+        checksum/grafana-dashboards: {{ .Files.Get "files/grafana/dashboards.yml" | sha256sum }}
+        checksum/grafana-st-dashboard: {{ .Files.Get "files/grafana/dashboards/st.json" | sha256sum }}
       labels:
         app: grafana
     spec:

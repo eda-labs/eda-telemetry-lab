@@ -1,4 +1,4 @@
-apiVersion: config.eda.nokia.com/v1alpha1
+apiVersion: config.eda.nokia.com/v1
 kind: Configlet
 metadata:
   name: syslog-config
@@ -28,7 +28,7 @@ spec:
       }
     operation: Update
     path: .system
-  endpointSelector:
+  endpointSelectors:
   - eda.nokia.com/role=leaf
   - eda.nokia.com/role=spine
   operatingSystem: srl

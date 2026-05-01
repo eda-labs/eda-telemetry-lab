@@ -68,14 +68,14 @@ edactl() {
         -- edactl "$@"
 }
 
-# Run namespace bootstrap (25.12 and newer)
+# Run namespace bootstrap.
 echo -e "${GREEN}--> Creating ${ST_STACK_NS} namespace...${RESET}"
 edactl namespace bootstrap create --from-namespace eda ${ST_STACK_NS} | indent_out
 
 if [ $? -eq 0 ]; then
     echo "Namespace ${ST_STACK_NS} bootstrap completed successfully." | indent_out
 else
-    echo "--> Warning: Namespace ${ST_STACK_NS} bootstrap failed. Only EDA 25.12.1 and newer are supported."
+    echo "--> Warning: Namespace ${ST_STACK_NS} bootstrap failed. Only EDA 26.4.1 and newer are supported."
 fi
 
 if [[ -n "$CX_DEP" ]]; then

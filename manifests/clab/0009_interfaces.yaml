@@ -1,5 +1,5 @@
 ---
-apiVersion: interfaces.eda.nokia.com/v1alpha1
+apiVersion: interfaces.eda.nokia.com/v1
 kind: Interface
 metadata:
   labels:
@@ -10,23 +10,35 @@ metadata:
   namespace: eda-telemetry
 spec:
   enabled: true
-  encapType: dot1q
+  encapType: Dot1q
   ethernet:
     speed: 10G
   lag:
-    multihoming:
-      mode: all-active
     lacp:
+      interval: Fast
+      mode: Active
       systemPriority: 32768
+    minLinks: 1
+    multihoming:
+      esi: auto
+      mode: AllActive
+      reloadDelayTimerSeconds: 100
+      revertive: false
+    type: LACP
+  lldp: true
   members:
-    - interface: ethernet-1-1
+    - enabled: true
+      interface: ethernet-1-1
+      lacpPortPriority: 32768
       node: leaf1
-    - interface: ethernet-1-1
+    - enabled: true
+      interface: ethernet-1-1
+      lacpPortPriority: 32768
       node: leaf2
-  type: lag
+  type: LAG
 
 ---
-apiVersion: interfaces.eda.nokia.com/v1alpha1
+apiVersion: interfaces.eda.nokia.com/v1
 kind: Interface
 metadata:
   labels:
@@ -37,23 +49,35 @@ metadata:
   namespace: eda-telemetry
 spec:
   enabled: true
-  encapType: dot1q
+  encapType: Dot1q
   ethernet:
     speed: 10G
   lag:
-    multihoming:
-      mode: all-active
     lacp:
+      interval: Fast
+      mode: Active
       systemPriority: 32768
+    minLinks: 1
+    multihoming:
+      esi: auto
+      mode: AllActive
+      reloadDelayTimerSeconds: 100
+      revertive: false
+    type: LACP
+  lldp: true
   members:
-    - interface: ethernet-1-2
+    - enabled: true
+      interface: ethernet-1-2
+      lacpPortPriority: 32768
       node: leaf1
-    - interface: ethernet-1-2
+    - enabled: true
+      interface: ethernet-1-2
+      lacpPortPriority: 32768
       node: leaf2
-  type: lag
+  type: LAG
 
 ---
-apiVersion: interfaces.eda.nokia.com/v1alpha1
+apiVersion: interfaces.eda.nokia.com/v1
 kind: Interface
 metadata:
   labels:
@@ -64,26 +88,37 @@ metadata:
   namespace: eda-telemetry
 spec:
   enabled: true
-  encapType: dot1q
+  encapType: Dot1q
   ethernet:
     speed: 10G
   lag:
-    multihoming:
-      mode: all-active
     lacp:
+      interval: Fast
+      mode: Active
       systemPriority: 32768
+    minLinks: 1
+    multihoming:
+      esi: auto
+      mode: AllActive
+      reloadDelayTimerSeconds: 100
+      revertive: false
+    type: LACP
+  lldp: true
   members:
-    - interface: ethernet-1-1
+    - enabled: true
+      interface: ethernet-1-1
+      lacpPortPriority: 32768
       node: leaf3
-    - interface: ethernet-1-1
+    - enabled: true
+      interface: ethernet-1-1
+      lacpPortPriority: 32768
       node: leaf4
-  type: lag
+  type: LAG
 
 ---
-apiVersion: interfaces.eda.nokia.com/v1alpha1
+apiVersion: interfaces.eda.nokia.com/v1
 kind: Interface
 metadata:
-  generation: 1
   labels:
     eda.nokia.com/macvrf202: "true"
     eda.nokia.com/macvrf1001: "true"
@@ -92,17 +127,29 @@ metadata:
   namespace: eda-telemetry
 spec:
   enabled: true
-  encapType: dot1q
+  encapType: Dot1q
   ethernet:
     speed: 10G
   lag:
-    multihoming:
-      mode: all-active
     lacp:
+      interval: Fast
+      mode: Active
       systemPriority: 32768
+    minLinks: 1
+    multihoming:
+      esi: auto
+      mode: AllActive
+      reloadDelayTimerSeconds: 100
+      revertive: false
+    type: LACP
+  lldp: true
   members:
-    - interface: ethernet-1-2
+    - enabled: true
+      interface: ethernet-1-2
+      lacpPortPriority: 32768
       node: leaf3
-    - interface: ethernet-1-2
+    - enabled: true
+      interface: ethernet-1-2
+      lacpPortPriority: 32768
       node: leaf4
-  type: lag
+  type: LAG

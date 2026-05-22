@@ -1,4 +1,4 @@
-apiVersion: config.eda.nokia.com/v1alpha1
+apiVersion: config.eda.nokia.com/v1
 kind: Configlet
 metadata:
   name: syslog-config
@@ -11,7 +11,7 @@ spec:
               "network-instance": "mgmt",
               "remote-server": [
                   {
-                      "host": "alloy.eda-telemetry",
+                      "host": "alloy.eda-telemetry.svc.cluster.local",
                       "transport": "udp",
                       "remote-port": 1514,
                       "facility": [
@@ -28,7 +28,7 @@ spec:
       }
     operation: Update
     path: .system
-  endpointSelector:
+  endpointSelectors:
   - eda.nokia.com/role=leaf
   - eda.nokia.com/role=spine
   operatingSystem: srl

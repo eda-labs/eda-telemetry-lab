@@ -1,0 +1,38 @@
+apiVersion: config.eda.nokia.com/v1
+kind: Configlet
+metadata:
+  name: clab-mgmt-route-to-k8s
+  namespace: eda-telemetry
+spec:
+  configs:
+    - path: .network-instance{.name=="mgmt"}
+      operation: Update
+      config: |-
+        {
+          "next-hop-groups": {
+            "group": [
+              {
+                "name": "clab-k8s-gateway",
+                "nexthop": [
+                  {
+                    "index": 1,
+                    "ip-address": "10.58.2.1"
+                  }
+                ]
+              }
+            ]
+          },
+          "static-routes": {
+            "route": [
+              {
+                "prefix": "172.19.255.0/24",
+                "next-hop-group": "clab-k8s-gateway"
+              }
+            ]
+          }
+        }
+  endpointSelectors:
+    - eda.nokia.com/role=leaf
+    - eda.nokia.com/role=spine
+  operatingSystem: srl
+  priority: 0

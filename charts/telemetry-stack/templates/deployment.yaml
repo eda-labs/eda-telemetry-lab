@@ -20,7 +20,7 @@ spec:
         runAsNonRoot: true
       containers:
         - name: prometheus
-          image: quay.io/prometheus/prometheus:v3.4.2
+          image: quay.io/prometheus/prometheus:v3.11.3
           imagePullPolicy: {{ .Values.imagePullPolicy }}
           args:
             - --config.file=/etc/prometheus/prometheus.yml
@@ -70,6 +70,10 @@ spec:
       app: grafana
   template:
     metadata:
+      annotations:
+        checksum/grafana-datasource: {{ .Files.Get "files/grafana/datasource.yml" | sha256sum }}
+        checksum/grafana-dashboards: {{ .Files.Get "files/grafana/dashboards.yml" | sha256sum }}
+        checksum/grafana-st-dashboard: {{ .Files.Get "files/grafana/dashboards/st.json" | sha256sum }}
       labels:
         app: grafana
     spec:
@@ -79,7 +83,7 @@ spec:
         runAsGroup: 472
       containers:
         - name: grafana
-          image: grafana/grafana:12.0.2
+          image: grafana/grafana:13.0.1
           imagePullPolicy: {{ .Values.imagePullPolicy }}
           env:
             {{- if .Values.https_proxy }}
@@ -159,7 +163,7 @@ spec:
     spec:
       containers:
         - name: loki
-          image: grafana/loki:3.5.2
+          image: grafana/loki:3.7.1
           imagePullPolicy: {{ .Values.imagePullPolicy }}
           args:
             - --config.file=/etc/loki/loki-config.yml
@@ -202,7 +206,7 @@ spec:
     spec:
       containers:
         - name: alloy
-          image: grafana/alloy:v1.9.0
+          image: grafana/alloy:v1.16.0
           imagePullPolicy: {{ .Values.imagePullPolicy }}
           args:
             - run
@@ -254,7 +258,7 @@ spec:
     spec:
       containers:
         - name: kafka
-          image: apache/kafka:4.0.0
+          image: apache/kafka:4.2.0
           imagePullPolicy: {{ .Values.imagePullPolicy }}
           env:
             - name: KAFKA_NODE_ID

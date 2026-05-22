@@ -1,22 +1,29 @@
-apiVersion: services.eda.nokia.com/v1
+apiVersion: services.eda.nokia.com/v2
 kind: VirtualNetwork
 metadata:
   name: macvrf1001
   namespace: eda-telemetry
 spec:
   bridgeDomains:
-    - name: macvrf1001
-      spec:
-        eviPool: evi-pool
-        macAging: 300
-        macLearning: true
-        tunnelIndexPool: tunnel-index-pool
-        type: EVPNVXLAN
-        vniPool: vni-pool
+  - name: macvrf1001
+    spec:
+      encapOptions:
+        vxlan:
+          tunnelIndexPool: tunnel-index-pool
+          vniPool: vni-pool
+      eviPool: evi-pool
+      macLearning:
+        agingTimeSeconds: 300
+        enabled: true
+      type: EVPNVXLAN
+  bridgeInterfaces: []
+  irbInterfaces: []
+  routedInterfaces: []
+  routers: []
   vlans:
-    - name: macvrf1001
-      spec:
-        bridgeDomain: macvrf1001
-        interfaceSelector:
-          - eda.nokia.com/macvrf1001
-        vlanID: "1001"
+  - name: macvrf1001
+    spec:
+      bridgeDomain: macvrf1001
+      interfaceSelectors:
+      - eda.nokia.com/macvrf1001
+      vlanID: "1001"

@@ -1,62 +1,86 @@
-apiVersion: services.eda.nokia.com/v1
+apiVersion: services.eda.nokia.com/v2
 kind: VirtualNetwork
 metadata:
   name: ipvrf2001
   namespace: eda-telemetry
 spec:
   bridgeDomains:
-    - name: macvrf201
-      spec:
-        eviPool: evi-pool
-        macAging: 300
-        macLearning: true
-        macLimit: 250
-        tunnelIndexPool: tunnel-index-pool
-        type: EVPNVXLAN
-        vniPool: vni-pool
-    - name: macvrf202
-      spec:
-        eviPool: evi-pool
-        tunnelIndexPool: tunnel-index-pool
-        type: EVPNVXLAN
-        vniPool: vni-pool
+  - name: macvrf201
+    spec:
+      encapOptions:
+        vxlan:
+          tunnelIndexPool: tunnel-index-pool
+          vniPool: vni-pool
+      eviPool: evi-pool
+      macLearning:
+        agingTimeSeconds: 300
+        enabled: true
+      macLimit: 250
+      type: EVPNVXLAN
+  - name: macvrf202
+    spec:
+      encapOptions:
+        vxlan:
+          tunnelIndexPool: tunnel-index-pool
+          vniPool: vni-pool
+      eviPool: evi-pool
+      macLearning:
+        agingTimeSeconds: 300
+        enabled: true
+      type: EVPNVXLAN
+  bridgeInterfaces: []
   irbInterfaces:
-    - name: macvrf201-irb
-      spec:
-        bridgeDomain: macvrf201
-        ipAddresses:
-          - ipv4Address:
-              ipPrefix: 10.20.1.254/24
-              primary: false
-        ipMTU: 9200
-        router: ipvrf2001
-    - name: macvrf202-irb
-      spec:
-        bridgeDomain: macvrf202
-        ipAddresses:
-          - ipv4Address:
-              ipPrefix: 10.20.2.254/24
-              primary: false
-        ipMTU: 9200
-        router: ipvrf2001
+  - name: macvrf201-irb
+    spec:
+      bridgeDomain: macvrf201
+      ipAddresses:
+      - ipv4Address:
+          ipPrefix: 10.20.1.254/24
+          primary: false
+      ipMTU: 9200
+      ipv4:
+        arpTimeoutSeconds: 14400
+        learnUnsolicitedARP: Disabled
+      ipv6:
+        learnUnsolicitedNA: Disabled
+      router: ipvrf2001
+      virtualIPDiscovery: []
+  - name: macvrf202-irb
+    spec:
+      bridgeDomain: macvrf202
+      ipAddresses:
+      - ipv4Address:
+          ipPrefix: 10.20.2.254/24
+          primary: false
+      ipMTU: 9200
+      ipv4:
+        arpTimeoutSeconds: 14400
+        learnUnsolicitedARP: Disabled
+      ipv6:
+        learnUnsolicitedNA: Disabled
+      router: ipvrf2001
+      virtualIPDiscovery: []
+  routedInterfaces: []
   routers:
-    - name: ipvrf2001
-      spec:
-        eviPool: evi-pool
-        routerID: 2.0.0.1
-        tunnelIndexPool: tunnel-index-pool
-        type: EVPNVXLAN
-        vniPool: vni-pool
+  - name: ipvrf2001
+    spec:
+      encapOptions:
+        vxlan:
+          tunnelIndexPool: tunnel-index-pool
+          vniPool: vni-pool
+      eviPool: evi-pool
+      routerID: 2.0.0.1
+      type: EVPNVXLAN
   vlans:
-    - name: macvrf201
-      spec:
-        bridgeDomain: macvrf201
-        interfaceSelector:
-          - eda.nokia.com/macvrf201
-        vlanID: "201"
-    - name: macvrf202
-      spec:
-        bridgeDomain: macvrf202
-        interfaceSelector:
-          - eda.nokia.com/macvrf202
-        vlanID: "202"
+  - name: macvrf201
+    spec:
+      bridgeDomain: macvrf201
+      interfaceSelectors:
+      - eda.nokia.com/macvrf201
+      vlanID: "201"
+  - name: macvrf202
+    spec:
+      bridgeDomain: macvrf202
+      interfaceSelectors:
+      - eda.nokia.com/macvrf202
+      vlanID: "202"

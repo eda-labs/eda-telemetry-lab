@@ -1,19 +1,19 @@
-apiVersion: topologies.eda.nokia.com/v1alpha1
+apiVersion: topologies.eda.nokia.com/v1
 kind: NetworkTopology
 metadata:
   generateName: telemetry-lab-
   namespace: eda-telemetry
 spec:
-  operation: replaceAll
+  operation: ReplaceAll
   nodeTemplates:
     - name: leaf
-      nodeProfile: srlinux-ghcr-25.10.1
+      nodeProfile: srlinux-ghcr-25.10.3
       platform: 7220 IXR-D2L
       labels:
         eda.nokia.com/security-profile: managed
         eda.nokia.com/role: leaf
     - name: spine
-      nodeProfile: srlinux-ghcr-25.10.1
+      nodeProfile: srlinux-ghcr-25.10.3
       platform: 7220 IXR-D3L
       labels:
         eda.nokia.com/security-profile: managed
@@ -35,12 +35,12 @@ spec:
 
   linkTemplates:
     - name: isl
-      type: interSwitch
+      type: InterSwitch
       labels:
         eda.nokia.com/role: interSwitch
     - name: edge
-      type: edge
-      encapType: dot1q
+      type: Edge
+      encapType: Dot1q
       labels:
         eda.nokia.com/role: edge
         eda.nokia.com/macvrf1001: "true" # all access ports are part of the macvrf1001

@@ -1,24 +1,24 @@
 # note, unnumbered does not work with ceos yet
-apiVersion: fabrics.eda.nokia.com/v1alpha1
+apiVersion: fabrics.eda.nokia.com/v1
 kind: Fabric
 metadata:
   name: myfabric
   namespace: eda-telemetry
 spec:
   leafs:
-    leafNodeSelector:
+    leafNodeSelectors:
       - eda.nokia.com/role=leaf
   spines:
-    spineNodeSelector:
+    spineNodeSelectors:
       - eda.nokia.com/role=spine
   interSwitchLinks:
-    linkSelector:
+    linkSelectors:
       - eda.nokia.com/role=interSwitch
-    unnumbered: IPV6
+    unnumbered: IPv6
     ipMTU: 9200
-  systemPoolIPV4: systemipv4-pool
+  systemPoolIPv4: systemipv4-pool
   underlayProtocol:
-    protocol:
+    protocols:
       - EBGP
     bgp:
       asnPool: asn-pool

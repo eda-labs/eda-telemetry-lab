@@ -17,14 +17,14 @@ kubectl -n ${TOPO_NS} wait --for=create simlink l3-l4-e1-2-lag-2 --timeout=120s
 echo "Waiting for server pods to be ready..."
 for server in server1 server2 server3 server4; do
   echo "Waiting for $server pod..."
-  kubectl -n ${CORE_NS} wait --for=condition=ready pod -l eda.nokia.com/app=sim-${server} --timeout=300s
+  kubectl -n ${CORE_NS} wait --for=condition=ready pod -l "eda.nokia.com/app=sim-${server},cx-node-namespace=${TOPO_NS}" --timeout=300s
 done
 
 for server in server1 server2 server3 server4; do
   echo "Waiting for $server eth1/eth2 interfaces to appear..."
   kubectl -n ${CORE_NS} exec -it -c ${server} \
       $(kubectl get -n ${CORE_NS} pods \
-      -l eda.nokia.com/app=sim-${server} -o jsonpath="{.items[0].metadata.name}") \
+      -l "eda.nokia.com/app=sim-${server},cx-node-namespace=${TOPO_NS}" -o jsonpath="{.items[0].metadata.name}") \
       -- bash -c "$(cat configs/servers/wait-for-ifaces.sh)"
 done
 
@@ -36,6 +36,6 @@ for server in server1 server2 server3 server4; do
   echo "Configuring $server IP and interfaces..."
   kubectl -n ${CORE_NS} exec -it -c ${server} \
       $(kubectl get -n ${CORE_NS} pods \
-      -l eda.nokia.com/app=sim-${server} -o jsonpath="{.items[0].metadata.name}") \
+      -l "eda.nokia.com/app=sim-${server},cx-node-namespace=${TOPO_NS}" -o jsonpath="{.items[0].metadata.name}") \
       -- bash -c "$(cat configs/servers/$server.sh)"
 done

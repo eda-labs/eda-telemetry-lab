@@ -30,7 +30,7 @@ fi
 # open shell to the cx pod
 kubectl -n ${CORE_NS} exec -it -c ${SIMNODE_NAME} \
   $(kubectl get -n ${CORE_NS} pods \
-  -l cx-node-namespace/${USER_NS} -l cx-pod-name=${SIMNODE_NAME} -o jsonpath="{.items[0].metadata.name}") -- su - admin \
+  -l "cx-node-namespace=${USER_NS},cx-pod-name=${SIMNODE_NAME}" -o jsonpath="{.items[0].metadata.name}") -- su - admin \
   || {
   echo "Failed to open shell into node ${SIMNODE_NAME} in ${USER_NS}" namespace.
   echo "Available nodes are:"

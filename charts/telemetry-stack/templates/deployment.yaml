@@ -6,11 +6,17 @@ metadata:
     app: telemetry-stack
 spec:
   replicas: 1
+  # the ReadWriteOnce volume can't be attached to the new pod on another node while the old pod still runs
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       app: prometheus
   template:
     metadata:
+      annotations:
+        checksum/prometheus-config: {{ .Files.Get "files/prometheus/prometheus.yml" | sha256sum }}
+        checksum/prometheus-web-config: {{ .Files.Get "files/prometheus/web-config.yml" | sha256sum }}
       labels:
         app: prometheus
     spec:
@@ -24,6 +30,7 @@ spec:
           imagePullPolicy: {{ .Values.imagePullPolicy }}
           args:
             - --config.file=/etc/prometheus/prometheus.yml
+            - --web.config.file=/etc/prometheus/web-config.yml
             - --storage.tsdb.path=/prometheus
             - --storage.tsdb.retention.time=7d
             - --storage.tsdb.retention.size=2GB
@@ -65,6 +72,9 @@ metadata:
     app: telemetry-stack
 spec:
   replicas: 1
+  # the ReadWriteOnce volume can't be attached to the new pod on another node while the old pod still runs
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       app: grafana
@@ -94,7 +104,8 @@ spec:
             - name: NO_PROXY
               value: "{{ .Values.no_proxy }}"
             {{- end }}
-            - name: GF_PLUGINS_PREINSTALL
+            # install plugins before grafana starts serving, so the dashboard panels are available on first load
+            - name: GF_PLUGINS_PREINSTALL_SYNC
               value: "andrewbmchugh-flow-panel, volkovlabs-variable-panel"
             - name: GF_AUTH_ANONYMOUS_ENABLED
               value: "true"
@@ -106,10 +117,11 @@ spec:
               value: "true"
             - name: GF_SERVER_ROOT_URL
               value: "{{ .Values.eda_url }}/core/httpproxy/v1/grafana/"
+            # EDA HttpProxy (26.8+) injects a restrictive "default-src 'self'" CSP unless the backend sends its own
             - name: GF_SECURITY_CONTENT_SECURITY_POLICY
               value: "true"
             - name: GF_SECURITY_CONTENT_SECURITY_POLICY_TEMPLATE
-              value: "script-src 'self' 'unsafe-eval' 'unsafe-inline' 'strict-dynamic' $NONCE;object-src 'none';font-src 'self';style-src 'self' 'unsafe-inline' blob:;img-src * data:;base-uri 'self';connect-src 'self' grafana.com https://raw.githubusercontent.com ws://$ROOT_PATH wss://$ROOT_PATH;manifest-src 'self';media-src 'none';form-action 'self' $FORM_ACTION_ADDITIONAL_HOSTS;"
+              value: "script-src 'self' 'unsafe-eval' 'unsafe-inline' 'strict-dynamic' $NONCE;object-src 'none';font-src 'self' data:;style-src 'self' 'unsafe-inline' blob:;img-src * data:;base-uri 'self';connect-src 'self' grafana.com https://raw.githubusercontent.com ws://$ROOT_PATH wss://$ROOT_PATH;manifest-src 'self';media-src 'none';form-action 'self' $FORM_ACTION_ADDITIONAL_HOSTS;"
             # - name: GF_SERVER_SERVE_FROM_SUB_PATH
             #   value: "true"
           volumeMounts:

@@ -70,12 +70,14 @@ edactl() {
 
 # Run namespace bootstrap.
 echo -e "${GREEN}--> Creating ${ST_STACK_NS} namespace...${RESET}"
-edactl namespace bootstrap create --from-namespace eda ${ST_STACK_NS} | indent_out
+edactl namespace bootstrap create --from-namespace eda ${ST_STACK_NS} 2>&1 | indent_out
 
-if [ $? -eq 0 ]; then
+if [[ ${PIPESTATUS[0]} -eq 0 ]]; then
     echo "Namespace ${ST_STACK_NS} bootstrap completed successfully." | indent_out
+elif kubectl get namespace ${ST_STACK_NS} &> /dev/null; then
+    echo "Namespace ${ST_STACK_NS} already exists." | indent_out
 else
-    echo "--> Warning: Namespace ${ST_STACK_NS} bootstrap failed. Only EDA 26.4.1 and newer are supported."
+    echo "--> Warning: Namespace ${ST_STACK_NS} bootstrap failed. Only EDA 26.8.2 and newer are supported."
 fi
 
 if [[ -n "$CX_DEP" ]]; then
@@ -244,12 +246,36 @@ echo "Workflow $APP_INSTALL_WF_NAME created" | indent_out
 echo -e "${GREEN}--> Waiting for EDA apps installation to complete...${RESET}"
 kubectl -n ${EDA_CORE_NS} wait --for=jsonpath='{.status.result}'=Completed $APP_INSTALL_WF_NAME --timeout=300s | indent_out
 
+# Apply a manifests directory in a single edactl transaction.
+# The app installer reports completion before the app pods (e.g. eda-kx with the kafka exporter admission webhook)
+# are rolled out and serving, which makes the transaction fail. A failed transaction is not applied at all, so retry it.
+function edactl-apply {
+    local commit_message=$1 manifests_dir=$2 output reason
+    for attempt in $(seq 1 30); do
+        if output=$(edactl apply --commit-message "$commit_message" -f "$manifests_dir" 2>&1); then
+            echo "$output" | indent_out
+            return 0
+        fi
+        reason=$(echo "$output" | grep -E 'Caused by: .+' | tail -n1 | sed -E 's/.*Caused by: //')
+        echo "Attempt $attempt failed, retrying in 10s: ${reason:-$(echo "$output" | tail -n1)}" | cut -c1-250 | indent_out
+        sleep 10
+    done
+    echo "$output" | indent_out
+    return 1
+}
+
 echo -e "${GREEN}--> Creating EDA resources...${RESET}"
-edactl apply --commit-message "installing eda-telemetry-lab common resources" -f ${TB_LAB_DIR}/manifests/common | indent_out
+if ! edactl-apply "installing eda-telemetry-lab common resources" ${TB_LAB_DIR}/manifests/common; then
+    echo -e "${RED}Error: Failed to create EDA resources from manifests/common.${RESET}"
+    exit 1
+fi
 
 # adding containerlab specific resources
 if [[ "$IS_CX" != "true" ]]; then
-    edactl apply --commit-message "installing topolinks and interfaces" -f ${TB_LAB_DIR}/manifests/clab | indent_out
+    if ! edactl-apply "installing topolinks and interfaces" ${TB_LAB_DIR}/manifests/clab; then
+        echo -e "${RED}Error: Failed to create EDA resources from manifests/clab.${RESET}"
+        exit 1
+    fi
 fi
 
 # add control panel for cx

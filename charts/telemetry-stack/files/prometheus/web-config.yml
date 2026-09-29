@@ -1,0 +1,6 @@
+# Prometheus is exposed via EDA HttpProxy, which (26.8+) injects a restrictive
+# "default-src 'self'" CSP unless the backend sends its own.
+# The Prometheus UI needs inline scripts and styles.
+http_server_config:
+  headers:
+    Content-Security-Policy: "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'"

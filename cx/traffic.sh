@@ -35,6 +35,7 @@ BANDWIDTH="120K"                  # Bandwidth parameter
 MSS=1400                          # Maximum segment size
 WINDOW=4K                         # Window size
 CORE_NS=${CORE_NS:-"eda-system"}  # Kubernetes namespace
+TOPO_NS=${TOPO_NS:-"eda-telemetry"} # EDA namespace of the topology, to select the sim pods of this lab only
 
 # Define deployments
 DEPLOYMENT_SERVER1="cx-eda-telemetry--server1-sim"
@@ -44,13 +45,13 @@ DEPLOYMENT_SERVER4="cx-eda-telemetry--server4-sim"
 
 # Get pod names (assuming standard K8s labels)
 SERVER1_POD=$(kubectl get -n ${CORE_NS} pods \
-    -l eda.nokia.com/app=sim-server1 -o jsonpath="{.items[0].metadata.name}")
+    -l "eda.nokia.com/app=sim-server1,cx-node-namespace=${TOPO_NS}" -o jsonpath="{.items[0].metadata.name}")
 SERVER2_POD=$(kubectl get -n ${CORE_NS} pods \
-    -l eda.nokia.com/app=sim-server2 -o jsonpath="{.items[0].metadata.name}")
+    -l "eda.nokia.com/app=sim-server2,cx-node-namespace=${TOPO_NS}" -o jsonpath="{.items[0].metadata.name}")
 SERVER3_POD=$(kubectl get -n ${CORE_NS} pods \
-    -l eda.nokia.com/app=sim-server3 -o jsonpath="{.items[0].metadata.name}")
+    -l "eda.nokia.com/app=sim-server3,cx-node-namespace=${TOPO_NS}" -o jsonpath="{.items[0].metadata.name}")
 SERVER4_POD=$(kubectl get -n ${CORE_NS} pods \
-    -l eda.nokia.com/app=sim-server4 -o jsonpath="{.items[0].metadata.name}")
+    -l "eda.nokia.com/app=sim-server4,cx-node-namespace=${TOPO_NS}" -o jsonpath="{.items[0].metadata.name}")
 
 # Define endpoints based on your design:
 # Server pods
